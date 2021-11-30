@@ -1,0 +1,44 @@
+/* Variables */
+:root {
+    --navy: #22577A;
+    --mint: #38A3A5;
+    --peridot: #57CC99;
+    --lime: #80ED99;
+    --turn-on: #64E2CA;
+}
+/* Global */
+.hide {
+    display: none;
+    visibility: hidden;
+}
+/* Login */
+.login-bg {
+    background: var(--turn-on) !important;
+}
+.login-title-name {
+    visibility: hidden;
+    display: none;
+}
+.remember {
+    font-size: 14px !important;
+    font-style: unset !important;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.login-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+.login-title .logo-img {
+    width: 70%;
+    position: relative;
+    margin: 2% 15%;
+}
+.login-title a .login-img {
+    position: relative;
+    margin: 0 auto;
+    padding: 0;
+}
+
+/* Sidebar */
