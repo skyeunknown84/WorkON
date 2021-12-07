@@ -4,6 +4,14 @@ $twhere ="";
 if($_SESSION['login_type'] != 1)
   $twhere = "  ";
 ?>
+<?php 
+if(isset($_GET['id'])){
+	$qry = $conn->query("SELECT * FROM task_list where id = ".$_GET['id'])->fetch_array();
+	foreach($qry as $k => $v){
+		$$k = $v;
+	}
+}
+?>
 <!-- Info boxes -->
  <!-- <div class="col-12">
     <div class="card">
@@ -48,6 +56,7 @@ if($_SESSION['login_type'] != 1)
                 <thead>
                   <th>#</th>
                   <th>Project</th>
+                  <th class="hide">Assignee</th>
                   <th>Progress</th>
                   <th>Status</th>
                   <th></th>
@@ -92,6 +101,9 @@ if($_SESSION['login_type'] != 1)
                               Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
                           </small>
                       </td>
+                      <td>
+                        <?php echo ucwords($row['name']) ?>
+                      </td>
                       <td class="project_progress">
                           <div class="progress progress-sm">
                               <div class="progress-bar bg-green" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
@@ -103,19 +115,32 @@ if($_SESSION['login_type'] != 1)
                       </td>
                       <td class="project-state">
                           <?php
-                            if($stat[$row['status']] =='Not Started'){
-                              echo "<span class='badge badge-secondary'>{$stat[$row['status']]}</span>";
-                            }elseif($stat[$row['status']] =='Started'){
-                              echo "<span class='badge badge-primary'>{$stat[$row['status']]}</span>";
-                            }elseif($stat[$row['status']] =='In Progress'){
-                              echo "<span class='badge badge-info'>{$stat[$row['status']]}</span>";
-                            }elseif($stat[$row['status']] =='In Review'){
-                              echo "<span class='badge badge-warning'>{$stat[$row['status']]}</span>";
-                            }elseif($stat[$row['status']] =='Over Due'){
-                              echo "<span class='badge badge-danger'>{$stat[$row['status']]}</span>";
-                            }elseif($stat[$row['status']] =='Completed'){
-                              echo "<span class='badge badge-success'>{$stat[$row['status']]}</span>";
-                            }
+                            // if($stat[$row['status']] =='Not Started'){
+                            //   echo "<span class='badge badge-secondary'>{$stat[$row['status']]}</span>";
+                            // }elseif($stat[$row['status']] =='Started'){
+                            //   echo "<span class='badge badge-primary'>{$stat[$row['status']]}</span>";
+                            // }elseif($stat[$row['status']] =='In Progress'){
+                            //   echo "<span class='badge badge-info'>{$stat[$row['status']]}</span>";
+                            // }elseif($stat[$row['status']] =='In Review'){
+                            //   echo "<span class='badge badge-warning'>{$stat[$row['status']]}</span>";
+                            // }elseif($stat[$row['status']] =='Over Due'){
+                            //   echo "<span class='badge badge-danger'>{$stat[$row['status']]}</span>";
+                            // }elseif($stat[$row['status']] =='Completed'){
+                            //   echo "<span class='badge badge-success'>{$stat[$row['status']]}</span>";
+                            // }
+                            if($row['status'] == 1){
+                              echo "<span class='badge badge-secondary'>Not Started</span>";
+                            }elseif($row['status'] == 2){
+                            echo "<span class='badge badge-primary'>Started</span>";
+                            }elseif($row['status'] == 3){
+                            echo "<span class='badge badge-primary'>In Progress</span>";
+                            }elseif($row['status'] == 4){
+                            echo "<span class='badge badge-primary'>In Review</span>";
+                            }elseif($row['status'] == 5){
+                            echo "<span class='badge badge-primary'>Over Due</span>";
+                            }elseif($row['status'] == 6){
+                              echo "<span class='badge badge-success'>Completed</span>";
+                                      }
                           ?>
                       </td>
                       <td>

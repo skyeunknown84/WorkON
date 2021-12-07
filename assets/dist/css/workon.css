@@ -2568,9 +2568,9 @@ fieldset:disabled a.btn {
 
 .btn-primary:focus, .btn-primary.focus {
   color: #fff;
-  background-color: #317e9c;
-  border-color: #0062cc;
-  box-shadow: 0 0 0 0 rgba(38, 143, 255, 0.5);
+  background-color: var(--navy-light);
+  border-color: var(--navy-light);
+  box-shadow: 0 0 0 0 rgba(var(--navy-light), 0.5);
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
@@ -3227,7 +3227,7 @@ input[type="button"].btn-block {
   display: none;
   float: left;
   min-width: 10rem;
-  padding: 0.5rem 0;
+  padding: 0.15rem 0;
   margin: 0.125rem 0 0;
   font-size: 1rem;
   color: #212529;
@@ -3387,7 +3387,7 @@ input[type="button"].btn-block {
 
 .dropdown-divider {
   height: 0;
-  margin: 0.5rem 0;
+  margin: 0.10rem 0;
   overflow: hidden;
   border-top: 1px solid #e9ecef;
 }
@@ -3408,7 +3408,7 @@ input[type="button"].btn-block {
 .dropdown-item:hover, .dropdown-item:focus {
   color: #16181b;
   text-decoration: none;
-  background-color: #f8f9fa;
+  background-color: var(--mint);
 }
 
 .dropdown-item.active, .dropdown-item:active {
@@ -6742,7 +6742,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
 a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,
 button.bg-primary:focus {
-  background-color: #0062cc !important;
+  background-color: var(--navy-light) !important;
 }
 
 .bg-secondary {
@@ -20330,12 +20330,12 @@ html.maximized-card {
   float: left;
   padding: 10px;
   text-align: center;
-  width: 25%;
+  width: 15%;
 }
 
 .users-list > li img {
   border-radius: 50%;
-  height: auto;
+  /* height: auto; */
   max-width: 100%;
 }
 
@@ -21063,7 +21063,7 @@ html.maximized-card {
 }
 
 .select2-container--default .select2-results__option--highlighted[aria-selected], .select2-container--default .select2-results__option--highlighted[aria-selected]:hover {
-  background-color: #0074f0;
+  background-color: var(--navy);
   color: #fff;
 }
 
@@ -28330,7 +28330,7 @@ blockquote.quote-gray-dark h6 {
 }
 
 .bg-primary.btn:hover {
-  border-color: #0062cc;
+  border-color: rgba(var(--peridot), 0.5);
   color: #ececec;
 }
 

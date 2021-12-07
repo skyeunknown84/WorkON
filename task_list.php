@@ -3,7 +3,8 @@
 	<div class="card card-outline card-success">
 		<div class="card-header">
 			<div class="card-tools">
-				<a class="btn btn-block btn-sm btn-default btn-flat border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New project</a>
+
+				<a class="hide btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New project</a>
 			</div>
 		</div>
 		<div class="card-body">
@@ -21,12 +22,12 @@
 				<thead>
 					<tr>
 						<th class="text-center">#</th>
-						<th>Project</th>
-						<th>Task</th>
-						<th>Project Started</th>
-						<th>Project Due Date</th>
-						<th>Project Status</th>
-						<th>Task Status</th>
+						<!-- <th>Project</th> -->
+						<th style="width:400px">Task</th>
+						<th>Started Date</th>
+						<th>Due Date</th>
+						<!-- <th>Project Status</th> -->
+						<th>Status</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -48,13 +49,13 @@
 						$desc = strtr(html_entity_decode($row['description']),$trans);
 						$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
 						$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['pid']}")->num_rows;
-		                $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['pid']} and status = 3")->num_rows;
+		                $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['pid']} and status = 6")->num_rows;
 						$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
 		                $prog = $prog > 0 ?  number_format($prog,2) : $prog;
 		                $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['pid']}")->num_rows;
 		                if($row['pstatus'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
 		                if($prod  > 0  || $cprog > 0)
-		                  $row['pstatus'] = 2;
+		                  $row['pstatus'] = 1;
 		                else
 		                  $row['pstatus'] = 1;
 		                elseif($row['pstatus'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
@@ -65,40 +66,59 @@
 					?>
 					<tr>
 						<td class="text-center"><?php echo $i++ ?></td>
-						<td>
+						<td class="hide">
 							<p><b><?php echo ucwords($row['pname']) ?></b></p>
 						</td>
-						<td>
+						<td style="width:400px">
 							<p><b><?php echo ucwords($row['task']) ?></b></p>
 							<p class="truncate"><?php echo strip_tags($desc) ?></p>
 						</td>
 						<td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
 						<td><b><?php echo date("M d, Y",strtotime($row['end_date'])) ?></b></td>
-						<td class="text-center">
+						<td class="text-center hide">
 							<?php
-							  if($stat[$row['pstatus']] =='Pending'){
-							  	echo "<span class='badge badge-secondary'>{$stat[$row['pstatus']]}</span>";
-							  }elseif($stat[$row['pstatus']] =='Started'){
-							  	echo "<span class='badge badge-primary'>{$stat[$row['pstatus']]}</span>";
-							  }elseif($stat[$row['pstatus']] =='On-Progress'){
-							  	echo "<span class='badge badge-info'>{$stat[$row['pstatus']]}</span>";
-							  }elseif($stat[$row['pstatus']] =='On-Hold'){
-							  	echo "<span class='badge badge-warning'>{$stat[$row['pstatus']]}</span>";
-							  }elseif($stat[$row['pstatus']] =='Over Due'){
-							  	echo "<span class='badge badge-danger'>{$stat[$row['pstatus']]}</span>";
-							  }elseif($stat[$row['pstatus']] =='Done'){
-							  	echo "<span class='badge badge-success'>{$stat[$row['pstatus']]}</span>";
-							  }
+							//   if($stat[$row['pstatus']] =='Not Started'){
+							//   	echo "<span class='badge badge-secondary'>{$stat[$row['pstatus']]}</span>";
+							//   }elseif($stat[$row['pstatus']] =='Started'){
+							//   	echo "<span class='badge badge-primary'>{$stat[$row['pstatus']]}</span>";
+							//   }elseif($stat[$row['pstatus']] =='In Progress'){
+							//   	echo "<span class='badge badge-info'>{$stat[$row['pstatus']]}</span>";
+							//   }elseif($stat[$row['pstatus']] =='In Review'){
+							//   	echo "<span class='badge badge-warning'>{$stat[$row['pstatus']]}</span>";
+							//   }elseif($stat[$row['pstatus']] =='Over Due'){
+							//   	echo "<span class='badge badge-danger'>{$stat[$row['pstatus']]}</span>";
+							//   }elseif($stat[$row['pstatus']] =='Completed'){
+							//   	echo "<span class='badge badge-success'>{$stat[$row['pstatus']]}</span>";
+							//   }
+								if($row['pstatus'] == 1){
+									echo "<span class='badge badge-secondary'>Not Started</span>";
+								}elseif($row['pstatus'] == 2){
+								echo "<span class='badge badge-primary'>Started</span>";
+								}elseif($row['pstatus'] == 3){
+								echo "<span class='badge badge-primary'>In Progress</span>";
+								}elseif($row['pstatus'] == 4){
+								echo "<span class='badge badge-primary'>In Review</span>";
+								}elseif($row['pstatus'] == 5){
+								echo "<span class='badge badge-primary'>Over Due</span>";
+								}elseif($row['pstatus'] == 6){
+									echo "<span class='badge badge-success'>Completed</span>";
+								}
 							?>
 						</td>
 						<td>
                         	<?php 
                         	if($row['status'] == 1){
-						  		echo "<span class='badge badge-secondary'>Pending</span>";
+						  		echo "<span class='badge badge-secondary'>Not Started</span>";
                         	}elseif($row['status'] == 2){
-						  		echo "<span class='badge badge-primary'>On-Progress</span>";
-                        	}elseif($row['status'] == 3){
-						  		echo "<span class='badge badge-success'>Done</span>";
+								echo "<span class='badge badge-primary'>Started</span>";
+						  	}elseif($row['status'] == 3){
+								echo "<span class='badge badge-primary'>In Progress</span>";
+						  	}elseif($row['status'] == 4){
+								echo "<span class='badge badge-primary'>In Review</span>";
+						  	}elseif($row['status'] == 5){
+								echo "<span class='badge badge-primary'>Over Due</span>";
+						  	}elseif($row['status'] == 6){
+						  		echo "<span class='badge badge-success'>Completed</span>";
                         	}
                         	?>
                         </td>

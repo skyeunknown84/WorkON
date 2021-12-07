@@ -6,6 +6,7 @@ if(isset($_GET['id'])){
 		$$k = $v;
 	}
 }
+include 'header.php';
 ?>
 <div class="container-fluid">
 	<form action="" id="manage-progress">
@@ -47,13 +48,19 @@ if(isset($_GET['id'])){
 						<input type="time" class="form-control form-control-sm" name="end_time" value="<?php echo isset($end_time) ? date("H:i",strtotime("2020-01-01 ".$end_time)) : '' ?>" required>
 					</div>
 				</div>
-				<div class="col-md-7">
+				<div class="col-md-6">
 					<div class="form-group">
 						<label for="">Comment/Progress Description</label>
 						<textarea name="comment" id="" cols="30" rows="10" class="summernote form-control" required="">
-							<?php echo isset($comment) ? $comment : '' ?>
+							<?php echo isset($comment) ? $comment : '' ?>s
 						</textarea>
 					</div>
+				</div>
+				<div class="col-md-6">
+					<form action="upload_file.php" id="form" method="post" encytype="multipart/form-data">
+						<input type="file" name="file" id="myFile">
+						<input type="submit" id="uploadfile" value="Upload">
+					</form>
 				</div>
 			</div>
 		</div>
@@ -62,24 +69,32 @@ if(isset($_GET['id'])){
 
 <script>
 	$(document).ready(function(){
-	$('.summernote').summernote({
-        height: 200,
-        toolbar: [
-            [ 'style', [ 'style' ] ],
-            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
-            [ 'fontname', [ 'fontname' ] ],
-            [ 'fontsize', [ 'fontsize' ] ],
-            [ 'color', [ 'color' ] ],
-            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
-            [ 'table', [ 'table' ] ],
-            [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
-        ]
-    })
-     $('.select2').select2({
-	    placeholder:"Please select here",
-	    width: "100%"
-	  });
-     })
+		// upload file
+		$("#uploadFile").click(function(e){
+			e.preventDefault();
+			let myfiles = $("#myFile")[0].files;
+			console.log(myfiles);
+		});
+		// description
+		$('.summernote').summernote({
+			height: 200,
+			toolbar: [
+				[ 'style', [ 'style' ] ],
+				[ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+				[ 'fontname', [ 'fontname' ] ],
+				[ 'fontsize', [ 'fontsize' ] ],
+				[ 'color', [ 'color' ] ],
+				[ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+				[ 'table', [ 'table' ] ],
+				[ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+			]
+		})
+		// multiple select
+		$('.select2').select2({
+			placeholder:"Please select here",
+			width: "100%"
+		});
+	});
     $('#manage-progress').submit(function(e){
     	e.preventDefault()
     	start_load()
@@ -91,14 +106,22 @@ if(isset($_GET['id'])){
 		    processData: false,
 		    method: 'POST',
 		    type: 'POST',
+			enctype: 'multipart/form-data',
 			success:function(resp){
 				if(resp == 1){
 					alert_toast('Data successfully saved',"success");
 					setTimeout(function(){
-						location.reload()
+						console.log(myfiles);
+						// location.reload()
 					},1500)
+				}
+				else{
+					console.log(myfiles);
 				}
 			}
     	})
     })
+
 </script>
+
+<?php include 'footer.php'; ?>

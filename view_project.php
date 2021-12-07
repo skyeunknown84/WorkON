@@ -1,6 +1,6 @@
 <?php
 include 'db_connect.php';
-$stat = array("Pending","Started","On-Progress","On-Hold","Over Due","Done");
+$stat = array("Not Started","Started","In Progress","In Review","Over Due","Completed");
 $qry = $conn->query("SELECT * FROM project_list where id = ".$_GET['id'])->fetch_array();
 foreach($qry as $k => $v){
 	$$k = $v;
@@ -24,7 +24,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 <div class="col-lg-12">
 	<div class="row">
 		<div class="col-md-12">
-			<div class="callout callout-info">
+			<div class="callout callout-success">
 				<div class="col-md-12">
 					<div class="row">
 						<div class="col-sm-6">
@@ -85,9 +85,9 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 	</div>
 	<div class="row">
 		<div class="col-md-4">
-			<div class="card card-outline card-primary">
+			<div class="card card-outline card-success">
 				<div class="card-header">
-					<span><b>Team Member/s:</b></span>
+					<span><b>PROJECT MEMBER/S</b></span>
 					<div class="card-tools">
 						<!-- <button class="btn btn-primary bg-gradient-primary btn-sm" type="button" id="manage_team">Manage</button> -->
 					</div>
@@ -113,18 +113,20 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 			</div>
 		</div>
 		<div class="col-md-8">
-			<div class="card card-outline card-primary">
+			<div class="card card-outline card-success">
 				<div class="card-header">
-					<span><b>Task List:</b></span>
-					<?php if($_SESSION['login_type'] != 3): ?>
-					<div class="card-tools">
-						<button class="btn btn-primary bg-gradient-primary btn-sm" type="button" id="new_task"><i class="fa fa-plus"></i> New Task</button>
+					<div class="row">
+						<div class="col-6"><b>Task List:</b></div>
+						<div class="col-6 text-right">
+						<?php if($_SESSION['login_type'] != 3): ?>
+							<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_task"><i class="fa fa-plus"></i> New Task</button>
+						<?php endif; ?>
+						</div>
 					</div>
-				<?php endif; ?>
 				</div>
-				<div class="card-body p-0">
+				<div class="card-body ps-3 pe-3 pb-2-pt-1">
 					<div class="table-responsive">
-					<table class="table table-condensed m-0 table-hover">
+					<table class="table table-condensed table-hover" id="datalist">
 						<colgroup>
 							<col width="5%">
 							<col width="25%">
@@ -135,7 +137,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<thead>
 							<th>#</th>
 							<th>Task</th>
-							<th>Description</th>
+							<th>Assignee</th>
 							<th>Status</th>
 							<th>Action</th>
 						</thead>
@@ -144,24 +146,30 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 							$i = 1;
 							$tasks = $conn->query("SELECT * FROM task_list where project_id = {$id} order by task asc");
 							while($row=$tasks->fetch_assoc()):
-								$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
-								unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
-								$desc = strtr(html_entity_decode($row['description']),$trans);
-								$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
+								// $trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+								// unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
+								// $desc = strtr(html_entity_decode($row['description']),$trans);
+								// $desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
 							?>
 								<tr>
 			                        <td class="text-center"><?php echo $i++ ?></td>
-			                        <td class=""><b><?php echo ucwords($row['task']) ?></b></td>
-			                        <td class=""><p class="truncate"><?php echo strip_tags($desc) ?></p></td>
+			                        <td class="" style="min-width:300px"><b><?php echo ucwords($row['task']) ?></b></td>
+			                        <td class=""><b><?php echo ucwords($row['task_owner']) ?></b></td>
 			                        <td>
 			                        	<?php 
 			                        	if($row['status'] == 1){
-									  		echo "<span class='badge badge-secondary'>Pending</span>";
-			                        	}elseif($row['status'] == 2){
-									  		echo "<span class='badge badge-primary'>On-Progress</span>";
-			                        	}elseif($row['status'] == 3){
-									  		echo "<span class='badge badge-success'>Done</span>";
-			                        	}
+											echo "<span class='badge badge-secondary'>Not Started</span>";
+									  }elseif($row['status'] == 2){
+										  echo "<span class='badge badge-primary'>Started</span>";
+										}elseif($row['status'] == 3){
+										  echo "<span class='badge badge-primary'>In Progress</span>";
+										}elseif($row['status'] == 4){
+										  echo "<span class='badge badge-primary'>In Review</span>";
+										}elseif($row['status'] == 5){
+										  echo "<span class='badge badge-primary'>Over Due</span>";
+										}elseif($row['status'] == 6){
+											echo "<span class='badge badge-success'>Completed</span>";
+									  }
 			                        	?>
 			                        </td>
 			                        <td class="text-center">
@@ -191,11 +199,11 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 	</div>
 	<div class="row">
 		<div class="col-md-12">
-			<div class="card">
+			<div class="card card-outline card-success">
 				<div class="card-header">
-					<b>Member's Activity</b>
+					<b>PROJECT FILE/S</b>
 					<div class="card-tools">
-						<button class="btn btn-primary bg-gradient-primary btn-sm" type="button" id="new_productivity"><i class="fa fa-plus"></i> New Productivity</button>
+						<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_productivity"><i class="fa fa-plus"></i> Add Task Productivity</button>
 					</div>
 				</div>
 				<div class="card-body">
@@ -205,7 +213,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 					?>
 						<div class="post">
 
-		                      <div class="user-block">
+							<div class="user-block">
 		                      	<?php if($_SESSION['login_id'] == $row['user_id']): ?>
 		                      	<span class="btn-group dropleft float-right">
 								  <span class="btndropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
@@ -230,15 +238,19 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 		                        	<span> | </span>
                       				<span>End: <b><?php echo date('h:i A',strtotime($row['date'].' '.$row['end_time'])) ?></b></span>
 	                        	</span>
-
-	                        	
-
-		                      </div>
-		                      <!-- /.user-block -->
-		                      <div>
-		                       <?php echo html_entity_decode($row['comment']) ?>
-		                      </div>
-
+								<div class="ps-1">
+		                       		<?php echo html_entity_decode($row['comment']) ?>
+		                      	</div>
+							</div>
+		                      	<!-- /.user-block -->
+		                      	
+								<!-- Files/Documents/Images/Recordings -->
+								<div class="col-md-12">
+									<!-- <form action="upload_file.php" id="form" method="post" encytype="multipart/form-data">
+										<input type="file" name="file" id="myFile">
+										<input type="submit" id="submit" value="Upload">
+									</form>	 -->
+								</div>								
 		                      <p>
 		                        <!-- <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo File 1 v2</a> -->
 		                      </p>
@@ -253,18 +265,23 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 <style>
 	.users-list>li img {
 	    border-radius: 50%;
-	    height: 67px;
-	    width: 67px;
+	    height: 57px;
+	    width: 57px;
 	    object-fit: cover;
 	}
 	.users-list>li {
-		width: 33.33% !important
+		width: 33.33% !important;
 	}
 	.truncate {
 		-webkit-line-clamp:1 !important;
 	}
 </style>
 <script>
+	// dataTables Search and Sort
+	$(document).ready(function(){
+		$('#datalist').dataTable()
+	})
+	// Links For Pages & Modal which connect to ajax.php and admin_class.php
 	$('#new_task').click(function(){
 		uni_modal("New Task For <?php echo ucwords($name) ?>","manage_task.php?pid=<?php echo $id ?>","mid-large")
 	})
@@ -295,9 +312,18 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 					setTimeout(function(){
 						location.reload()
 					},1500)
-
 				}
 			}
 		})
 	}
+	// // Upload File Function
+	// $(document).ready(function(){
+	// 	// upload file
+	// 	$("#submit").click(function(e){
+	// 		e.preventDefault();
+	// 		let form_data = new FormData();
+	// 		let myfiles = $("#myFile")[0].files;
+	// 		console.log(myfiles);
+	// 	});
+	// });
 </script>

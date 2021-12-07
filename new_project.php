@@ -1,7 +1,7 @@
 <?php if(!isset($conn)){ include 'db_connect.php'; } ?>
 
 <div class="col-lg-12">
-	<div class="card card-outline card-primary">
+	<div class="card card-outline card-success">
 		<div class="card-body">
 			<form action="" id="manage-project">
 
@@ -21,7 +21,8 @@
 						<option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>Started</option>
 						<option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Progress</option>
 						<option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>In Review</option>
-						<option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
+						<option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Over Due</option>
+						<option value="6" <?php echo isset($status) && $status == 6 ? 'selected' : '' ?>>Completed</option>
 					</select>
 				</div>
 			</div>
@@ -75,7 +76,7 @@
           </div>
         </div>
 		<div class="row">
-			<div class="col-md-10">
+			<div class="col-md-7">
 				<div class="form-group">
 					<label for="" class="control-label">Description</label>
 					<textarea name="description" id="" cols="30" rows="10" class="summernote form-control">
@@ -83,13 +84,19 @@
 					</textarea>
 				</div>
 			</div>
+			<div class="col-md-5">
+				<div class="form-group">
+					<label for="" class="control-label">External Project URL:</label>
+					<input type="url" class="form-control" name="external_link" id="external_link" />
+				</div>
+			</div>
 		</div>
         </form>
     	</div>
     	<div class="card-footer border-top border-info">
     		<div class="d-flex w-100 justify-content-center align-items-center">
-    			<button class="btn btn-flat  bg-gradient-primary mx-2" form="manage-project">Save</button>
-    			<button class="btn btn-flat bg-gradient-secondary mx-2" type="button" onclick="location.href='index.php?page=project_list'">Cancel</button>
+    			<button class="btn btn-round  bg-primary mx-2" form="manage-project">Save</button>
+    			<button class="btn btn-round bg-info mx-2" type="button" onclick="location.href='index.php?page=project_list'">Cancel</button>
     		</div>
     	</div>
 	</div>
