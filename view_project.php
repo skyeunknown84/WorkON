@@ -173,7 +173,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 			                        	?>
 			                        </td>
 			                        <td class="text-center">
-										<button type="button" class="btn btn-default btn-sm btn-flat border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+										<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 					                      Action
 					                    </button>
 					                    <div class="dropdown-menu" style="">
@@ -245,17 +245,17 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 		                      	<!-- /.user-block -->
 		                      	
 								<!-- Files/Documents/Images/Recordings -->
-								<div class="col-md-12">
+								<div class="col-md-12 hide">
 									<!-- <form action="upload_file.php" id="form" method="post" encytype="multipart/form-data">
 										<input type="file" name="file" id="myFile">
 										<input type="submit" id="submit" value="Upload">
 									</form>	 -->
 								</div>								
-		                      <p>
+		                      <p class="hide">
 		                        <!-- <a href="#" class="link-black text-sm"><i class="fas fa-link mr-1"></i> Demo File 1 v2</a> -->
 		                      </p>
 	                    </div>
-	                    <div class="post clearfix"></div>
+	                    <!-- <div class="post clearfix"></div> -->
                     <?php endwhile; ?>
 				</div>
 			</div>
@@ -285,18 +285,23 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 	$('#new_task').click(function(){
 		uni_modal("New Task For <?php echo ucwords($name) ?>","manage_task.php?pid=<?php echo $id ?>","mid-large")
 	})
+	// Modal goes to manage_task php to edit
 	$('.edit_task').click(function(){
 		uni_modal("Edit Task: "+$(this).attr('data-task'),"manage_task.php?pid=<?php echo $id ?>&id="+$(this).attr('data-id'),"mid-large")
 	})
+	// Modal goes to view_task php
 	$('.view_task').click(function(){
 		uni_modal("Task Details","view_task.php?id="+$(this).attr('data-id'),"mid-large")
 	})
+	// Add Link to Modal for Add Task Productivity
 	$('#new_productivity').click(function(){
 		uni_modal("<i class='fa fa-plus'></i> New Progress","manage_progress.php?pid=<?php echo $id ?>",'large')
 	})
+	// Edit Link to Modal for Add Task Productivity
 	$('.manage_progress').click(function(){
 		uni_modal("<i class='fa fa-edit'></i> Edit Progress","manage_progress.php?pid=<?php echo $id ?>&id="+$(this).attr('data-id'),'large')
 	})
+	// Delete Link to Modal for Add Task Productivity
 	$('.delete_progress').click(function(){
 	_conf("Are you sure to delete this progress?","delete_progress",[$(this).attr('data-id')])
 	})

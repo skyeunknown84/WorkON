@@ -17,7 +17,7 @@ include 'header.php';
 				<div class="col-md-5">
 					<?php if(!isset($_GET['tid'])): ?>
 					 <div class="form-group">
-		              <label for="" class="control-label">Project Manager</label>
+		              <label for="" class="control-label">Project Task</label>
 		              <select class="form-control form-control-sm select2" name="task_id">
 		              	<option></option>
 		              	<?php 
@@ -57,10 +57,16 @@ include 'header.php';
 					</div>
 				</div>
 				<div class="col-md-6">
-					<form action="upload_file.php" id="form" method="post" encytype="multipart/form-data">
-						<input type="file" name="file" id="myFile">
-						<input type="submit" id="uploadfile" value="Upload">
-					</form>
+					<div class="form-group">
+						<label for="" class="control-label">Avatar</label>
+						<div class="custom-file">
+						<input type="file" class="custom-file-input rounded-circle" id="customFile" name="file" onchange="displayFile(this,$(this))">
+						<label class="custom-file-label" for="customFile">Choose file</label>
+						</div>
+					</div>
+					<div class="form-group d-flex justify-content-center">
+						<img src="<?php echo isset($meta['avatar']) ? 'assets/uploads/'.$meta['avatar'] :'' ?>" alt="" id="cfile" class="img-fluid img-thumbnail">
+					</div>
 				</div>
 			</div>
 		</div>
@@ -70,11 +76,11 @@ include 'header.php';
 <script>
 	$(document).ready(function(){
 		// upload file
-		$("#uploadFile").click(function(e){
-			e.preventDefault();
-			let myfiles = $("#myFile")[0].files;
-			console.log(myfiles);
-		});
+		// $("#uploadFile").click(function(e){
+		// 	e.preventDefault();
+		// 	var myfiles = $("#myFile")[0].files;
+		// 	console.log(myfiles);
+		// });
 		// description
 		$('.summernote').summernote({
 			height: 200,
@@ -95,6 +101,16 @@ include 'header.php';
 			width: "100%"
 		});
 	});
+	function displayFile(input,_this) {
+	    if (input.files && input.files[0]) {
+	        var reader = new FileReader();
+	        reader.onload = function (e) {
+	        	$('#cfile').attr('src', e.target.result);
+	        }
+
+	        reader.readAsDataURL(input.files[0]);
+	    }
+	}
     $('#manage-progress').submit(function(e){
     	e.preventDefault()
     	start_load()
@@ -111,12 +127,9 @@ include 'header.php';
 				if(resp == 1){
 					alert_toast('Data successfully saved',"success");
 					setTimeout(function(){
-						console.log(myfiles);
-						// location.reload()
+						// console.log(myfiles);
+						location.reload();
 					},1500)
-				}
-				else{
-					console.log(myfiles);
 				}
 			}
     	})

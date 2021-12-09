@@ -21,8 +21,7 @@
 						<option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>Started</option>
 						<option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Progress</option>
 						<option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>In Review</option>
-						<option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Over Due</option>
-						<option value="6" <?php echo isset($status) && $status == 6 ? 'selected' : '' ?>>Completed</option>
+						<option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
 					</select>
 				</div>
 			</div>
@@ -43,40 +42,40 @@
 		</div>
         <div class="row">
         	<?php if($_SESSION['login_type'] == 1 ): ?>
-           <div class="col-md-6">
-            <div class="form-group">
-              <label for="" class="control-label">Project Manager</label>
-              <select class="form-control form-control-sm select2" name="manager_id">
-              	<option></option>
-              	<?php 
-              	$managers = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 2 order by concat(firstname,' ',lastname) asc ");
-              	while($row= $managers->fetch_assoc()):
-              	?>
-              	<option value="<?php echo $row['id'] ?>" <?php echo isset($manager_id) && $manager_id == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
-              	<?php endwhile; ?>
-              </select>
-            </div>
-          </div>
-      <?php else: ?>
-      	<input type="hidden" name="manager_id" value="<?php echo $_SESSION['login_id'] ?>">
-      <?php endif; ?>
-          <div class="col-md-6">
-            <div class="form-group">
-              <label for="" class="control-label">Project Team Members</label>
-              <select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]">
-              	<option></option>
-              	<?php 
-              	$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
-              	while($row= $employees->fetch_assoc()):
-              	?>
-              	<option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
-              	<?php endwhile; ?>
-              </select>
-            </div>
-          </div>
+			<div class="col-md-6">
+				<div class="form-group">
+				<label for="" class="control-label">Project Manager</label>
+				<select class="form-control form-control-sm select2" name="manager_id">
+					<option></option>
+					<?php 
+					$managers = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 2 order by concat(firstname,' ',lastname) asc ");
+					while($row= $managers->fetch_assoc()):
+					?>
+					<option value="<?php echo $row['id'] ?>" <?php echo isset($manager_id) && $manager_id == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+					<?php endwhile; ?>
+				</select>
+				</div>
+			</div>
+			<?php else: ?>
+				<input type="hidden" name="manager_id" value="<?php echo $_SESSION['login_id'] ?>">
+			<?php endif; ?>
+			<div class="col-md-6">
+				<div class="form-group">
+				<label for="" class="control-label">Project Team Members</label>
+				<select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]">
+					<option></option>
+					<?php 
+					$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
+					while($row= $employees->fetch_assoc()):
+					?>
+					<option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+					<?php endwhile; ?>
+				</select>
+				</div>
+			</div>
         </div>
 		<div class="row">
-			<div class="col-md-7">
+			<div class="col-md-12">
 				<div class="form-group">
 					<label for="" class="control-label">Description</label>
 					<textarea name="description" id="" cols="30" rows="10" class="summernote form-control">
@@ -84,10 +83,22 @@
 					</textarea>
 				</div>
 			</div>
-			<div class="col-md-5">
+			<div class="col-md-6">
 				<div class="form-group">
-					<label for="" class="control-label">External Project URL:</label>
-					<input type="url" class="form-control" name="external_link" id="external_link" />
+					<label for="">Share External Document (Link)</label>
+					<input type="url" class="form-control form-control-sm" name="external_link" value="<?php echo isset($external_link) ? $external_link : '' ?>" placeholder="ex. https://docs.google.com/document/file_encrypt_source/edit">
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+					<label for="" class="control-label">Upload Screenshots</label>
+					<div class="custom-file">
+					<input type="file" class="custom-file-input rounded-circle" id="customFile" name="file" onchange="displayFile(this,$(this))">
+					<label class="custom-file-label" for="customFile">Choose file</label>
+					</div>
+				</div>
+				<div class="form-group d-flex justify-content-center">
+					<img src="<?php echo isset($meta['avatar']) ? 'assets/uploads/'.$meta['avatar'] :'' ?>" alt="" id="cfile" class="img-fluid img-thumbnail">
 				</div>
 			</div>
 		</div>
@@ -95,13 +106,16 @@
     	</div>
     	<div class="card-footer border-top border-info">
     		<div class="d-flex w-100 justify-content-center align-items-center">
-    			<button class="btn btn-round  bg-primary mx-2" form="manage-project">Save</button>
+    			<button class="btn btn-round bg-primary mx-2" form="manage-project">Save</button>
     			<button class="btn btn-round bg-info mx-2" type="button" onclick="location.href='index.php?page=project_list'">Cancel</button>
     		</div>
     	</div>
 	</div>
 </div>
 <script>
+	function getUploadFile() {
+		console.log("getUploadFile");
+	}
 	$('#manage-project').submit(function(e){
 		e.preventDefault()
 		start_load()

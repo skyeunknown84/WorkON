@@ -101,7 +101,7 @@ if(isset($_GET['id'])){
                               Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
                           </small>
                       </td>
-                      <td>
+                      <td class="hide">
                         <?php echo ucwords($row['name']) ?>
                       </td>
                       <td class="project_progress">
