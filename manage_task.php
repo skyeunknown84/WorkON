@@ -35,49 +35,28 @@ if(isset($_GET['id'])){
 				<option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
 			</select>
 		</div>
-		<div class="form-group">
-			<label for="">Share External Document (Link)</label>
-			<input type="url" class="form-control form-control-sm" name="external_link" value="<?php echo isset($external_link) ? $external_link : '' ?>" placeholder="ex. https://docs.google.com/document/file_encrypt_source/edit">
-		</div>
-		<div class="form-group">
-			<label for="" class="control-label">Upload Screenshots</label>
-			<div class="custom-file">
-              <input type="file" class="custom-file-input rounded-circle" id="customFile" name="file" onchange="displayFile(this,$(this))">
-              <label class="custom-file-label" for="customFile">Choose file</label>
-            </div>
-		</div>
-		<div class="form-group d-flex justify-content-center">
-			<img src="<?php echo isset($meta['avatar']) ? 'assets/uploads/'.$meta['avatar'] :'' ?>" alt="" id="cfile" class="img-fluid img-thumbnail">
-		</div>
-		
 	</form>
 </div>
 
 <script>
 	$(document).ready(function(){
-		$('.summernote').summernote({
-			height: 200,
-			toolbar: [
-				[ 'style', [ 'style' ] ],
-				[ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
-				[ 'fontname', [ 'fontname' ] ],
-				[ 'fontsize', [ 'fontsize' ] ],
-				[ 'color', [ 'color' ] ],
-				[ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
-				[ 'table', [ 'table' ] ],
-				[ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
-			]
-		})
-	})
-	// function displayFile(input,_this) {
-	//     if (input.files && input.files[0]) {
-	//         var reader = new FileReader();
-	//         reader.onload = function (e) {
-	//         	$('#cfile').attr('src', e.target.result);
-	//         }
-	//         reader.readAsDataURL(input.files[0]);
-	//     }
-	// }
+
+
+	$('.summernote').summernote({
+        height: 200,
+        toolbar: [
+            [ 'style', [ 'style' ] ],
+            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+            [ 'fontname', [ 'fontname' ] ],
+            [ 'fontsize', [ 'fontsize' ] ],
+            [ 'color', [ 'color' ] ],
+            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+            [ 'table', [ 'table' ] ],
+            [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+        ]
+    })
+     })
+    
     $('#manage-task').submit(function(e){
     	e.preventDefault()
     	start_load()

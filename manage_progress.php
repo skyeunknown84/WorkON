@@ -6,7 +6,6 @@ if(isset($_GET['id'])){
 		$$k = $v;
 	}
 }
-include 'header.php';
 ?>
 <div class="container-fluid">
 	<form action="" id="manage-progress">
@@ -18,7 +17,7 @@ include 'header.php';
 					<?php if(!isset($_GET['tid'])): ?>
 					 <div class="form-group">
 		              <label for="" class="control-label">Project Task</label>
-		              <select class="form-control form-control-sm select2" name="task_id">
+		              <select class="form-control form-control-sm select2" name="task_id" >
 		              	<option></option>
 		              	<?php 
 		              	$tasks = $conn->query("SELECT * FROM task_list where project_id = {$_GET['pid']} order by task asc ");
@@ -47,70 +46,61 @@ include 'header.php';
 						<label for="">End Time</label>
 						<input type="time" class="form-control form-control-sm" name="end_time" value="<?php echo isset($end_time) ? date("H:i",strtotime("2020-01-01 ".$end_time)) : '' ?>" required>
 					</div>
-				</div>
-				<div class="col-md-6">
 					<div class="form-group">
-						<label for="">Comment/Progress Description</label>
-						<textarea name="comment" id="" cols="30" rows="10" class="summernote form-control" required="">
-							<?php echo isset($comment) ? $comment : '' ?>s
-						</textarea>
-					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-						<label for="" class="control-label">Avatar</label>
+						<label for="" class="control-label">Upload Project File</label>
 						<div class="custom-file">
-						<input type="file" class="custom-file-input rounded-circle" id="customFile" name="file" onchange="displayFile(this,$(this))">
-						<label class="custom-file-label" for="customFile">Choose file</label>
+						<input type="file" class="custom-file-input rounded-circle" id="customFileToUpload" name="custom_file">
+						<label class="custom-file-label" for="custom_file">Choose file</label>
 						</div>
 					</div>
 					<div class="form-group d-flex justify-content-center">
-						<img src="<?php echo isset($meta['avatar']) ? 'assets/uploads/'.$meta['avatar'] :'' ?>" alt="" id="cfile" class="img-fluid img-thumbnail">
+						<span class=" id=""></span>
 					</div>
+					
+				</div>
+				<div class="col-md-7">
+					<div class="form-group">
+						<label for="" class="control-label">Project Documentation Link</label>
+						<input type="url" class="form-control form-control-sm" name="url_productivity" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($url_productivity) ? $url_productivity : '' ?>" required>
+					</div>
+					<div class="form-group pb-4 mb-4">
+						<label for="">Comment/Progress Description</label>
+						<textarea name="comment" id="task_progress_desc" cols="30" rows="30" class="summernote form-control" required="">
+							<?php echo isset($comment) ? $comment : '' ?>
+						</textarea>
+					</div>
+					
 				</div>
 			</div>
 		</div>
 	</form>
 </div>
-
+<style>
+	.custom-file .custom-file-input {
+		height: 1rem !important;
+		padding: 0 !important;
+	}
+</style>
 <script>
 	$(document).ready(function(){
-		// upload file
-		// $("#uploadFile").click(function(e){
-		// 	e.preventDefault();
-		// 	var myfiles = $("#myFile")[0].files;
-		// 	console.log(myfiles);
-		// });
-		// description
-		$('.summernote').summernote({
-			height: 200,
-			toolbar: [
-				[ 'style', [ 'style' ] ],
-				[ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
-				[ 'fontname', [ 'fontname' ] ],
-				[ 'fontsize', [ 'fontsize' ] ],
-				[ 'color', [ 'color' ] ],
-				[ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
-				[ 'table', [ 'table' ] ],
-				[ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
-			]
-		})
-		// multiple select
-		$('.select2').select2({
-			placeholder:"Please select here",
-			width: "100%"
-		});
-	});
-	function displayFile(input,_this) {
-	    if (input.files && input.files[0]) {
-	        var reader = new FileReader();
-	        reader.onload = function (e) {
-	        	$('#cfile').attr('src', e.target.result);
-	        }
-
-	        reader.readAsDataURL(input.files[0]);
-	    }
-	}
+	$('.summernote').summernote({
+        height: 200,
+        toolbar: [
+            [ 'style', [ 'style' ] ],
+            [ 'font', [ 'bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', 'clear'] ],
+            [ 'fontname', [ 'fontname' ] ],
+            [ 'fontsize', [ 'fontsize' ] ],
+            [ 'color', [ 'color' ] ],
+            [ 'para', [ 'ol', 'ul', 'paragraph', 'height' ] ],
+            [ 'table', [ 'table' ] ],
+            [ 'view', [ 'undo', 'redo', 'fullscreen', 'codeview', 'help' ] ]
+        ]
+    })
+     $('.select2').select2({
+	    placeholder:"Please select here",
+	    width: "100%"
+	  });
+     })
     $('#manage-progress').submit(function(e){
     	e.preventDefault()
     	start_load()
@@ -122,19 +112,14 @@ include 'header.php';
 		    processData: false,
 		    method: 'POST',
 		    type: 'POST',
-			enctype: 'multipart/form-data',
 			success:function(resp){
 				if(resp == 1){
 					alert_toast('Data successfully saved',"success");
 					setTimeout(function(){
-						// console.log(myfiles);
-						location.reload();
+						location.reload()
 					},1500)
 				}
 			}
     	})
     })
-
 </script>
-
-<?php include 'footer.php'; ?>

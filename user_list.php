@@ -47,8 +47,8 @@
 					</tbody>
 				</table>
 			</div>
-			<div class="table-responsive xpand xpand-grid ">
-				<table class="table table-hover" id="hlist">
+			<div class="table-responsive xpand xpand-grid hide">
+				<table class="table table-hover hide" id="hlist">
 					<?php
 						$i = 1;
 						$type = array('',"Admin","Project Manager","Employee");
