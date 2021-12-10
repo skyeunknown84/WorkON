@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 08, 2021 at 12:50 AM
+-- Generation Time: Dec 10, 2021 at 02:10 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -53,6 +53,9 @@ CREATE TABLE `project_list` (
   `end_date` date NOT NULL,
   `manager_id` int(30) NOT NULL,
   `user_ids` text NOT NULL,
+  `project_url` longtext NOT NULL,
+  `project_time_sheet` longtext NOT NULL,
+  `project_files` longtext NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -60,10 +63,12 @@ CREATE TABLE `project_list` (
 -- Dumping data for table `project_list`
 --
 
-INSERT INTO `project_list` (`id`, `name`, `description`, `status`, `start_date`, `end_date`, `manager_id`, `user_ids`, `date_created`) VALUES
-(9, 'Christmas Party', '																														List anything activities and needed stuff for the Annual Christmas Party!																									', 1, '2021-12-02', '2021-12-25', 9, '6', '2021-12-02 19:13:42'),
-(10, 'Christmas Movies', '												&lt;p&gt;List All Holidays Movie Marathons (2019-2021)&lt;/p&gt;										', 1, '2021-12-04', '2021-12-04', 9, '10,12,11,6', '2021-12-02 22:10:15'),
-(11, 'Work-On: A Task Management System', 'Create A Baby Tasks', 1, '2021-12-07', '2021-12-09', 9, '10,12,11', '2021-12-07 05:33:45');
+INSERT INTO `project_list` (`id`, `name`, `description`, `status`, `start_date`, `end_date`, `manager_id`, `user_ids`, `project_url`, `project_time_sheet`, `project_files`, `date_created`) VALUES
+(21, 'Project One', '																Proj One														', 1, '2021-12-10', '2021-12-17', 17, '18,20', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 05:54:59'),
+(22, 'Project Two', '								Proj Two							', 1, '2021-12-10', '2021-12-17', 16, '21,19', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 05:58:48'),
+(23, 'Project Three', '								Proj Three							', 1, '2021-12-10', '2021-12-24', 16, '18,21,22', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 06:14:10'),
+(24, 'Project Four', 'Proj Four', 1, '2021-12-10', '2021-12-31', 16, '18,20,21,19,22', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 06:51:29'),
+(25, 'Project Five', 'Project Five', 1, '2021-12-10', '2022-01-07', 17, '18,20,21,19,22', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 07:11:07');
 
 -- --------------------------------------------------------
 
@@ -100,6 +105,7 @@ CREATE TABLE `task_list` (
   `task_owner` varchar(255) NOT NULL,
   `description` text NOT NULL,
   `file_uploaded` longtext NOT NULL,
+  `task_url` longtext NOT NULL,
   `status` tinyint(4) NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -108,12 +114,8 @@ CREATE TABLE `task_list` (
 -- Dumping data for table `task_list`
 --
 
-INSERT INTO `task_list` (`id`, `project_id`, `task`, `task_owner`, `description`, `file_uploaded`, `status`, `date_created`) VALUES
-(10, 9, 'Christmas Gifts', 'Adam', '&lt;ul&gt;&lt;li&gt;Monito -&amp;gt; Monita&lt;/li&gt;&lt;li&gt;Monita -&amp;gt; Monito&lt;/li&gt;&lt;/ul&gt;', '', 1, '2021-12-02 19:48:26'),
-(11, 10, 'Christmas Party', 'Ethan', '							', '', 1, '2021-12-02 23:29:06'),
-(12, 9, 'Christmas Dinner', 'Ellie', '							', '', 1, '2021-12-02 23:43:39'),
-(13, 11, 'Make A Responsive UI in Login and Register via Bootstrap', 'Adam', 'Tasd', '', 1, '2021-12-07 05:37:02'),
-(14, 10, 'Birthday Party', 'Ellie', '&lt;p&gt;Daddy&amp;#x2019;s Bday&lt;/p&gt;&lt;p&gt;Auntie&amp;#x2019;s Bday&lt;/p&gt;', '', 1, '2021-12-08 06:10:46');
+INSERT INTO `task_list` (`id`, `project_id`, `task`, `task_owner`, `description`, `file_uploaded`, `task_url`, `status`, `date_created`) VALUES
+(21, 25, 'Task 1', 'Ellie Pal', 'Task No. 1', '', '', 1, '2021-12-10 07:28:19');
 
 -- --------------------------------------------------------
 
@@ -137,13 +139,14 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`, `type`, `avatar`, `date_created`) VALUES
-(1, 'Administrator', '', 'admin@workon.com', '0192023a7bbd73250516f069df18b500', 1, '1638257340_rocky-sea-bg.PNG', '2020-11-26 10:57:04'),
-(6, 'Nancy', 'Drew', 'nancydrew@workon.com', 'f4f0d1165fbf5ddc5fbf4c214af9f2b2', 3, '1636958700_Screenshot (1).png', '2021-11-15 14:45:39'),
-(8, 'Jen', 'Del', 'jendel@workon.com', '0ed3d2694dbb0fb3a8e75b5b5ac80cf6', 2, '1636965480_IMG_20180825_134618.jpg', '2021-11-15 16:38:52'),
-(9, 'bea', 'gal', 'beagal@workon.com', '371b3ac948d5928e52206be791de78f3', 2, '1638429540_Ellie-7th-Months.jpg', '2021-12-02 15:19:03'),
-(10, 'Adam', 'Dom', 'adam@workon.com', '3e7b522b9756d2578d3a86d8f366be6e', 3, '1638444480_IMG_20200909_162649.jpg', '2021-12-02 19:28:04'),
-(11, 'Ethan', 'end', 'ethan@wotkon.com', '95b82c0376b58d81b9a7283be2ead91c', 3, '1638444600_Ethan-1st-BDay.png', '2021-12-02 19:30:12'),
-(12, 'Ellie', 'Pal', 'ellie@workon.com', 'ce33397f0e2fdb6e5c7e83da88bf823f', 3, '1638444660_Ellie-7th-Months.jpg', '2021-12-02 19:31:13');
+(1, 'Administrator', ' ', 'admin@workon.com', '0192023a7bbd73250516f069df18b500', 1, '1639091160_144119.jpg', '2021-12-10 05:16:23'),
+(16, 'Jane', 'Smith', 'janesmith@workon.com', '9172a26354c4073ced007b01b3ac5b1f', 2, '1639085100_PM_1.PNG', '2021-12-10 05:25:32'),
+(17, 'Jon', 'Smith', 'jonsmith@workon.com', '13188d067cb373f775e0c452c42bc177', 2, '1639085220_PM.PNG', '2021-12-10 05:27:32'),
+(18, 'Adam', 'Doe', 'adamdoe@workon.com', '51e4b4360b146d70f1c8f457be19497e', 3, '1639085580_EMP_1.jfif', '2021-12-10 05:33:05'),
+(19, 'Ethan', 'End', 'ethanend@workon.com', '423f2413ede9d1207cc40377c64b4c2f', 3, '1639085640_EMP_2.jpg', '2021-12-10 05:34:24'),
+(20, 'Alice', 'Doe', 'alicedoe@workon.com', '0c71b853e16aa031265abd08f94024e7', 3, '1639085820_EMP_3.jfif', '2021-12-10 05:37:55'),
+(21, 'Ellie', 'Pal', 'elliepal@workon.com', '4c8a8df57b4f393623abbf4eb916720d', 3, '1639085940_EMP_4.jpg', '2021-12-10 05:39:00'),
+(22, 'Sage', 'Del', 'sagedel@workon.com', '73a7ac02d64efa7c3b177c8581a2ad53', 3, '1639086000_EMP_5.jpg', '2021-12-10 05:40:59');
 
 -- --------------------------------------------------------
 
@@ -161,10 +164,20 @@ CREATE TABLE `user_productivity` (
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
   `user_id` int(30) NOT NULL,
+  `file_uploaded` longtext NOT NULL,
+  `url_productivity` longtext NOT NULL,
   `status` tinyint(4) NOT NULL,
   `time_rendered` float NOT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user_productivity`
+--
+
+INSERT INTO `user_productivity` (`id`, `project_id`, `task_id`, `comment`, `subject`, `date`, `start_time`, `end_time`, `user_id`, `file_uploaded`, `url_productivity`, `status`, `time_rendered`, `date_created`) VALUES
+(23, 25, 21, '&lt;ul&gt;&lt;li&gt;Add more icons for each buttons&lt;/li&gt;&lt;li&gt;Add more details to design&lt;/li&gt;&lt;/ul&gt;', 'For Task 1 - Initial Update', '0000-00-00', '08:58:00', '09:58:00', 1, '', 'https://docs.google.com/spreadsheets/u/0/', 0, 1, '2021-12-10 08:59:34'),
+(24, 25, 21, '&lt;ul&gt;&lt;li&gt;Apply URL Links&lt;/li&gt;&lt;li&gt;Responsiveness of UI&lt;/li&gt;&lt;/ul&gt;', 'For Task 1 - Final Update', '2021-12-10', '00:00:00', '02:00:00', 1, '', 'https://docs.google.com/spreadsheets/u/0/', 0, 2, '2021-12-10 09:01:12');
 
 --
 -- Indexes for dumped tables
@@ -220,7 +233,7 @@ ALTER TABLE `group_list`
 -- AUTO_INCREMENT for table `project_list`
 --
 ALTER TABLE `project_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT for table `system_settings`
@@ -232,19 +245,19 @@ ALTER TABLE `system_settings`
 -- AUTO_INCREMENT for table `task_list`
 --
 ALTER TABLE `task_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `user_productivity`
 --
 ALTER TABLE `user_productivity`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
