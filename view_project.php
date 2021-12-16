@@ -81,9 +81,9 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						<div class="col-sm-4">
 							<dl>
 								<dt><b class="border-bottom border-primary">Documentation Link:</b></dt>
-								<dd><a href="<?php echo ucwords($project_time_sheet) ?>" class="btn btn-success btn_url mt-1 pt-0 pb-0" target="_blank" rel="noopener noreferrer"><i class="fa fa-link"></i> Google Docs</a></dd>
+								<dd><a href="<?php echo $project_url ?>" class="btn btn-success btn_url mt-1 pt-0 pb-0" target="_blank" rel="noopener noreferrer"><i class="fa fa-link"></i> Google Docs</a></dd>
 								<dt><b class="border-bottom border-primary">Time Sheet Link:</b></dt>
-								<dd><a href="<?php echo ucwords($project_time_sheet) ?>" class="btn btn-success btn_url mt-1 pt-0 pb-0" target="_blank" rel="noopener noreferrer"><i class="fa fa-link"></i> Time Sheet</a></dd>
+								<dd><a href="<?php echo $project_time_sheet ?>" class="btn btn-success btn_url mt-1 pt-0 pb-0" target="_blank" rel="noopener noreferrer"><i class="fa fa-link"></i> Time Sheet</a></dd>
 							</dl>
 						</div>
 					</div>
