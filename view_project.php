@@ -338,4 +338,25 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 			}
 		})
 	}
+	// Delete Task
+	$('.delete_task').click(function(){
+	_conf("Are you sure to delete this task?","delete_task",[$(this).attr('data-id')])
+	})
+	function delete_task($id){
+		start_load()
+		$.ajax({
+			url:'ajax.php?action=delete_task',
+			method:'POST',
+			data:{id:$id},
+			success:function(resp){
+				if(resp==1){
+					alert_toast("Data successfully deleted",'success')
+					setTimeout(function(){
+						location.reload()
+					},1500)
+
+				}
+			}
+		})
+	}
 </script>

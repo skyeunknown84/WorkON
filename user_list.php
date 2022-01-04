@@ -103,7 +103,6 @@
 <script>
 	$(document).ready(function(){
 		$('#list').dataTable()
-		$('#hlist').dataTable()
 	$('.view_user').click(function(){
 		uni_modal("<i class='fa fa-id-card'></i> User Details","view_user.php?id="+$(this).attr('data-id'))
 	})

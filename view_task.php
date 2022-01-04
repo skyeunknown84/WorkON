@@ -40,4 +40,12 @@ if(isset($_GET['id'])){
 		<dt><b class="border-bottom border-primary">Description</b></dt>
 		<dd><?php echo html_entity_decode($description) ?></dd>
 	</dl>
+	<dl>
+		<dt><b class="border-bottom border-primary">Task External Documents Link:</b></dt>
+		<dd>
+			<span class="fa fa-link pr-1" title="attachment (docs link / screenshots / docs / recorded video)"></span>
+			<a href="<?php echo $task_url ?>" target="_blank" rel="noopener noreferrer"><?php echo $task_url ?></a>
+		</dd>
+	
+	</dl>
 </div>
