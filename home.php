@@ -54,7 +54,7 @@ if(isset($_GET['id'])){
                   <col width="15%">
                 </colgroup>
                 <thead>
-                  <th>#</th>
+                  <th># </th>
                   <th>Project</th>
                   <th class="hide">Assignee</th>
                   <th>Progress</th>
