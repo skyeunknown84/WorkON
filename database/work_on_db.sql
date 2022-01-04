@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2021 at 02:10 AM
+-- Generation Time: Jan 04, 2022 at 07:21 AM
 -- Server version: 10.4.20-MariaDB
 -- PHP Version: 8.0.9
 
@@ -64,7 +64,7 @@ CREATE TABLE `project_list` (
 --
 
 INSERT INTO `project_list` (`id`, `name`, `description`, `status`, `start_date`, `end_date`, `manager_id`, `user_ids`, `project_url`, `project_time_sheet`, `project_files`, `date_created`) VALUES
-(21, 'Project One', '																Proj One														', 1, '2021-12-10', '2021-12-17', 17, '18,20', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 05:54:59'),
+(21, 'Project One', '																																								Proj One																																			', 1, '2021-12-10', '2021-12-17', 17, '18,20', 'https://docs.google.com/spreadsheets/d/1VPYzRekHOMXbRFmHUASxOZDdOuxMYn8se4cjgW_a_8U/edit#gid=0', 'https://docs.google.com/spreadsheets/d/1NKXcLS3rcaNcnDc_ej0YB38FqE_HKjyx7aqQWFOnWqA/edit#gid=0', '', '2021-12-10 05:54:59'),
 (22, 'Project Two', '								Proj Two							', 1, '2021-12-10', '2021-12-17', 16, '21,19', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 05:58:48'),
 (23, 'Project Three', '								Proj Three							', 1, '2021-12-10', '2021-12-24', 16, '18,21,22', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 06:14:10'),
 (24, 'Project Four', 'Proj Four', 1, '2021-12-10', '2021-12-31', 16, '18,20,21,19,22', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 06:51:29'),
