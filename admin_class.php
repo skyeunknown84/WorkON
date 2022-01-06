@@ -233,6 +233,20 @@ Class Action {
 			}
 		}
 	}
+	function save_file(){
+		extract($_FILES['file']);
+		if(!empty($tmp_name)){
+			$fname = strtotime(date("Y-m-d H:i"))."_".(str_replace(" ","-",$name));
+			$move = move_uploaded_file($tmp_name,'assets/uploads/files/'. $fname);
+			$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https'?'https':'http';
+			$hostName = $_SERVER['HTTP_HOST'];
+			$path =explode('/',$_SERVER['PHP_SELF']);
+			$currentPath = '/'.$path[1]; 
+			if($move){
+				return $protocol.'://'.$hostName.$currentPath.'/assets/uploads/files/'.$fname;
+			}
+		}
+	}
 	function save_project(){
 		extract($_POST);
 		$data = "";

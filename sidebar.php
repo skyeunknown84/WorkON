@@ -93,7 +93,7 @@
             </a>
           </li>
           <?php if($_SESSION['login_type'] != 3): ?>
-           <li class="nav-item hide">
+           <li class="nav-item">
                 <a href="./index.php?page=reports" class="nav-link nav-reports">
                   <i class="fas fa-th-list nav-icon"></i>
                   <p>Reports</p>

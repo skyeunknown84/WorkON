@@ -30,10 +30,10 @@ if(isset($_GET['id'])){
 		            <?php else: ?>
 					<input type="hidden" name="task_id" value="<?php echo isset($_GET['tid']) ? $_GET['tid'] : '' ?>">
 		            <?php endif; ?>
-					<div class="form-group">
+					<!-- <div class="form-group hide">
 						<label for="">Subject</label>
-						<input type="text" class="form-control form-control-sm" name="subject" value="<?php echo isset($subject) ? $subject : '' ?>" required>
-					</div>
+						<input type="text" class="form-control form-control-sm hide" name="subject" value="<?php echo isset($subject) ? $subject : '' ?>" required>
+					</div> -->
 					<div class="form-group">
 						<label for="">Date</label>
 						<input type="date" class="form-control form-control-sm" name="date" value="<?php echo isset($date) ? date("Y-m-d",strtotime($date)) : '' ?>" required>

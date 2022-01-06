@@ -1,5 +1,30 @@
 <?php if(!isset($conn)){ include 'db_connect.php'; } ?>
-
+<?php if (isset($_POST['save'])) {
+  $target_dir = "Uploaded_Files/";
+  $target_file = $target_dir . date("dmYhis") . "_". basename($_FILES["file"]["name"]);
+  $uploadOk = 1;
+  $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+ 
+  if($imageFileType != "jpg" || $imageFileType != "png" || $imageFileType != "jpeg" || $imageFileType != "gif" ) {
+    if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
+      $files = date("dmYhis") . basename($_FILES["file"]["name"]);
+    }else{
+      echo "Error Uploading File";
+      exit;
+    }
+  }else{
+    echo "File Not Supported";
+    exit;
+  }
+  $filename = $_POST['filename'];
+  $location = "Uploaded_Files/" . $files;
+  $sqli = "INSERT INTO `tblfiles` (`FileName`, `Location`) VALUES ('{$filename}','{$location}')";
+  $result = mysqli_query($con,$sqli);
+  if ($result) {
+    echo "File has been uploaded";
+  };
+}
+?>
 <div class="col-lg-12">
 	<div class="card card-outline card-success">
 		<div class="card-body">
@@ -95,15 +120,13 @@
 						</div>
 					</div>
 					<div class="col-md-6">
-						<div class="form-group">
-							<label for="" class="control-label">Upload Project File</label>
-							<div class="custom-file">
-							<input type="file" class="custom-file-input rounded-circle" id="customFileToUpload" name="custom_file">
-							<label class="custom-file-label" for="custom_file">Choose file</label>
-							</div>
-						</div>
-						<div class="form-group d-flex justify-content-center">
-							<span class=" id=""></span>
+						<div class="form-group ">
+							<label for="" class="control-label col-12">Upload Project File</label>
+							<div class="custom-file col-8">
+								<input type="file" class="custom-file-input rounded-circle" id="customFileToUpload" name="project_files">
+								<label class="custom-file-label" for="file" name="project_filename">Choose file</label>								
+							</div>				
+							<!-- <button class="btn btn-primary mt-1 col-3" name="save_file" style="margin-left:2rem">Upload</button>	 -->
 						</div>
 					</div>
 				</div>
@@ -111,7 +134,7 @@
     	</div>
     	<div class="card-footer border-top border-info">
     		<div class="d-flex w-100 justify-content-center align-items-center">
-    			<button class="btn btn-round  bg-primary mx-2" form="manage-project">Save</button>
+    			<button class="btn btn-round bg-primary mx-2" form="manage-project">Save</button>
     			<button class="btn btn-round bg-info mx-2" type="button" onclick="location.href='index.php?page=project_list'">Cancel</button>
     		</div>
     	</div>
@@ -119,7 +142,7 @@
 </div>
 <script>
 	// $document.ready(function() {
-		// $target_path = "assets/uploads/files/";
+	// 	// define variables
 	// })
 	$('#manage-project').submit(function(e){
 		e.preventDefault()
