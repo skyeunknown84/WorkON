@@ -8,6 +8,31 @@
             </div>
           </div>
           <div class="card-body p-0">
+            <div class="col-lg-12 d-flex p-3">
+              <div class="col-md-4">
+                <select name="status" id="status" class="custom-select custom-select-md form-control">
+                  <option value="">Select Status</option>
+                  <option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Not Started</option>
+                  <option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>Started</option>
+                  <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Progress</option>
+                  <option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>In Review</option>
+                  <option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <select name="status" id="status" class="custom-select custom-select-md form-control">
+                  <option value="">Select Assignee</option>
+                  <option value="1">Jon</option>
+                  <option value="2">Ethan</option>
+                  <option value="3">Ellie</option>
+                  <option value="4">Alice</option>
+                  <option value="5">Sage</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <input type="search" name="search" id="search" class="form-control" placeholder="Search" />
+              </div>
+            </div>
             <div class="table-responsive" id="printable">
               <table class="table m-0 table-bordered">
                <!--  <colgroup>
@@ -19,9 +44,10 @@
                 </colgroup> -->
                 <thead>
                   <th>#</th>
-                  <th>Project</th>
                   <th>Task</th>
-                  <th>Completed Task</th>
+                  <th>Assignee</th>
+                  <th>Start Date</th>
+                  <th>End Date</th>
                   <th>Work Duration</th>
                   <th>Progress</th>
                   <th>Status</th>
@@ -36,7 +62,7 @@
                 }elseif($_SESSION['login_type'] == 3){
                   $where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
                 }
-                $qry = $conn->query("SELECT * FROM project_list $where order by name asc");
+                $qry = $conn->query("SELECT *, concat(firstname,' ',lastname) AS uname FROM project_list INNER JOIN users $where order by name asc");
                 while($row= $qry->fetch_assoc()):
                 $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
                 $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 3")->num_rows;
@@ -55,7 +81,7 @@
                 endif;
                   ?>
                   <tr>
-                      <td>
+                      <td width="10px">
                          <?php echo $i++ ?>
                       </td>
                       <td>
@@ -67,11 +93,14 @@
                               Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
                           </small>
                       </td>
-                      <td class="text-center">
-                      	<?php echo number_format($tprog) ?>
+                      <td>
+                        <?php echo ucwords($row['uname']) ?>
                       </td>
                       <td class="text-center">
-                      	<?php echo number_format($cprog) ?>
+                        <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
+                      </td>
+                      <td class="text-center">
+                        <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
                       </td>
                       <td class="text-center">
                       	<?php echo number_format($dur).' Hr/s.' ?>

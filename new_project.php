@@ -33,7 +33,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="" class="control-label">Project Name</label>
+							<label for="" class="control-label">Task Name</label>
 							<input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>" required>
 						</div>
 					</div>
@@ -68,7 +68,7 @@
 					<?php if($_SESSION['login_type'] == 1 ): ?>
 					<div class="col-md-6">
 						<div class="form-group">
-						<label for="" class="control-label">Project Manager</label>
+						<label for="" class="control-label">Task Manager</label>
 						<select class="form-control form-control-sm select2" name="manager_id" required>
 							<option></option>
 							<?php 
@@ -85,7 +85,7 @@
 					<?php endif; ?>
 					<div class="col-md-6">
 						<div class="form-group">
-						<label for="" class="control-label">Project Team Members</label>
+						<label for="" class="control-label">Task Team Members</label>
 						<select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]" required>
 							<option></option>
 							<?php 
@@ -101,7 +101,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="form-group">
-							<label for="" class="control-label">Project Overview</label>
+							<label for="" class="control-label">Task Overview</label>
 							<textarea name="description" id="" cols="30" rows="10" class="summernote form-control" required>
 								<?php echo isset($description) ? $description : '' ?>
 							</textarea>
@@ -109,19 +109,19 @@
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="" class="control-label">Project Documentation Link</label>
+							<label for="" class="control-label">Task Documentation Link</label>
 							<input type="url" class="form-control form-control-sm" name="project_url" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($project_url) ? $project_url : '' ?>">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="" class="control-label">Project Time Sheet Link</label>
+							<label for="" class="control-label">Task Time Sheet Link</label>
 							<input type="url" class="form-control form-control-sm" name="project_time_sheet" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($project_time_sheet) ? $project_time_sheet : '' ?>">
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="form-group ">
-							<label for="" class="control-label col-12">Upload Project File</label>
+							<label for="" class="control-label col-12">Upload Task File</label>
 							<div class="custom-file col-8">
 								<input type="file" class="custom-file-input rounded-circle" id="customFileToUpload" name="project_files">
 								<label class="custom-file-label" for="file" name="project_filename">Choose file</label>								

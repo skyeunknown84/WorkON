@@ -16,7 +16,7 @@ if(isset($_GET['id'])){
 				<div class="col-md-5">
 					<?php if(!isset($_GET['tid'])): ?>
 					 <div class="form-group">
-		              <label for="" class="control-label">Project Task</label>
+		              <label for="" class="control-label">Task Name</label>
 		              <select class="form-control form-control-sm select2" name="task_id" >
 		              	<option></option>
 		              	<?php 
@@ -47,7 +47,7 @@ if(isset($_GET['id'])){
 						<input type="time" class="form-control form-control-sm" name="end_time" value="<?php echo isset($end_time) ? date("H:i",strtotime("2020-01-01 ".$end_time)) : '' ?>" required>
 					</div>
 					<div class="form-group">
-						<label for="" class="control-label">Upload Project File</label>
+						<label for="" class="control-label">Upload Task File</label>
 						<div class="custom-file">
 						<input type="file" class="custom-file-input rounded-circle" id="customFileToUpload" name="custom_file">
 						<label class="custom-file-label" for="custom_file">Choose file</label>
@@ -60,7 +60,7 @@ if(isset($_GET['id'])){
 				</div>
 				<div class="col-md-7">
 					<div class="form-group">
-						<label for="" class="control-label">Project Documentation Link</label>
+						<label for="" class="control-label">Task Documentation Link</label>
 						<input type="url" class="form-control form-control-sm" name="url_productivity" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($url_productivity) ? $url_productivity : '' ?>" required>
 					</div>
 					<div class="form-group pb-4 mb-4">
