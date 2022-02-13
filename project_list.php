@@ -30,7 +30,7 @@
 							<thead>
 								<tr>
 									<th class="text-center">#</th>
-									<th>Project Name</th>
+									<th>Task Name</th>
 									<th class="">Members</th>
 									<th>Start Date</th>
 									<th>Due Date</th>
