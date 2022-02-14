@@ -29,7 +29,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 					<div class="row">
 						<div class="col-sm-4">
 							<dl>
-								<dt><b class="border-bottom border-primary">Project Name</b></dt>
+								<dt><b class="border-bottom border-primary">Task Name</b></dt>
 								<dd><?php echo ucwords($name) ?></dd>
 								<dt><b class="border-bottom border-primary">Description</b></dt>
 								<dd><?php echo html_entity_decode($description) ?></dd>
@@ -65,7 +65,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 								</dd>
 							</dl>
 							<dl>
-								<dt><b class="border-bottom border-primary">Project Manager</b></dt>
+								<dt><b class="border-bottom border-primary">Task Manager</b></dt>
 								<dd>
 									<?php if(isset($manager['id'])) : ?>
 									<div class="d-flex align-items-center mt-1">
@@ -95,7 +95,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 		<div class="col-md-4">
 			<div class="card card-outline card-success">
 				<div class="card-header">
-					<span><b>PROJECT MEMBER/S</b></span>
+					<span><b>TASK MEMBER/S</b></span>
 					<div class="card-tools">
 						<!-- <button class="btn btn-primary bg-gradient-primary btn-sm" type="button" id="manage_team">Manage</button> -->
 					</div>
@@ -209,7 +209,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 		<div class="col-md-12">
 			<div class="card card-outline card-success">
 				<div class="card-header">
-					<b>PROJECT FILE/S</b>
+					<b>TASK FILE/S</b>
 					<div class="card-tools">
 						<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_productivity"><i class="fa fa-plus"></i> Add Task Productivity</button>
 					</div>

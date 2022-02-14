@@ -3,7 +3,7 @@
 	<ul class="nav nav-pills ml-auto p-2">
 		<li class="nav-item"><a class="nav-link active" href="#list" data-toggle="tab">List</a></li>
 		<li class="nav-item"><a class="nav-link" href="#board" data-toggle="tab">Board</a></li>
-		<li class="nav-item hide"><a class="nav-link" href="#files" data-toggle="tab">Files</a></li>
+		<li class="nav-item"><a class="nav-link" href="#files" data-toggle="tab">Files</a></li>
 	</ul>
 	<hr class="border-primary mt-0 mb-3">
 	<div class="tab-content" id="pills-tabContent">
@@ -12,7 +12,7 @@
 				<div class="card-header hide">
 					<?php if($_SESSION['login_type'] != 3): ?>
 					<div class="card-tools">
-						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New project</a>
+						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
 					</div>
 					<?php endif; ?>
 				</div>
@@ -30,7 +30,7 @@
 							<thead>
 								<tr>
 									<th class="text-center">#</th>
-									<th>Project Name</th>
+									<th>Task Name</th>
 									<th class="">Members</th>
 									<th>Start Date</th>
 									<th>Due Date</th>
@@ -151,10 +151,61 @@
 			</div>
 		</div>
 		<div class="tab-pane" id="board" role="tabpanel" aria-labelledby="pills-board-tab">
-			<div class="d-flex justify-content-center align-tems-center m-1"><h1>Board Card (Drag & Drop) - Coming Soon!</h1></div>
+			<div class="card card-outline card-success">
+				<div class="card-header hide">
+					<?php if($_SESSION['login_type'] != 3): ?>
+					<div class="card-tools">
+						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+					</div>
+					<?php endif; ?>
+				</div>
+				<div class="card-body">
+					<div class="col-lg-12 d-flex pl-0">
+						<div class="card col-md-4 mr-1 p-0">
+							<div class="card-header">TODO <a class="btn btn-success btn-sm float-right"><i class="fa fa-plus"></i></a></div>
+							<div class="card-body">
+								<div class="card">
+									<div class="card-header">Task One</div>
+									<div class="card-body">One</div>
+								</div>
+							</div>
+						</div>
+						<div class="card col-md-4 mr-1 p-0">
+							<div class="card-header">IN-PROGRESS </div>
+							<div class="card-body">
+								<div class="card">
+									<div class="card-header">Task One</div>
+									<div class="card-body">One</div>
+								</div>
+							</div>
+						</div>
+						<div class="card col-md-4 p-0">
+							<div class="card-header">DONE</div>
+							<div class="card-body">
+								<div class="card">
+									<div class="card-header">Task One</div>
+									<div class="card-body">One</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="d-flex justify-content-center align-tems-center m-1 hide"><h1>Board Card (Drag & Drop) - Coming Soon!</h1></div>
 		</div>
 		<div class="tab-pane" id="files" role="tabpanel" aria-labelledby="pills-files-tab">
-			<div class="d-flex justify-content-center align-tems-center m-1"><h1>Files Uploading Page is Coming Soon</h1></div>
+			<div class="card card-outline card-success">
+				<div class="card-header hide">
+					<?php if($_SESSION['login_type'] != 3): ?>
+					<div class="card-tools">
+						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+					</div>
+					<?php endif; ?>
+				</div>
+				<div class="card-body">
+					<div class="d-flex justify-content-center align-tems-center m-1"><h1>Files Uploading Page is Coming Soon</h1></div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
