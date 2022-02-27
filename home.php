@@ -6,7 +6,7 @@ if($_SESSION['login_type'] != 1)
 ?>
 <?php 
 if(isset($_GET['id'])){
-	$qry = $conn->query("SELECT * FROM task_list where id = ".$_GET['id'])->fetch_array();
+	$qry = $conn->query("SELECT * FROM project_list where id = ".$_GET['id'])->fetch_array();
 	foreach($qry as $k => $v){
 		$$k = $v;
 	}
@@ -41,7 +41,7 @@ if(isset($_GET['id'])){
         <div class="col-md-8">
         <div class="card card-outline card-success">
           <div class="card-header">
-            <b>Task Progress</b>
+            <b>Project Progress</b>
           </div>
           <div class="card-body p-0">
             <div class="table-responsive">
@@ -55,8 +55,8 @@ if(isset($_GET['id'])){
                 </colgroup>
                 <thead>
                   <th># </th>
-                  <th>Tasks</th>
-                  <th class="">Assignee</th>
+                  <th>Project</th>
+                  <th class="hide">Assignee</th>
                   <th>Progress</th>
                   <th>Status</th>
                   <th></th>
@@ -71,7 +71,7 @@ if(isset($_GET['id'])){
                 }elseif($_SESSION['login_type'] == 3){
                   $where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
                 }
-                $qry = $conn->query("SELECT *, concat(firstname,' ',lastname) AS fullname FROM project_list INNER JOIN users $where group by name asc");
+                $qry = $conn->query("SELECT * FROM project_list $where order by name asc");
                 while($row= $qry->fetch_assoc()):
                   $prog= 0;
                 $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
@@ -101,8 +101,8 @@ if(isset($_GET['id'])){
                               Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
                           </small>
                       </td>
-                      <td class="">
-                        <?php echo ucwords($row['fullname']) ?>
+                      <td class="hide">
+                        <?php echo ucwords($row['name']) ?>
                       </td>
                       <td class="project_progress">
                           <div class="progress progress-sm">
@@ -165,7 +165,7 @@ if(isset($_GET['id'])){
               <div class="inner bg-success">
                 <h3><?php echo $conn->query("SELECT * FROM project_list $where")->num_rows; ?></h3>
 
-                <p>Total Tasks</p>
+                <p>Total Projects</p>
               </div>
               <div class="icon">
                 <i class="fa fa-layer-group"></i>
@@ -176,13 +176,13 @@ if(isset($_GET['id'])){
             <div class="small-box bg-light shadow-sm border">
               <div class="inner bg-info">
                 <h3><?php echo $conn->query("SELECT t.*,p.name as pname,p.start_date,p.status as pstatus, p.end_date,p.id as pid FROM task_list t inner join project_list p on p.id = t.project_id $where2")->num_rows; ?></h3>
-                <p>Total Assigned Tasks</p>
+                <p>Total Tasks</p>
               </div>
               <div class="icon">
                 <i class="fa fa-tasks"></i>
               </div>
             </div>
           </div>
+      </div>
         </div>
       </div>
-    </div>

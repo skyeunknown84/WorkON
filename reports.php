@@ -2,7 +2,7 @@
  <div class="col-md-12">
         <div class="card card-outline card-success">
           <div class="card-header">
-            <b>Reports</b>
+            <b>Project Progress</b>
             <div class="card-tools">
             	<button class="btn btn-flat btn-sm bg-gradient-success btn-success" id="print"><i class="fa fa-print"></i> Print</button>
             </div>
@@ -144,7 +144,7 @@
 		start_load()
 		var _h = $('head').clone()
 		var _p = $('#printable').clone()
-		var _d = "<p class='text-center'><b>Task Progress Report as of (<?php echo date("F d, Y") ?>)</b></p>"
+		var _d = "<p class='text-center'><b>Project Progress Report as of (<?php echo date("F d, Y") ?>)</b></p>"
 		_p.prepend(_d)
 		_p.prepend(_h)
 		var nw = window.open("","","width=900,height=600")

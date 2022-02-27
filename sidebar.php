@@ -41,7 +41,7 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-            <?php if($_SESSION['login_type'] != 3): ?>
+            <?php if($_SESSION['login_type'] == 1): ?>
               <li class="nav-item">
                 <a href="./index.php?page=new_project" class="nav-link nav-new_project tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
@@ -56,41 +56,31 @@
                 </a>
               </li>
             </ul>
-          </li> 
-          <li class="nav-item hide">
-            <a href="#" class="nav-link nav-edit_task">
-              <i class="nav-icon fas fa-tasks"></i>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link nav-edit_group nav-view_group">
+              <i class="nav-icon fas fa-users"></i>
               <p>
-                Tasks
+                Groups
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
-            <?php if($_SESSION['login_type'] != 3): ?>
+            <?php if($_SESSION['login_type'] == 1): ?>
               <li class="nav-item">
-                <a href="./index.php?page=new_task" class="nav-link nav-new_task tree-item">
+                <a href="./index.php?page=new_group" class="nav-link nav-new_group tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Create New Task</p>
+                  <p>Create New Group</p>
                 </a>
               </li>
             <?php endif; ?>
               <li class="nav-item">
-                <a href="./index.php?page=task_list" class="nav-link nav-task_list tree-item">
+                <a href="./index.php?page=group_list" class="nav-link nav-group_list tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Tasks List</p>
+                  <p>Group List</p>
                 </a>
               </li>
             </ul>
-            <!-- <a href="./index.php?page=task_list" class="hide nav-link nav-task_list">
-              <i class="fas fa-tasks nav-icon"></i>
-              <p>Tasks</p>
-            </a> -->
-          </li>
-          <li class="nav-item hide">
-            <a href="./index.php?page=group_list" class="nav-link nav-group_list">
-              <i class="fas fa-users nav-icon"></i>
-              <p>Groups</p>
-            </a>
           </li>
           <?php if($_SESSION['login_type'] != 3): ?>
            <li class="nav-item">
@@ -103,7 +93,7 @@
           <?php if($_SESSION['login_type'] == 1): ?>
           <li class="nav-item">
             <a href="#" class="nav-link nav-edit_user">
-              <i class="nav-icon fas fa-users"></i>
+              <i class="nav-icon fas fa-user"></i>
               <p>
                 Users
                 <i class="right fas fa-angle-left"></i>

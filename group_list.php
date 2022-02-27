@@ -12,7 +12,7 @@
 				<div class="card-header hide">
 					<?php if($_SESSION['login_type'] != 3): ?>
 					<div class="card-tools">
-						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Group</a>
 					</div>
 					<?php endif; ?>
 				</div>
@@ -30,7 +30,7 @@
 							<thead>
 								<tr>
 									<th class="text-center">#</th>
-									<th>Project Name</th>
+									<th>Group Name</th>
 									<th class="">Members</th>
 									<th>Start Date</th>
 									<th>Due Date</th>
@@ -48,17 +48,17 @@
 								}elseif($_SESSION['login_type'] == 3){
 									$where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
 								}
-								$qry = $conn->query("SELECT * FROM project_list $where order by name asc");
+								$qry = $conn->query("SELECT * FROM group_list $where order by name asc");
 								while($row= $qry->fetch_assoc()):
 									$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
 									unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
 									$desc = strtr(html_entity_decode($row['description']),$trans);
 									$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
 
-									$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
-									$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 6")->num_rows;
-									$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
-									$prog = $prog > 0 ?  number_format($prog,6) : $prog;
+									// $tprog = $conn->query("SELECT * FROM group_list where project_id = {$row['id']}")->num_rows;
+									// $cprog = $conn->query("SELECT * FROM group_list where project_id = {$row['id']} and status = 6")->num_rows;
+									// $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+									// $prog = $prog > 0 ?  number_format($prog,6) : $prog;
 									$prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
 									if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
 									if($prod  > 0  || $cprog > 0)
@@ -129,8 +129,8 @@
 										Action
 										</button>
 										<div class="dropdown-menu" style="">
-										<a class="dropdown-item view_project" href="./index.php?page=view_project&id=<?php echo $row['id'] ?>" data-id="<?php echo $row['id'] ?>">
-											<i class="fas fa-plus mr-2"></i> Add Task</a>
+										<a class="dropdown-item view_group" href="./index.php?page=view_group&id=<?php echo $row['id'] ?>" data-id="<?php echo $row['id'] ?>">
+											<i class="fas fa-eye mr-2"></i> View Group</a>
 										<div class="dropdown-divider"></div>
 										<?php if($_SESSION['login_type'] != 3): ?>
 										<a class="dropdown-item" href="./index.php?page=edit_project&id=<?php echo $row['id'] ?>">
@@ -155,7 +155,7 @@
 				<div class="card-header hide">
 					<?php if($_SESSION['login_type'] != 3): ?>
 					<div class="card-tools">
-						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Group</a>
 					</div>
 					<?php endif; ?>
 				</div>
@@ -165,7 +165,7 @@
 							<div class="card-header">TODO <a class="btn btn-success btn-sm float-right"><i class="fa fa-plus"></i></a></div>
 							<div class="card-body">
 								<div class="card">
-									<div class="card-header">Task One</div>
+									<div class="card-header">Group One</div>
 									<div class="card-body">One</div>
 								</div>
 							</div>
@@ -174,7 +174,7 @@
 							<div class="card-header">IN-PROGRESS </div>
 							<div class="card-body">
 								<div class="card">
-									<div class="card-header">Task One</div>
+									<div class="card-header">Group One</div>
 									<div class="card-body">One</div>
 								</div>
 							</div>
@@ -183,7 +183,7 @@
 							<div class="card-header">DONE</div>
 							<div class="card-body">
 								<div class="card">
-									<div class="card-header">Task One</div>
+									<div class="card-header">Group One</div>
 									<div class="card-body">One</div>
 								</div>
 							</div>
@@ -198,7 +198,7 @@
 				<div class="card-header hide">
 					<?php if($_SESSION['login_type'] != 3): ?>
 					<div class="card-tools">
-						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Group</a>
 					</div>
 					<?php endif; ?>
 				</div>
