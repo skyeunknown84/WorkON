@@ -81,5 +81,15 @@ if($action == 'get_report'){
 	if($get)
 		echo $get;
 }
+if($action == 'save_group'){
+	$save = $crud->save_group();
+	if($save)
+		echo $save;
+}
+if($action == 'delete_group'){
+	$save = $crud->delete_group();
+	if($save)
+		echo $save;
+}
 ob_end_flush();
 ?>

@@ -362,4 +362,43 @@ Class Action {
 		return json_encode($data);
 
 	}
+
+	function save_group(){
+		extract($_POST);
+		// $data = "";
+		$check = $this->db->query("SELECT * FROM group_list where group_name ='$group_name' ".(!empty($id) ? " and id != {$id} " : ''))->num_rows;
+		if($check > 0){
+			return 2;
+			exit;
+		}
+		if(empty($id)){
+			$save = $this->db->query("INSERT INTO group_list (group_name,group_manager,group_members,date_created) VALUES ('$group_name','$group_manager','$group_members',now()) ");
+		}else{
+			echo $id;
+			$save = $this->db->query("UPDATE group_list SET $data WHERE id = $id");
+		}
+		if($save){
+			return 1;
+		}
+	}
+	function update_group(){
+		extract($_POST);
+		$data = "";
+		$check = $this->db->query("SELECT * FROM group_list where group_name ='$group_name' ".(!empty($id) ? " and id != {$id} " : ''))->num_rows;
+		if($check > 0){
+			return 2;
+			exit;
+		}
+		if(empty($id)){
+			$save = $this->db->query("INSERT INTO group_list set $data");
+		}else{
+			$save = $this->db->query("UPDATE group_list set $data where id = $id");
+		}
+	}
+	function delete_group(){
+		extract($_POST);
+		$delete = $this->db->query("DELETE FROM group_list where id = ".$id);
+		if($delete)
+			return 1;
+	}
 }

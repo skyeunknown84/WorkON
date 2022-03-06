@@ -57,8 +57,9 @@
               </li>
             </ul>
           </li>
+          <?php if($_SESSION['login_type'] == 1): ?>
           <li class="nav-item">
-            <a href="#" class="nav-link nav-edit_group nav-view_group">
+            <a href="#" class="nav-link nav-edit_group">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 Groups
@@ -66,39 +67,12 @@
               </p>
             </a>
             <ul class="nav nav-treeview">
-            <?php if($_SESSION['login_type'] != 3): ?>
               <li class="nav-item">
                 <a href="./index.php?page=new_group" class="nav-link nav-new_group tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
                   <p>Create New Group</p>
                 </a>
               </li>
-            <?php endif; ?>
-              <li class="nav-item">
-                <a href="./index.php?page=group_list" class="nav-link nav-group_list tree-item">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Group List</p>
-                </a>
-              </li>
-            </ul>
-          </li> 
-          <li class="nav-item hide">
-            <a href="#" class="nav-link nav-edit_task">
-              <i class="nav-icon fas fa-tasks"></i>
-              <p>
-                Groups
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-            <?php if($_SESSION['login_type'] == 1): ?>
-              <li class="nav-item">
-                <a href="./index.php?page=new_group" class="nav-link nav-new_group tree-item">
-                  <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Create New Group</p>
-                </a>
-              </li>
-            <?php endif; ?>
               <li class="nav-item">
                 <a href="./index.php?page=group_list" class="nav-link nav-group_list tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
@@ -107,6 +81,7 @@
               </li>
             </ul>
           </li>
+          <?php endif; ?>
           <?php if($_SESSION['login_type'] != 3): ?>
            <li class="nav-item">
                 <a href="./index.php?page=reports" class="nav-link nav-reports">
@@ -139,7 +114,7 @@
               </li>
             </ul>
           </li>
-        <?php endif; ?>
+          <?php endif; ?>
         </ul>
       </nav>
     </div>
