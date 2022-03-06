@@ -17,7 +17,16 @@ if(isset($_GET['id'])){
 		</div>
 		<div class="form-group">
 			<label for="">Assignee</label>
-			<input type="text" class="form-control form-control-sm" name="task_owner" value="<?php echo isset($task_owner) ? $task_owner : '' ?>" required>
+			<select class="form-control form-control-sm select2" multiple="multiple" name="task_owner[]" required>
+				<option></option>
+				<?php 
+				$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
+				while($row= $employees->fetch_assoc()):
+				?>
+				<option value="<?php echo $row['name'] ?>" <?php echo isset($task_owner) && in_array($row['id'],explode(',',$task_owner)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+				<?php endwhile; ?>
+			</select>
+			<input type="text" class="form-control form-control-sm hide" name="task_owner" value="<?php echo isset($task_owner) ? $task_owner : '' ?>" required>
 		</div>
 		<div class="form-group">
 			<label for="">Description</label>
