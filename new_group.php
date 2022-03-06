@@ -9,7 +9,9 @@ $members_list = mysqli_query($conn, $select_members);
 // foreach($members_list as $members_row){
 // 	$membersList[] = $members_row['group_members'];
 // }
-
+// Get Task List
+$select_tasks = "SELECT name FROM project_list where group_id = 1 order by id asc";
+$tasksList = mysqli_query($conn, $select_tasks);
 ?>
 <div class="col-lg-12">
 	<div class="card card-outline card-success">
@@ -35,13 +37,22 @@ $members_list = mysqli_query($conn, $select_members);
 					</div>
 					<div class="col-md-6">
 						<div class="form-group">
-						<label for="" class="control-label">Group Members</label>
-						<select class="form-control form-control-sm js-example-basic-multiple select2 select-member" multiple="multiple" name="group_members[]" required>
-							<option></option>
-							<?php foreach($members_list as $row){ ?>
-							<option value="<?= $row['name']; ?>" <?= isset($group_members) && in_array($row['name'],explode(',',$group_members)) ? "selected" : '' ?>><?= $row['name']; ?></option>
-							<?php } ?>
-						</select>
+							<label for="" class="control-label">Group Members</label>
+							<select class="form-control form-control-sm js-example-basic-multiple select2 select-members" multiple="multiple" name="group_members[]" required>
+								<option></option>
+								<?php foreach($members_list as $row){ ?>
+								<option value="<?= $row['name']; ?>" <?= isset($group_members) && in_array($row['name'],explode(',',$group_members)) ? "selected" : '' ?>><?= $row['name']; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div class="form-group">
+							<label for="" class="control-label">Tasks</label>
+							<select class="form-control form-control-sm js-example-basic-multiple select2 select-tasks" multiple="multiple" name="group_tasks[]" required>
+								<option></option>
+								<?php foreach($tasksList as $row){ ?>
+								<option value="<?= $row['name']; ?>" <?= isset($group_tasks) && in_array($row['name'],explode(',',$group_tasks)) ? "selected" : '' ?>><?= $row['name']; ?></option>
+								<?php } ?>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -63,10 +74,23 @@ $members_list = mysqli_query($conn, $select_members);
 	}
 </style>
 <script>
-	$('.select-members').select2({
-		placeholder: 'Select Group Members',
-
-	})
+	(function(){
+		var items = ($('.select-members').val().split(','));
+		$('.select-members').select2({
+			placeholder: 'Select Group Members',
+			multiple: true,
+			allowClear: true
+		});
+		$('select-members').val(items).trigger('change');
+		// var items2 = ($('.select-tasks').val().split(','));
+		$('.select-tasks').select2({
+			placeholder: 'Select Group Tasks',
+			multiple: true,
+			allowClear: true
+		});
+		// $('select-tasks').val(items2).trigger('change');
+	});
+	
 	$('#manage-group').submit(function(e){
 		e.preventDefault()
 		$('input').removeClass("border-danger")

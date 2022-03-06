@@ -13,6 +13,7 @@
 						<tr>
 							<th class="text-center">#</th>
 							<th>Group Name</th>
+							<th>Tasks</th>
 							<th>Group Manager</th>
 							<th>Group Members</th>
 							<th>Action</th>
@@ -28,6 +29,7 @@
 						<tr>
 							<th class="text-center"><?php echo $i++ ?></th>
 							<td><b><?php echo ucwords($row['group_name']) ?></b></td>
+							<td><b><?php echo ucwords($row['group_tasks']) ?></b></td>
 							<td><b><?php echo $row['group_manager'] ?></b></td>
 							<td><b><?php echo $row['group_members'] ?></b></td>
 							<td class="text-center">

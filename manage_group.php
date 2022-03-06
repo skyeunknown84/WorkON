@@ -25,6 +25,10 @@ foreach($user->fetch_array() as $k =>$v){
 			<label for="name">Group Members</label>
 			<input type="text" name="group_members" id="group_members" class="form-control" value="<?php echo isset($meta['group_members']) ? $meta['group_members']: '' ?>" required>
 		</div>
+		<div class="form-group">
+			<label for="name">Group Tasks</label>
+			<input type="text" name="group_tasks" id="group_tasks" class="form-control" value="<?php echo isset($meta['group_tasks']) ? $meta['group_tasks']: '' ?>" required>
+		</div>
 
 	</form>
 </div>

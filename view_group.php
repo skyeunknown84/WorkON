@@ -23,6 +23,10 @@ if(isset($_GET['id'])){
         		<dt>Group Members</dt>
         		<dd><?php echo $group_members ?></dd>
         	</dl>
+			<dl>
+        		<dt>Group Tasks</dt>
+        		<dd><?php echo $group_tasks ?></dd>
+        	</dl>
         </div>
     </div>
 	</div>

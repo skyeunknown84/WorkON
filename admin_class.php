@@ -372,10 +372,10 @@ Class Action {
 			exit;
 		}
 		if(empty($id)){
-			$save = $this->db->query("INSERT INTO group_list (group_name,group_manager,group_members,date_created) VALUES ('$group_name','$group_manager','$group_members',now()) ");
+			$save = $this->db->query("INSERT INTO group_list (group_name,group_manager,group_members,group_tasks,date_created) VALUES ('$group_name','$group_manager','$group_members','$group_tasks',now()) ");
 		}else{
 			echo $id;
-			$save = $this->db->query("UPDATE group_list SET $data WHERE id = $id");
+			$save = $this->db->query("UPDATE group_list SET group_name='".$group_name."', group_manager='".$group_manager."', group_members='".$group_members."', group_tasks='".$group_tasks."' WHERE id = $id");
 		}
 		if($save){
 			return 1;
