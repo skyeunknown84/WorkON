@@ -51,20 +51,12 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-md-6">
-					<div class="form-group">
-					<label for="" class="control-label">Start Date</label>
-					<input type="date" class="form-control form-control-sm" autocomplete="off" name="start_date" value="<?php echo isset($start_date) ? date("Y-m-d",strtotime($start_date)) : '' ?>" required>
+					<div class="col-md-6 hide">
+						<div class="form-group">
+						<label for="" class="control-label hide">Start Date</label>
+						<input type="hidden" name="start_date" value="<?php echo date('Y-m-d') ?>" required>
+						</div>
 					</div>
-				</div>
-				<div class="col-md-6">
-					<div class="form-group">
-					<label for="" class="control-label">End Date</label>
-					<input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
-					</div>
-				</div>
-				</div>
-				<div class="row">
 					<?php if($_SESSION['login_type'] == 1 ): ?>
 					<div class="col-md-6">
 						<div class="form-group">
@@ -84,6 +76,15 @@
 						<input type="hidden" name="manager_id" value="<?php echo $_SESSION['login_id'] ?>">
 					<?php endif; ?>
 					<div class="col-md-6">
+						<div class="form-group">
+						<label for="" class="control-label">Due Date</label>
+						<input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
+						</div>
+					</div>		
+				</div>
+				<div class="row">
+					
+					<div class="col-md-12">
 						<div class="form-group">
 						<label for="" class="control-label">Task Team Members</label>
 						<select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]" required>
@@ -107,19 +108,19 @@
 							</textarea>
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-6 hide">
 						<div class="form-group">
 							<label for="" class="control-label">Task Documentation Link</label>
-							<input type="url" class="form-control form-control-sm" name="project_url" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($project_url) ? $project_url : '' ?>">
+							<input type="url" class="form-control form-control-sm hide" name="project_url" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($project_url) ? $project_url : '' ?>">
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-6 hide">
 						<div class="form-group">
 							<label for="" class="control-label">Task Time Sheet Link</label>
-							<input type="url" class="form-control form-control-sm" name="project_time_sheet" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($project_time_sheet) ? $project_time_sheet : '' ?>">
+							<input type="url" class="form-control form-control-sm hide" name="project_time_sheet" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($project_time_sheet) ? $project_time_sheet : '' ?>">
 						</div>
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-6 hide">
 						<div class="form-group ">
 							<label for="" class="control-label col-12">Upload Task File</label>
 							<div class="custom-file col-8">

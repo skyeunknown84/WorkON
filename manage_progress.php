@@ -35,19 +35,19 @@ if(isset($_GET['id'])){
 						<input type="text" class="form-control form-control-sm hide" name="subject" value="<?php echo isset($subject) ? $subject : '' ?>" required>
 					</div> -->
 					<div class="form-group">
-						<label for="">Date</label>
+						<label for="">End Date</label>
 						<input type="date" class="form-control form-control-sm" name="date" value="<?php echo isset($date) ? date("Y-m-d",strtotime($date)) : '' ?>" required>
 					</div>
-					<div class="form-group">
+					<div class="form-group hide">
 						<label for="">Start Time</label>
-						<input type="time" class="form-control form-control-sm" name="start_time" value="<?php echo isset($start_time) ? date("H:i",strtotime("2020-01-01 ".$start_time)) : '' ?>" required>
+						<input type="hidden" name="start_time" value="<?php echo isset($start_time) ? date("H:i",strtotime("2020-01-01 "."Y-m-d")) : '' ?>" required>
 					</div>
 					<div class="form-group">
 						<label for="">End Time</label>
 						<input type="time" class="form-control form-control-sm" name="end_time" value="<?php echo isset($end_time) ? date("H:i",strtotime("2020-01-01 ".$end_time)) : '' ?>" required>
 					</div>
 					<div class="form-group">
-						<label for="" class="control-label">Upload Task File</label>
+						<label for="" class="control-label">Add Task File</label>
 						<div class="custom-file">
 						<input type="file" class="custom-file-input rounded-circle" id="customFileToUpload" name="custom_file">
 						<label class="custom-file-label" for="custom_file">Choose file</label>
@@ -59,7 +59,7 @@ if(isset($_GET['id'])){
 					
 				</div>
 				<div class="col-md-7">
-					<div class="form-group">
+					<div class="form-group hide">
 						<label for="" class="control-label">Task Documentation Link</label>
 						<input type="url" class="form-control form-control-sm" name="url_productivity" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($url_productivity) ? $url_productivity : '' ?>" required>
 					</div>
