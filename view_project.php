@@ -37,12 +37,17 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 						</div>
 						<div class="col-md-4">
 							<dl>
-								<dt><b class="border-bottom border-primary">Start Date</b></dt>
-								<dd><?php echo date("F d, Y",strtotime($start_date)) ?></dd>
-							</dl>
-							<dl>
-								<dt><b class="border-bottom border-primary">End Date</b></dt>
-								<dd><?php echo date("F d, Y",strtotime($end_date)) ?></dd>
+								<dt><b class="border-bottom border-primary">Task Manager</b></dt>
+								<dd>
+									<?php if(isset($manager['id'])) : ?>
+									<div class="d-flex align-items-center mt-1">
+										<img class="img-circle img-thumbnail p-0 shadow-sm border-info img-sm mr-3" src="assets/uploads/<?php echo $manager['avatar'] ?>" alt="Avatar">
+										<b><?php echo ucwords($manager['name']) ?></b>
+									</div>
+									<?php else: ?>
+										<small><i>Manager Deleted from Database</i></small>
+									<?php endif; ?>
+								</dd>
 							</dl>
 							<dl>
 								<dt><b class="border-bottom border-primary">Status</b></dt>
@@ -63,22 +68,20 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 									  }
 									?>
 								</dd>
+							</dl>						
+							
+						</div>
+						<div class="col-md-4">
+							<dl>
+								<dt><b class="border-bottom border-primary">Start Date</b></dt>
+								<dd><?php echo date("F d, Y",strtotime($start_date)) ?></dd>
 							</dl>
 							<dl>
-								<dt><b class="border-bottom border-primary">Task Manager</b></dt>
-								<dd>
-									<?php if(isset($manager['id'])) : ?>
-									<div class="d-flex align-items-center mt-1">
-										<img class="img-circle img-thumbnail p-0 shadow-sm border-info img-sm mr-3" src="assets/uploads/<?php echo $manager['avatar'] ?>" alt="Avatar">
-										<b><?php echo ucwords($manager['name']) ?></b>
-									</div>
-									<?php else: ?>
-										<small><i>Manager Deleted from Database</i></small>
-									<?php endif; ?>
-								</dd>
+								<dt><b class="border-bottom border-primary">End Date</b></dt>
+								<dd><?php echo date("F d, Y",strtotime($end_date)) ?></dd>
 							</dl>
-						</div>
-						<div class="col-sm-4">
+						</div>						
+						<div class="col-sm-4 hide">
 							<dl>
 								<dt><b class="border-bottom border-primary">Documentation Link:</b></dt>
 								<dd><a href="<?php echo ucwords($project_time_sheet) ?>" class="btn btn-success btn_url mt-1 pt-0 pb-0" target="_blank" rel="noopener noreferrer"><i class="fa fa-link"></i> Google Docs</a></dd>
@@ -211,7 +214,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 				<div class="card-header">
 					<b>TASK FILE/S</b>
 					<div class="card-tools">
-						<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_productivity"><i class="fa fa-plus"></i> Add Task Productivity</button>
+						<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_productivity"><i class="fa fa-plus"></i> Add Task Files</button>
 					</div>
 				</div>
 				<div class="card-body">
@@ -311,7 +314,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 	})
 	// Add Link to Modal for Add Task Productivity
 	$('#new_productivity').click(function(){
-		uni_modal("<i class='fa fa-plus'></i> New Progress","manage_progress.php?pid=<?php echo $id ?>",'large')
+		uni_modal("<i class='fa fa-plus'></i> Task Progress","manage_progress.php?pid=<?php echo $id ?>",'large')
 	})
 	// Edit Link to Modal for Add Task Productivity
 	$('.manage_progress').click(function(){

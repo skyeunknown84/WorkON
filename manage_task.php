@@ -44,7 +44,7 @@ if(isset($_GET['id'])){
 				<option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
 			</select>
 		</div>
-		<div class="form-group">
+		<div class="form-group hide">
 			<label for="">Add Proof Attachment (Screenshot/Recording/Link)</label>
 			<input type="url" class="form-control form-control-sm" name="task_url" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($task_url) ? $task_url : '' ?>" required>
 		</div>

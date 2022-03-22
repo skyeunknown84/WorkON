@@ -43,7 +43,7 @@
 								</div>
 							</td>
 						</tr>	
-					<?php endwhile; ?>
+						<?php endwhile; ?>
 					</tbody>
 				</table>
 			</div>

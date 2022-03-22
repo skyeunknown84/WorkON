@@ -58,7 +58,7 @@
             </ul>
           </li>
           <?php if($_SESSION['login_type'] == 1): ?>
-          <li class="nav-item">
+          <li class="nav-item hide">
             <a href="#" class="nav-link nav-edit_group">
               <i class="nav-icon fas fa-users"></i>
               <p>

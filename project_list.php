@@ -78,7 +78,7 @@
 									<td class="">
 										<ul class="users-list clearfix">
 											<?php 
-											$user_ids = "";
+											$user_ids = array();
 											if(!empty($user_ids)):
 												$members = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
 												while($row=$members->fetch_assoc()):
@@ -90,6 +90,11 @@
 											</li>
 											<?php endwhile; endif;
 											?>
+										</ul>
+										<ul class="list-inline hide">
+											<li class="list-inline-item">
+												<img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
+											</li>
 										</ul>
 									</td>
 									<td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
@@ -194,18 +199,9 @@
 			<div class="d-flex justify-content-center align-tems-center m-1 hide"><h1>Board Card (Drag & Drop) - Coming Soon!</h1></div>
 		</div>
 		<div class="tab-pane" id="files" role="tabpanel" aria-labelledby="pills-files-tab">
-			<div class="card card-outline card-success">
-				<div class="card-header hide">
-					<?php if($_SESSION['login_type'] != 3): ?>
-					<div class="card-tools">
-						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
-					</div>
-					<?php endif; ?>
-				</div>
-				<div class="card-body">
-					<div class="d-flex justify-content-center align-tems-center m-1"><h1>Files Uploading Page is Coming Soon</h1></div>
-				</div>
-			</div>
+			<?php include 'files.php' ?>
+
+			<div id="display-files"></div>
 		</div>
 	</div>
 </div>
