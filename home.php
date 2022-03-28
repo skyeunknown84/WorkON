@@ -64,7 +64,7 @@ if(isset($_GET['id'])){
                 <tbody>
                 <?php
                 $i = 1;
-                $stat = array("Pending","Started","In Progress","In Review","Over Due","Completed");
+                $stat = array("Not-Started","Started","In Progress","In Review","Completed");
                 $where = "";
                 if($_SESSION['login_type'] == 2){
                   $where = " where manager_id = '{$_SESSION['login_id']}' ";
@@ -106,7 +106,7 @@ if(isset($_GET['id'])){
                       </td>
                       <td class="project_progress">
                           <div class="progress progress-sm">
-                              <div class="progress-bar bg-green" role="progressbar" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
+                              <div class="progress-bar bg-green" role="progressbar progressbar-success" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
                               </div>
                           </div>
                           <small>
@@ -133,14 +133,15 @@ if(isset($_GET['id'])){
                             }elseif($row['status'] == 2){
                             echo "<span class='badge badge-primary'>Started</span>";
                             }elseif($row['status'] == 3){
-                            echo "<span class='badge badge-primary'>In Progress</span>";
+                            echo "<span class='badge badge-info'>In Progress</span>";
                             }elseif($row['status'] == 4){
-                            echo "<span class='badge badge-primary'>In Review</span>";
+                            echo "<span class='badge badge-warning'>In Review</span>";
                             }elseif($row['status'] == 5){
-                            echo "<span class='badge badge-primary'>Over Due</span>";
-                            }elseif($row['status'] == 6){
-                              echo "<span class='badge badge-success'>Completed</span>";
-                                      }
+                            echo "<span class='badge badge-success'>Completed</span>";
+                            }
+                            // elseif($row['status'] == 6){
+                            //   echo "<span class='badge badge-success'>Completed</span>";
+                            // }
                           ?>
                       </td>
                       <td>

@@ -29,10 +29,11 @@ if(isset($_GET['id'])){
 		  	}elseif($status == 4){
 				echo "<span class='badge badge-warning'>In Review</span>";
 		  	}elseif($status == 5){
-				echo "<span class='badge badge-warning'>Over Due</span>";
-		  	}elseif($status == 6){
 				echo "<span class='badge badge-success'>Completed</span>";
 		  	}
+			// elseif($status == 6){
+			// 	echo "<span class='badge badge-success'>Completed</span>";
+		  	// }
         	?>
 		</dd>
 	</dl>
