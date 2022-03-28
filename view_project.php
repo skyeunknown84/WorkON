@@ -61,8 +61,6 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 									  	echo "<span class='badge badge-info'>{$stat[$status]}</span>";
 									  }elseif($stat[$status] =='In Review'){
 									  	echo "<span class='badge badge-warning'>{$stat[$status]}</span>";
-									  }elseif($stat[$status] =='Over Due'){
-									  	echo "<span class='badge badge-danger'>{$stat[$status]}</span>";
 									  }elseif($stat[$status] =='Completed'){
 									  	echo "<span class='badge badge-success'>{$stat[$status]}</span>";
 									  }
