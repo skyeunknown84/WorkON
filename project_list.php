@@ -41,7 +41,7 @@
 							<tbody>
 								<?php
 								$i = 1;
-								$stat = array("Not Started","Started","In-Progress","In-Review","Over Due","Completed");
+								$stat = array("Not Started","Started","In Progress","In Review","Completed");
 								$where = "";
 								if($_SESSION['login_type'] == 2){
 									$where = " where manager_id = '{$_SESSION['login_id']}' ";
@@ -56,9 +56,9 @@
 									$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
 
 									$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
-									$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 6")->num_rows;
+									$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
 									$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
-									$prog = $prog > 0 ?  number_format($prog,6) : $prog;
+									$prog = $prog > 0 ?  number_format($prog,5) : $prog;
 									$prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
 									if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
 									if($prod  > 0  || $cprog > 0)
@@ -80,7 +80,7 @@
 											<?php 
 											$user_ids = array();
 											if(!empty($user_ids)):
-												$members = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
+												$members = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as name FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
 												while($row=$members->fetch_assoc()):
 											?>
 											<li>
@@ -101,32 +101,20 @@
 									<td><b><?php echo date("M d, Y",strtotime($row['end_date'])) ?></b></td>
 									<td class="text-center">
 										<?php
-										//   if($stat[$row['status']] =='Not Started'){
-										//   	echo "<span class='badge badge-secondary'>{$stat[$row['status']]}</span>";
-										//   }elseif($stat[$row['status']] =='Started'){
-										//   	echo "<span class='badge badge-primary'>{$stat[$row['status']]}</span>";
-										//   }elseif($stat[$row['status']] =='In Progress'){
-										//   	echo "<span class='badge badge-info'>{$stat[$row['status']]}</span>";
-										//   }elseif($stat[$row['status']] =='In Review'){
-										//   	echo "<span class='badge badge-warning'>{$stat[$row['status']]}</span>";
-										//   }elseif($stat[$row['status']] =='Over Due'){
-										//   	echo "<span class='badge badge-danger'>{$stat[$row['status']]}</span>";
-										//   }elseif($stat[$row['status']] =='Completed'){
-										//   	echo "<span class='badge badge-success'>{$stat[$row['status']]}</span>";
-										//   }
 										if($row['status'] == 1){
 											echo "<span class='badge badge-secondary'>Not Started</span>";
 										}elseif($row['status'] == 2){
 										echo "<span class='badge badge-primary'>Started</span>";
 										}elseif($row['status'] == 3){
-										echo "<span class='badge badge-primary'>In Progress</span>";
+										echo "<span class='badge badge-info'>In Progress</span>";
 										}elseif($row['status'] == 4){
-										echo "<span class='badge badge-primary'>In Review</span>";
+										echo "<span class='badge badge-warning'>In Review</span>";
 										}elseif($row['status'] == 5){
-										echo "<span class='badge badge-primary'>Over Due</span>";
-										}elseif($row['status'] == 6){
-											echo "<span class='badge badge-success'>Completed</span>";
-									}
+										echo "<span class='badge badge-success'>Completed</span>";
+										}
+										// elseif($row['status'] == 6){
+										// 	echo "<span class='badge badge-success'>Completed</span>";
+										// }
 										?>
 									</td>
 									<td class="text-center">

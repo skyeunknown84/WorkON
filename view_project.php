@@ -173,14 +173,15 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 									  }elseif($row['status'] == 2){
 										  echo "<span class='badge badge-primary'>Started</span>";
 										}elseif($row['status'] == 3){
-										  echo "<span class='badge badge-primary'>In Progress</span>";
+										  echo "<span class='badge badge-info'>In Progress</span>";
 										}elseif($row['status'] == 4){
-										  echo "<span class='badge badge-primary'>In Review</span>";
+										  echo "<span class='badge badge-warning'>In Review</span>";
 										}elseif($row['status'] == 5){
-										  echo "<span class='badge badge-primary'>Over Due</span>";
-										}elseif($row['status'] == 6){
-											echo "<span class='badge badge-success'>Completed</span>";
-									  }
+										  echo "<span class='badge badge-success'>Completed</span>";
+										}
+										// elseif($row['status'] == 6){
+										// 	echo "<span class='badge badge-success'>Completed</span>";
+									  	// }
 			                        	?>
 			                        </td>
 			                        <td class="text-center">

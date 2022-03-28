@@ -2,7 +2,7 @@
  <div class="col-md-12">
         <div class="card card-outline card-success">
           <div class="card-header">
-            <b>Project Progress</b>
+            <b>Tasks Report</b>
             <div class="card-tools">
             	<button class="btn btn-flat btn-sm bg-gradient-success btn-success" id="print"><i class="fa fa-print"></i> Print</button>
             </div>
@@ -20,6 +20,9 @@
                 </select>
               </div>
               <div class="col-md-4">
+                <?php
+
+                ?>
                 <select name="status" id="status" class="custom-select custom-select-md form-control">
                   <option value="">Select Assignee</option>
                   <option value="1">Jon</option>
@@ -55,7 +58,7 @@
                 <tbody>
                 <?php
                 $i = 1;
-                $stat = array("Pending","Started","On-Progress","On-Hold","Over Due","Done");
+                $stat = array("Not-Started","Started","In Progress","In Review","Over Due","Completed");
                 $where = "";
                 if($_SESSION['login_type'] == 2){
                   $where = " where manager_id = '{$_SESSION['login_id']}' ";
@@ -116,17 +119,17 @@
                       </td>
                       <td class="project-state">
                           <?php
-                            if($stat[$row['status']] =='Pending'){
+                            if($stat[$row['status']] =='Not-Started'){
                               echo "<span class='badge badge-secondary'>{$stat[$row['status']]}</span>";
                             }elseif($stat[$row['status']] =='Started'){
                               echo "<span class='badge badge-primary'>{$stat[$row['status']]}</span>";
-                            }elseif($stat[$row['status']] =='On-Progress'){
+                            }elseif($stat[$row['status']] =='In Progress'){
                               echo "<span class='badge badge-info'>{$stat[$row['status']]}</span>";
-                            }elseif($stat[$row['status']] =='On-Hold'){
+                            }elseif($stat[$row['status']] =='In Review'){
                               echo "<span class='badge badge-warning'>{$stat[$row['status']]}</span>";
                             }elseif($stat[$row['status']] =='Over Due'){
                               echo "<span class='badge badge-danger'>{$stat[$row['status']]}</span>";
-                            }elseif($stat[$row['status']] =='Done'){
+                            }elseif($stat[$row['status']] =='Completed'){
                               echo "<span class='badge badge-success'>{$stat[$row['status']]}</span>";
                             }
                           ?>
