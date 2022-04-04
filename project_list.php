@@ -148,36 +148,70 @@
 				<div class="card-header hide">
 					<?php if($_SESSION['login_type'] != 3): ?>
 					<div class="card-tools">
-						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+						<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_task"><i class="fa fa-plus"></i> Add New Task</a>
 					</div>
 					<?php endif; ?>
 				</div>
+				
 				<div class="card-body">
 					<div class="col-lg-12 d-flex pl-0">
-						<div class="card col-md-4 mr-1 p-0">
-							<div class="card-header">TODO <a class="btn btn-success btn-sm float-right"><i class="fa fa-plus"></i></a></div>
-							<div class="card-body">
-								<div class="card">
-									<div class="card-header">Task One</div>
-									<div class="card-body">One</div>
+					<div class="card card-row card-primary">
+						</div>
+
+						<div class="card card-primary col-md-4 mr-2 m-0 p-0" style="height:440px">
+							<div class="card-header pt-2 pb-0"><label style="font-size:22px">TODO</label><a class="btn btn-success btn-sm float-right"><i class="fa fa-plus"></i> New Task</a></div>
+							<div class="card-body m-0 px-2">
+								<div class="card card-primary card-outline m-0 px-2">
+									<div class="card-header m-0 px-1">
+										<h5 class="card-title">Create first milestone</h5>
+										<div class="card-tools p-0 m-0">
+										<a href="#" class="btn btn-link p-0 m-0 hide">#5</a>
+										<a href="#" class="btn btn-link p-0 m-0">
+											<i class="fas fa-pen text-black"></i>
+										</a>
+										</div>
+									</div>
+									<div class="card-footer hide">
+									<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="card col-md-4 mr-1 p-0">
-							<div class="card-header">IN-PROGRESS </div>
+						<div class="card card-info col-md-4 mr-2 m-0 p-0" style="height:440px">
+							<div class="card-header pt-2 pb-0"><label style="font-size:22px">IN-PROGRESS</label></div>
 							<div class="card-body">
-								<div class="card">
-									<div class="card-header">Task One</div>
-									<div class="card-body">One</div>
+								<div class="card card-primary card-outline m-0 px-2">
+									<div class="card-header m-0 px-1">
+										<h5 class="card-title">Create first milestone 0</h5>
+										<div class="card-tools p-0 m-0">
+										<a href="#" class="btn btn-link p-0 m-0 hide">#5</a>
+										<a href="#" class="btn btn-link p-0 m-0">
+											<i class="fas fa-pen text-black"></i>
+										</a>
+										</div>
+									</div>
+									<div class="card-footer hide">
+									<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+									</div>
 								</div>
 							</div>
 						</div>
-						<div class="card col-md-4 p-0">
-							<div class="card-header">DONE</div>
+						<div class="card card-success col-md-4 mr-2 m-0 p-0" style="height:440px">
+							<div class="card-header pt-2 pb-0"><label style="font-size:22px">DONE</label></div>
 							<div class="card-body">
-								<div class="card">
-									<div class="card-header">Task One</div>
-									<div class="card-body">One</div>
+								<div class="card card-primary card-outline m-0 px-2">
+									<div class="card-header m-0 px-1">
+										<h5 class="card-title">Create first milestone 0</h5>
+										<div class="card-tools p-0 m-0">
+										<a href="#" class="btn btn-link p-0 m-0 hide">#5</a>
+										<a href="#" class="btn btn-link p-0 m-0">
+											<i class="fas fa-pen text-black"></i>
+										</a>
+										</div>
+									</div>
+									<div class="card-footer hide">
+									<a class="btn btn-block btn-sm btn-default btn-round border-primary" href="./index.php?page=new_project"><i class="fa fa-plus"></i> Add New Task</a>
+									</div>
 								</div>
 							</div>
 						</div>
