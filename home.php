@@ -16,7 +16,7 @@ if(isset($_GET['id'])){
  <!-- <div class="col-12">
     <div class="card">
       <div class="card-body">
-        Welcome <?php echo $_SESSION['login_name'] ?>!
+        Welcome !
       </div>
     </div>
   </div>
@@ -75,7 +75,11 @@ if(isset($_GET['id'])){
                 while($row= $qry->fetch_assoc()):
                   $prog= 0;
                 $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
-                $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 3")->num_rows;
+                $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+                // $prostat = $conn->query("SELECT *,t.status as tstat  FROM task_list t INNER JOIN project_list p ON t.project_id = p.id where t.project_id = {$row['id']}");
+                //   if($row= $qry->fetch_assoc()):
+                //     if($row['tstat'] <= 4)
+
                 $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
                 $prog = $prog > 0 ?  number_format($prog,2) : $prog;
                 $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
@@ -176,7 +180,7 @@ if(isset($_GET['id'])){
            <div class="col-12 col-sm-6 col-md-12">
             <div class="small-box bg-light shadow-sm border">
               <div class="inner bg-info">
-                <h3><?php echo $conn->query("SELECT t.*,p.name as pname,p.start_date,p.status as pstatus, p.end_date,p.id as pid FROM task_list t inner join project_list p on p.id = t.project_id $where2")->num_rows; ?></h3>
+                <h3><?php echo $conn->query("SELECT t.*,p.* FROM task_list t INNER JOIN project_list p ON t.project_id = p.id WHERE t.status = '5' AND p.status = '5' GROUP BY p.id HAVING count(p.id)")->num_rows; ?></h3>
                 <p>Completed Main Tasks</p>
               </div>
               <div class="icon">

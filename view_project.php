@@ -20,6 +20,12 @@ $status = 4;
 endif;
 $manager = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where id = $manager_id");
 $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
+$where = "";
+if($_SESSION['login_type'] == 2){
+	$where = " where manager_id = '{$_SESSION['login_id']}' ";
+}elseif($_SESSION['login_type'] == 3){
+	$where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
+}
 ?>
 <div class="col-lg-12">
 	<div class="row">
@@ -93,7 +99,7 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-4 hide">
 			<div class="card card-outline card-success">
 				<div class="card-header">
 					<span><b>TASK MEMBER/S</b></span>
@@ -121,87 +127,225 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 				</div>
 			</div>
 		</div>
-		<div class="col-md-8">
+		<div class="col-md-12">
 			<div class="card card-outline card-success">
 				<div class="card-header">
 					<div class="row">
-						<div class="col-6"><b>Task List:</b></div>
-						<div class="col-6 text-right">
+						<div class="col-6 p-0 m-0">
+							<ul class="nav nav-pills ml-auto m-0 p-0">
+								<li class="nav-item  btn-sm"><a class="nav-link  btn-sm" href="#listtask" data-toggle="tab"><i class="fa fa-tasks pr-2"></i>Task List</a></li>
+								<li class="nav-item  btn-sm"><a class="nav-link active  btn-sm" href="#boardtask" data-toggle="tab"><i class="fa fa-layer-group pr-2"></i> Board</a></li>
+							</ul>
+						</div>
+						<div class="col-6 text-right hide">
 						<?php if($_SESSION['login_type'] != 3): ?>
 							<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_task"><i class="fa fa-plus"></i> New Task</button>
 						<?php endif; ?>
 						</div>
 					</div>
 				</div>
-				<div class="card-body ps-3 pe-3 pb-2-pt-1">
-					<div class="">
-					<table class="table table-condensed table-hover table-responsive x-scroll" id="datalist">
-						<colgroup>
-							<col width="5%">
-							<col width="25%">
-							<col width="30%">
-							<col width="15%">
-							<col width="15%">
-						</colgroup>
-						<thead>
-							<th>#</th>
-							<th>Task</th>
-							<th>Assignee</th>
-							<th>Status</th>
-							<th>Action</th>
-						</thead>
-						<tbody>
-							<?php 
-							$i = 1;
-							$tasks = $conn->query("SELECT * FROM task_list where project_id = {$id} order by task asc");
-							while($row=$tasks->fetch_assoc()):
-								// $trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
-								// unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
-								// $desc = strtr(html_entity_decode($row['description']),$trans);
-								// $desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
-							?>
-								<tr>
-			                        <td class="text-center"><?php echo $i++ ?></td>
-			                        <td class="" style="min-width:250px"><b><?php echo ucwords($row['task']) ?></b></td>
-			                        <td class=""><b><?php echo ucwords($row['task_owner']) ?></b></td>
-			                        <td>
-			                        	<?php 
-			                        	if($row['status'] == 1){
-											echo "<span class='badge badge-secondary'>Not Started</span>";
-									  }elseif($row['status'] == 2){
-										  echo "<span class='badge badge-primary'>Started</span>";
-										}elseif($row['status'] == 3){
-										  echo "<span class='badge badge-info'>In Progress</span>";
-										}elseif($row['status'] == 4){
-										  echo "<span class='badge badge-warning'>In Review</span>";
-										}elseif($row['status'] == 5){
-										  echo "<span class='badge badge-success'>Completed</span>";
-										}
-										// elseif($row['status'] == 6){
-										// 	echo "<span class='badge badge-success'>Completed</span>";
-									  	// }
-			                        	?>
-			                        </td>
-			                        <td class="text-center">
-										<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-					                      Action
-					                    </button>
-					                    <div class="dropdown-menu" style="">
-					                      <a class="dropdown-item view_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"  data-task="<?php echo $row['task'] ?>"><i class="fa fa-eye mx-1"></i> View</a>
-					                      <div class="dropdown-divider"></div>
-					                      <?php if($_SESSION['login_type'] != 3): ?>
-					                      <a class="dropdown-item edit_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"  data-task="<?php echo $row['task'] ?>"><i class="fa fa-pencil-alt mx-1"></i> Edit</a>
-					                      <div class="dropdown-divider"></div>
-					                      <a class="dropdown-item delete_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash mx-1"></i> Delete</a>
-					                  <?php endif; ?>
-					                    </div>
-									</td>
-		                    	</tr>
-							<?php 
-							endwhile;
-							?>
-						</tbody>
-					</table>
+				
+				<div class="card-body col-12 x-scroll" style="width:1200px;">
+					<div class="tab-content px-0 mx-0" id="pills-tabContent">
+						<div class="tab-pane" id="listtask" role="tabpanel" aria-labelledby="pills-list-tab">
+							<div class="">
+							<table class="table table-condensed table-hover table-responsive x-scroll" id="datalist">
+								<colgroup>
+									<col width="5%">
+									<col width="25%">
+									<col width="30%">
+									<col width="15%">
+									<col width="15%">
+								</colgroup>
+								<thead>
+									<th>#</th>
+									<th>Task</th>
+									<th>Assignee</th>
+									<th>Status</th>
+									<th>Action</th>
+								</thead>
+								<tbody>
+									<?php 
+									$i = 1;
+									$tasks = $conn->query("SELECT * FROM task_list where project_id = {$id} order by task asc");
+									while($row=$tasks->fetch_assoc()):
+										// $trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+										// unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
+										// $desc = strtr(html_entity_decode($row['description']),$trans);
+										// $desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
+									?>
+										<tr>
+											<td class="text-center"><?php echo $i++ ?></td>
+											<td class="" style="min-width:250px"><b><?php echo ucwords($row['task']) ?></b></td>
+											<td class=""><b><?php echo ucwords($row['task_owner']) ?></b></td>
+											<td>
+												<?php 
+												if($row['status'] == 1){
+													echo "<span class='badge badge-secondary'>Not Started</span>";
+												}elseif($row['status'] == 2){
+												echo "<span class='badge badge-primary'>Started</span>";
+												}elseif($row['status'] == 3){
+												echo "<span class='badge badge-info'>In Progress</span>";
+												}elseif($row['status'] == 4){
+												echo "<span class='badge badge-warning'>In Review</span>";
+												}elseif($row['status'] == 5){
+												echo "<span class='badge badge-success'>Completed</span>";
+												}
+												// elseif($row['status'] == 6){
+												// 	echo "<span class='badge badge-success'>Completed</span>";
+												// }
+												?>
+											</td>
+											<td class="text-center">
+												<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+												Action
+												</button>
+												<div class="dropdown-menu" style="">
+												<a class="dropdown-item view_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"  data-task="<?php echo $row['task'] ?>"><i class="fa fa-eye mx-1"></i> View</a>
+												<div class="dropdown-divider"></div>
+												<?php if($_SESSION['login_type'] != 3): ?>
+												<a class="dropdown-item edit_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"  data-task="<?php echo $row['task'] ?>"><i class="fa fa-pencil-alt mx-1"></i> Edit</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item delete_task" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash mx-1"></i> Delete</a>
+											<?php endif; ?>
+												</div>
+											</td>
+										</tr>
+									<?php 
+									endwhile;
+									?>
+								</tbody>
+							</table>
+							</div>
+						</div>
+						<div class="tab-pane active d-flex px-0 mx-0 col-12" id="boardtask" role="tabpanel" aria-labelledby="pills-board-tab">
+							<!-- <div class="card card-secondary col-lg-4 col-md-4 col-sm-12 mr-2 mx-0 px-0 py-0">
+								<div class="card-header mx-0 px-3 py-2">
+									<strong for="" class="">BACKLOG</strong>
+									<div class="card-tools card-link">
+										<a href="./index.php?page=new_task" class="btn btn-success btn-sm"><i class="fa fa-arrowleft"></i> Add Task</a>
+									</div>
+								</div>
+								<div class="card-body px-2">
+									<div class="card card-outline card-primary m-0 p-0">
+										<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
+									</div>
+								</div>
+							</div> -->
+							<!-- <div class="card card-primary col-lg-4 col-md-4 col-sm-12 mr-2 mx-0 px-0 py-0">
+								<div class="card-header mx-0 px-3 py-2">
+									<strong for="" class="">TODO</strong>
+									<div class="card-tools card-link">
+										<a href="./index.php?page=new_task" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add Task</a>
+									</div>
+								</div>
+								<div class="card-body">
+									<div class="card card-outline card-primary todo-list ui-sortable my-2 mr-2 px-0 mx-0" data-widget="todo-list">
+										<div>
+											<span class="handle ui-sortable-handle" title="Sort Task">
+											<i class="fas fa-ellipsis-v"></i>
+											<i class="fas fa-ellipsis-v"></i>
+											</span>
+											<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
+										</div>
+										<div class="card-footer mx-0 my-0 py-2 px-0">
+											<div class="card-tools card-link product-share float-right px-0 mx-0">
+												<a href="#" class="text-primary">
+												<i class="fas fa-file" title="View Details"></i>
+												</a>
+												<a href="#" class="text-info">
+												<i class="fas fa-pen" title="Update"></i>
+												</a>
+												<a href="#" class="text-danger">
+												<i class="fas fa-trash" title="Delete"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+									<div class="card card-outline card-primary todo-list ui-sortable my-2 mr-2 px-0 mx-0" data-widget="todo-list">
+										<div>
+											<span class="handle ui-sortable-handle" title="Sort Task">
+											<i class="fas fa-ellipsis-v"></i>
+											<i class="fas fa-ellipsis-v"></i>
+											</span>
+											<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
+										</div>
+										<div class="card-footer mx-0 my-0 py-2 px-0">
+											<div class="card-tools card-link product-share float-right px-0 mx-0">
+												<a href="#" class="text-primary">
+												<i class="fas fa-file" title="View Details"></i>
+												</a>
+												<a href="#" class="text-info">
+												<i class="fas fa-pen" title="Update"></i>
+												</a>
+												<a href="#" class="text-danger">
+												<i class="fas fa-trash" title="Delete"></i>
+												</a>
+											</div>
+										</div>
+									</div>
+									
+								</div>
+							</div>
+							<div class="card card-info col-lg-4 col-md-4 col-sm-12 mr-2 mx-0 px-0 py-0">
+								<div class="card-header mx-0 px-3 py-2">
+									<strong for="" class="">IN-PROGRESS</strong>
+									<div class="card-tools card-link">
+										<a href="./index.php?page=new_task" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add Task</a>
+									</div>
+								</div>
+								<div class="card-body px-2">
+									<div class="card card-outline card-primary m-0 p-0">
+										<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
+									</div>
+								</div>
+							</div>
+							<div class="card card-success col-lg-4 col-md-4 col-sm-12 mr-2 mx-0 px-0 py-0">
+								<div class="card-header mx-0 px-3 py-2">
+									<strong for="" class="">DONE</strong>
+									<div class="card-tools card-link">
+										<a href="./index.php?page=new_task" class="btn btn-success btn-sm"><i class="fa fa-arrowleft"></i> Add Task</a>
+									</div>
+								</div>
+								<div class="card-body px-2">
+									<div class="card card-outline card-primary m-0 p-0">
+										<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
+									</div>
+								</div>
+							</div> -->
+							<div class="task-board">
+								<?php
+								require_once "board_crud.php";
+
+								$projectName = "StartTuts";
+								$boardManagement = new BoardManagement();
+								$statusResult = $boardManagement->getAllStatus();
+								foreach ($statusResult as $statusRow) {
+									$taskResult = $boardManagement->getProjectTaskByStatus($statusRow["id"], $projectName);
+									?>
+									<div class="status-card">
+										<div class="card-header">
+											<span class="card-header-text"><?php echo $statusRow["status_name"]; ?></span>
+										</div>
+										<ul class="sortable ui-sortable"
+											id="sort<?php echo $statusRow["id"]; ?>"
+											data-status-id="<?php echo $statusRow["id"]; ?>">
+											<?php
+											if (! empty($taskResult)) {
+												foreach ($taskResult as $taskRow) {
+											?>
+												<li class="text-row ui-sortable-handle" data-task-id="<?php echo $taskRow["id"]; ?>"><?php echo $taskRow["task"]; ?></li>
+											<?php 
+												}
+											} ?>
+										</ul>
+									</div>
+								<?php
+								} ?>
+							</div>
+							
+							<div class="d-flex justify-content-center align-tems-center m-1 hide"><h1>Board Card (Drag & Drop) - Coming Soon!</h1></div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -361,4 +505,21 @@ $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
 			}
 		})
 	}
+
+    $( function() {
+     	var url = 'edit-status.php';
+     	$('ul[id^="sort"]').sortable({
+         	connectWith: ".sortable",
+         	receive: function (e, ui) {
+             	var status_id = $(ui.item).parent(".sortable").data("status-id");
+             	var task_id = $(ui.item).data("task-id");
+             	$.ajax({
+                 	url: url+'?status_id='+status_id+'&task_id='+task_id,
+                 	success: function(response){
+					}
+             	});
+			}
+     
+     	}).disableSelection();
+    });
 </script>

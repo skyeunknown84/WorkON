@@ -51,7 +51,7 @@
 					</select>
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-6 hide">
 				<form action="upload_file.php" id="form" method="post" encytype="multipart/form-data">
 					<input type="file" name="file" id="myFile">
 					<input type="submit" id="uploadfile" value="Upload">
