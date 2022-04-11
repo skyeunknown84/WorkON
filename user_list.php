@@ -8,7 +8,7 @@
 		</div>
 		<div class="card-body">
 			<div class="table-responsive xpand xpand-table x-scroll">
-				<table class="table tabe-hover table-condensed " id="list">
+				<table class="table table-hover table-condensed " id="list">
 					<thead>
 						<tr>
 							<th class="text-center">#</th>

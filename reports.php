@@ -8,36 +8,43 @@
             </div>
           </div>
           <div class="card-body p-0">
-            <div class="col-lg-12 d-flex p-3">
-              <div class="col-md-4">
-                <select name="status" id="status" class="custom-select custom-select-md form-control">
-                  <option value="">Select Status</option>
-                  <option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Not Started</option>
-                  <option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>Started</option>
-                  <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Progress</option>
-                  <option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>In Review</option>
-                  <option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <?php
 
-                ?>
-                <select name="status" id="status" class="custom-select custom-select-md form-control">
-                  <option value="">Select Assignee</option>
-                  <option value="1">Jon</option>
-                  <option value="2">Ethan</option>
-                  <option value="3">Ellie</option>
-                  <option value="4">Alice</option>
-                  <option value="5">Sage</option>
-                </select>
-              </div>
-              <div class="col-md-4">
-                <input type="search" name="search" id="search" class="form-control" placeholder="Search" />
+          <div class="callout">
+            <div class="col-md-12">
+              <div class="col-lg-12 d-flex p-3">
+                <div class="col-md-4">
+                  <select name="status" id="status" class="custom-select custom-select-md form-control">
+                    <option value="">Select Status</option>
+                    <option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Not Started</option>
+                    <option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>Started</option>
+                    <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Progress</option>
+                    <option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>In Review</option>
+                    <option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  
+                  <select name="status" id="status" class="custom-select custom-select-md form-control">                
+                    <option value="">Select Assignee</option>
+                    <?php
+                      $qry = $conn->query("SELECT concat(firstname,' ',lastname) as name FROM users WHERE type BETWEEN 2 AND 3");
+                      while($row = $qry->fetch_assoc()):
+                    ?>
+                    <option value="<?php echo $row['name'] ?>"><?php echo $row['name'] ?></option>
+                    <?php endwhile ?>
+                    
+                  </select>
+                </div>
+                <div class="col-md-4">
+                  <input type="search" name="search" id="search" class="form-control" placeholder="Search" />
+                </div>
               </div>
             </div>
+          </div>
+            
+
             <div class="table-responsive" id="printable">
-              <table class="table m-0 table-bordered">
+              <table class="table table-hover table-condensed m-0 table-bordered" id="list">
                <!--  <colgroup>
                   <col width="5%">
                   <col width="30%">
@@ -142,7 +149,19 @@
           </div>
         </div>
         </div>
+<style>
+  .callout {
+    /* border-radius: 0.25rem; */
+    box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px 2px rgb(0 0 0 / 24%);
+    background-color: #fff;
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+</style>
 <script>
+  $(document).ready(function(){
+		$('#list').dataTable()
+	})
 	$('#print').click(function(){
 		start_load()
 		var _h = $('head').clone()
