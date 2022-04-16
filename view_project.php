@@ -137,7 +137,7 @@ if($_SESSION['login_type'] == 2){
 								<li class="nav-item  btn-sm"><a class="nav-link active  btn-sm" href="#boardtask" data-toggle="tab"><i class="fa fa-layer-group pr-2"></i> Board</a></li>
 							</ul>
 						</div>
-						<div class="col-6 text-right hide">
+						<div class="col-6 text-right">
 						<?php if($_SESSION['login_type'] != 3): ?>
 							<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_task"><i class="fa fa-plus"></i> New Task</button>
 						<?php endif; ?>
@@ -217,134 +217,6 @@ if($_SESSION['login_type'] == 2){
 								</tbody>
 							</table>
 							</div>
-						</div>
-						<div class="tab-pane active d-flex px-0 mx-0 col-12" id="boardtask" role="tabpanel" aria-labelledby="pills-board-tab">
-							<!-- <div class="card card-secondary col-lg-4 col-md-4 col-sm-12 mr-2 mx-0 px-0 py-0">
-								<div class="card-header mx-0 px-3 py-2">
-									<strong for="" class="">BACKLOG</strong>
-									<div class="card-tools card-link">
-										<a href="./index.php?page=new_task" class="btn btn-success btn-sm"><i class="fa fa-arrowleft"></i> Add Task</a>
-									</div>
-								</div>
-								<div class="card-body px-2">
-									<div class="card card-outline card-primary m-0 p-0">
-										<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
-									</div>
-								</div>
-							</div> -->
-							<!-- <div class="card card-primary col-lg-4 col-md-4 col-sm-12 mr-2 mx-0 px-0 py-0">
-								<div class="card-header mx-0 px-3 py-2">
-									<strong for="" class="">TODO</strong>
-									<div class="card-tools card-link">
-										<a href="./index.php?page=new_task" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add Task</a>
-									</div>
-								</div>
-								<div class="card-body">
-									<div class="card card-outline card-primary todo-list ui-sortable my-2 mr-2 px-0 mx-0" data-widget="todo-list">
-										<div>
-											<span class="handle ui-sortable-handle" title="Sort Task">
-											<i class="fas fa-ellipsis-v"></i>
-											<i class="fas fa-ellipsis-v"></i>
-											</span>
-											<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
-										</div>
-										<div class="card-footer mx-0 my-0 py-2 px-0">
-											<div class="card-tools card-link product-share float-right px-0 mx-0">
-												<a href="#" class="text-primary">
-												<i class="fas fa-file" title="View Details"></i>
-												</a>
-												<a href="#" class="text-info">
-												<i class="fas fa-pen" title="Update"></i>
-												</a>
-												<a href="#" class="text-danger">
-												<i class="fas fa-trash" title="Delete"></i>
-												</a>
-											</div>
-										</div>
-									</div>
-									<div class="card card-outline card-primary todo-list ui-sortable my-2 mr-2 px-0 mx-0" data-widget="todo-list">
-										<div>
-											<span class="handle ui-sortable-handle" title="Sort Task">
-											<i class="fas fa-ellipsis-v"></i>
-											<i class="fas fa-ellipsis-v"></i>
-											</span>
-											<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
-										</div>
-										<div class="card-footer mx-0 my-0 py-2 px-0">
-											<div class="card-tools card-link product-share float-right px-0 mx-0">
-												<a href="#" class="text-primary">
-												<i class="fas fa-file" title="View Details"></i>
-												</a>
-												<a href="#" class="text-info">
-												<i class="fas fa-pen" title="Update"></i>
-												</a>
-												<a href="#" class="text-danger">
-												<i class="fas fa-trash" title="Delete"></i>
-												</a>
-											</div>
-										</div>
-									</div>
-									
-								</div>
-							</div>
-							<div class="card card-info col-lg-4 col-md-4 col-sm-12 mr-2 mx-0 px-0 py-0">
-								<div class="card-header mx-0 px-3 py-2">
-									<strong for="" class="">IN-PROGRESS</strong>
-									<div class="card-tools card-link">
-										<a href="./index.php?page=new_task" class="btn btn-success btn-sm"><i class="fa fa-plus"></i> Add Task</a>
-									</div>
-								</div>
-								<div class="card-body px-2">
-									<div class="card card-outline card-primary m-0 p-0">
-										<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
-									</div>
-								</div>
-							</div>
-							<div class="card card-success col-lg-4 col-md-4 col-sm-12 mr-2 mx-0 px-0 py-0">
-								<div class="card-header mx-0 px-3 py-2">
-									<strong for="" class="">DONE</strong>
-									<div class="card-tools card-link">
-										<a href="./index.php?page=new_task" class="btn btn-success btn-sm"><i class="fa fa-arrowleft"></i> Add Task</a>
-									</div>
-								</div>
-								<div class="card-body px-2">
-									<div class="card card-outline card-primary m-0 p-0">
-										<label class="px-2 pb-0 pt-2 bold">Task Label 1</label>
-									</div>
-								</div>
-							</div> -->
-							<div class="task-board">
-								<?php
-								require_once "board_crud.php";
-
-								$projectName = "StartTuts";
-								$boardManagement = new BoardManagement();
-								$statusResult = $boardManagement->getAllStatus();
-								foreach ($statusResult as $statusRow) {
-									$taskResult = $boardManagement->getProjectTaskByStatus($statusRow["id"], $projectName);
-									?>
-									<div class="status-card">
-										<div class="card-header">
-											<span class="card-header-text"><?php echo $statusRow["status_name"]; ?></span>
-										</div>
-										<ul class="sortable ui-sortable"
-											id="sort<?php echo $statusRow["id"]; ?>"
-											data-status-id="<?php echo $statusRow["id"]; ?>">
-											<?php
-											if (! empty($taskResult)) {
-												foreach ($taskResult as $taskRow) {
-											?>
-												<li class="text-row ui-sortable-handle" data-task-id="<?php echo $taskRow["id"]; ?>"><?php echo $taskRow["task"]; ?></li>
-											<?php 
-												}
-											} ?>
-										</ul>
-									</div>
-								<?php
-								} ?>
-							</div>
-							
-							<div class="d-flex justify-content-center align-tems-center m-1 hide"><h1>Board Card (Drag & Drop) - Coming Soon!</h1></div>
 						</div>
 					</div>
 				</div>

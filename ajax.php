@@ -91,5 +91,16 @@ if($action == 'delete_group'){
 	if($save)
 		echo $save;
 }
+
+if($action == 'save_file'){
+	$save = $crud->save_file();
+	if($save)
+		echo $save;
+}
+if($action == 'delete_file'){
+	$save = $crud->delete_file();
+	if($save)
+		echo $save;
+}
 ob_end_flush();
 ?>

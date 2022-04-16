@@ -233,20 +233,20 @@ Class Action {
 			}
 		}
 	}
-	function save_file(){
-		extract($_FILES['file']);
-		if(!empty($tmp_name)){
-			$fname = strtotime(date("Y-m-d H:i"))."_".(str_replace(" ","-",$name));
-			$move = move_uploaded_file($tmp_name,'assets/uploads/files/'. $fname);
-			$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https'?'https':'http';
-			$hostName = $_SERVER['HTTP_HOST'];
-			$path =explode('/',$_SERVER['PHP_SELF']);
-			$currentPath = '/'.$path[1]; 
-			if($move){
-				return $protocol.'://'.$hostName.$currentPath.'/assets/uploads/files/'.$fname;
-			}
-		}
-	}
+	// function save_file(){
+	// 	extract($_FILES['file']);
+	// 	if(!empty($tmp_name)){
+	// 		$fname = strtotime(date("Y-m-d H:i"))."_".(str_replace(" ","-",$name));
+	// 		$move = move_uploaded_file($tmp_name,'assets/uploads/files/'. $fname);
+	// 		$protocol = strtolower(substr($_SERVER["SERVER_PROTOCOL"],0,5))=='https'?'https':'http';
+	// 		$hostName = $_SERVER['HTTP_HOST'];
+	// 		$path =explode('/',$_SERVER['PHP_SELF']);
+	// 		$currentPath = '/'.$path[1]; 
+	// 		if($move){
+	// 			return $protocol.'://'.$hostName.$currentPath.'/assets/uploads/files/'.$fname;
+	// 		}
+	// 	}
+	// }
 	function save_project(){
 		extract($_POST);
 		$data = "";
@@ -401,4 +401,74 @@ Class Action {
 		if($delete)
 			return 1;
 	}
+	
+	function save_file(){	
+		extract($_POST);
+		$statusMsg = '';
+		$file_name = "";
+		$check = $this->db->query("SELECT * FROM tbl_files where file_name ='$file_name' ".(!empty($id) ? " and id != {$id} " : ''))->num_rows;
+		if($check > 0){
+			return 2;
+			exit;
+		}
+		if(isset($_FILES['file']) && $_FILES['file']['tmp_name'] != ''){
+			// File upload path
+			$targetDir = "assets/uploads/files/";
+			$fileName = basename($_FILES["file"]["name"]);
+			$fileSize = basename($_FILES["file"]["size"]);
+			$position= strpos($fileName, ".");
+			$fileExt= substr($fileName, $position + 1);
+			$fileextension= strtolower($fileExt);
+			echo $fileextension;
+			$targetFilePath = $targetDir . $fileName;
+			$fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
+
+		}
+		if(empty($id)){
+			// Allow certain file formats
+			$allowTypes = array('jpg','png','jpeg','gif','pdf','docx','xlsx','pptx');
+			if(in_array($fileType, $allowTypes)){
+				// Upload file to server
+				if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
+					// Insert image file name into database
+					$save = $this->db->query("INSERT into tbl_files (file_name, file_type, file_size, date_uploaded) VALUES ('".$fileName."', '".$fileextension."', '".$fileSize."', NOW())");
+					if($save){
+						return 1;
+						$statusMsg = "The file (".$fileName. ") with type (".$fileextension. ") has been uploaded successfully.";
+						$page = $_SERVER['PHP_SELF'];
+						$sec = "3";
+						header("Refresh: $sec; url=$page");
+					}else{
+						return 2;
+						header( "refresh:2;url=index.php?page=project_list" );
+						$statusMsg = "File upload failed, please try again.";
+					} 
+				}else{
+					return 2;
+					$statusMsg = "Sorry, there was an error uploading your file.";
+					header( "refresh:2;url=index.php?page=project_list" );
+				}
+			}else{
+				return 2;
+				$statusMsg = 'Sorry, only with format JPG, JPEG, PNG, GIF for images allowed and only PDF, XLSX, DOCX, PPTX for files are allowed to upload.';
+				header( "refresh:3;url=index.php?page=project_list" );
+			}
+		}else{
+			return 2;
+			$statusMsg = 'Please select a file to upload.';
+		}
+		// Display status message
+		echo $statusMsg;
+		// if($save){
+		// 	return 1;
+		// }
+	}
+	function delete_file(){
+		extract($_POST);
+		$delete = $this->db->query("DELETE FROM tbl_files where id = $id");
+		if($delete){
+			return 1;
+		}
+	}
+
 }

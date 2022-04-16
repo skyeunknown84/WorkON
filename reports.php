@@ -9,7 +9,7 @@
           </div>
           <div class="card-body p-0">
 
-          <div class="callout">
+          <div class="p-2">
             <div class="col-md-12">
               <div class="col-lg-12 d-flex p-3">
                 <div class="col-md-4">
@@ -43,8 +43,8 @@
           </div>
             
 
-            <div class="table-responsive" id="printable">
-              <table class="table table-hover table-condensed m-0 table-bordered" id="list">
+            <div class="table-responsive p-2" id="printable">
+              <table class="table table-hover table-condensed m-0 table-bordered" id="">
                <!--  <colgroup>
                   <col width="5%">
                   <col width="30%">
