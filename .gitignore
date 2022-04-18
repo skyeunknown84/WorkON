@@ -1,2 +1,11 @@
 
 WorkOn.code-workspace
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.docx
+*.xlsx
+*.pptx
+*.pdf
+*.sql
