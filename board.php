@@ -1,25 +1,11 @@
-<?php
-require "db_connect.php";
-class BoardManagement {
-    function getProjectTaskByStatus($statusId, $projectName) {
-        $db_handle = new DBController();
-        $query = "SELECT * FROM task_list WHERE status= ? AND task = ?";
-        $result = $db_handle->runQuery($query, 'is', array($statusId, $projectName));
-        return $result;
-    }
-    
-    function getAllStatus() {
-        $db_handle = new DBController();
-        $query = "SELECT * FROM task_list";
-        $result = $db_handle->runBaseQuery($query);
-        return $result;
-    }
-    
-    function editTaskStatus($status, $task_id) {
-        $db_handle = new DBController();
-        $query = "UPDATE task_list SET status = ? WHERE id = ?";
-        $result = $db_handle->update($query, 'ii', array($status, $task_id));
-        return $result;
-    }
-}
-?>
+<section>
+    <div class="container-fluid">
+        <div class="card card-outline card-success">
+            <div class="card-body py-5">
+                <div class="py-5 my-5 mx-auto">
+                    <p class="py-5 my-5 mx-auto text-center">No task(s) found...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

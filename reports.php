@@ -27,16 +27,25 @@
                   <select name="status" id="status" class="custom-select custom-select-md form-control">                
                     <option value="">Select Assignee</option>
                     <?php
-                      $qry = $conn->query("SELECT concat(firstname,' ',lastname) as name FROM users WHERE type BETWEEN 2 AND 3");
+                      $qry = $conn->query("SELECT concat(firstname,' ',lastname) as assignee,type FROM users WHERE type BETWEEN 2 AND 3");
                       while($row = $qry->fetch_assoc()):
+                        $chair = "(Chair)";
+                        $faculty = "(Faculty)";
+                        
+                        $usertype = $row['type'];
+                        if($usertype=='2'){
+                          $name = $chair;
+                        }elseif($usertype=='3'){
+                          $name = $faculty;
+                        }
                     ?>
-                    <option value="<?php echo $row['name'] ?>"><?php echo $row['name'] ?></option>
+                    <option value="<?php echo $row['assignee'] ?>"><?php echo $row['assignee'] ?> - <?= $name ?></option>
                     <?php endwhile ?>
                     
                   </select>
                 </div>
                 <div class="col-md-4">
-                  <input type="search" name="search" id="search" class="form-control" placeholder="Search" />
+                  <input type="search" name="reportsearch" id="reportsearch" class="form-control" placeholder="Search" />
                 </div>
               </div>
             </div>
@@ -159,23 +168,41 @@
   }
 </style>
 <script>
-  $(document).ready(function(){
-		$('#list').dataTable()
+  $(function(){
+		$('#list').dataTable();
+    $('#print').click(function(){
+      start_load()
+      var _h = $('head').clone()
+      var _p = $('#printable').clone()
+      var _d = "<p class='text-center'><b>Project Progress Report as of (<?php echo date("F d, Y") ?>)</b></p>"
+      _p.prepend(_d)
+      _p.prepend(_h)
+      var nw = window.open("","","width=900,height=600")
+      nw.document.write(_p.html())
+      nw.document.close()
+      nw.print()
+      setTimeout(function(){
+        nw.close()
+        end_load()
+      },750)
+    });
+    $("#reportsearch").keyup(function(){
+      var input = $(this).val();
+      console.log(input);
+      if(input != ''){
+        $.ajax({
+          url:'index.php?page=reports_search',
+          method: 'POST',
+          data: {input:input},
+          success:function(data){
+            $('#searchresult').html(data)
+            // $('#searchresult').css("display","block");
+          }
+        })
+      }else{
+        $('#searchresult').css("display","none");
+      }
+    });
 	})
-	$('#print').click(function(){
-		start_load()
-		var _h = $('head').clone()
-		var _p = $('#printable').clone()
-		var _d = "<p class='text-center'><b>Project Progress Report as of (<?php echo date("F d, Y") ?>)</b></p>"
-		_p.prepend(_d)
-		_p.prepend(_h)
-		var nw = window.open("","","width=900,height=600")
-		nw.document.write(_p.html())
-		nw.document.close()
-		nw.print()
-		setTimeout(function(){
-			nw.close()
-			end_load()
-		},750)
-	})
+	
 </script>

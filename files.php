@@ -1,23 +1,20 @@
 <section>
-    <div class="container">
-    <div class="card">
+    <div class="container-fluid">
+    <div class="card card-outline card-success">
         <div class="card-body">
-
-
-    
-            <div class="table table-striped files mt-5 d-flex" id="previews actions">
-                <form action="" id="manage_upload_file" enctype="multipart/form-data" class="col-12">
-                    <div class="custom-file col-lg-7 col-md-6 col-sm-12 m-1">
+            <div class="table table-striped files mt-1 d-flex" id="previews actions">
+                <form action="" id="manage_upload_file" enctype="multipart/form-data" class="col-12 mx-auto align-center">
+                    <div class="custom-file col-lg-7 col-md-6 col-sm-12 mx-1">
                         <input type="file" class="custom-file-input" name="file" id="customFile">
-                        <label class="custom-file-label" for="customFile">Add New file</label>
+                        <label class="custom-file-label" for="customFile">Add New File</label>
                     </div>
-                    <input type="submit" name="submit" value="Upload" class="btn btn-primary col-lg-4 col-md-5 col-sm-12 mx-1 mt-1">
+                    <button type="submit" name="submit" class="btn btn-primary col-lg-4 col-md-5 col-sm-12 mx-1 mt-1"><i class="fa fa-upload"></i> Upload</button>
                 </form>
                 <br/>
                                
             </div>
             <hr/>
-            <div class="row col-12">
+            <div class="row col-12 hide">
                 <a class="btn btn-warning delete_file" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash"></i> Remove Files</a>
             </div> 
             <div class="conntainer">
@@ -75,7 +72,10 @@
                     <?php 
                             }
                         }else{ ?>
-                            <p>No image(s) found...</p>
+                        <div class="py-5 my-5 mx-auto">
+                            <p class="py-5 my-5 mx-auto text-center">No file(s) found...</p>
+                        </div>
+                            
                         <?php } ?>
                 </ul>
                 

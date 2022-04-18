@@ -31,7 +31,7 @@
 								<tr>
 									<th class="text-center">#</th>
 									<th>Project Name</th>
-									<th class="">Members</th>
+									<th class="" style="max-width:500px;width:500px">Members</th>
 									<th>Start Date</th>
 									<th>Due Date</th>
 									<th>Status</th>
@@ -44,16 +44,22 @@
 								$stat = array("Not Started","Started","In Progress","In Review","Completed");
 								$where = "";
 								if($_SESSION['login_type'] == 2){
-									$where = " where manager_id = '{$_SESSION['login_id']}' ";
+									$where = " where manager_id = '{$_SESSION['login_id']}'";
 								}elseif($_SESSION['login_type'] == 3){
 									$where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
 								}
-								$qry = $conn->query("SELECT * FROM project_list $where order by name asc");
+								// fetch members in array
+								
+
+								$qry = $conn->query("SELECT * FROM project_list $where order by id asc");
 								while($row= $qry->fetch_assoc()):
+									$user_ids = $row['user_ids']; 
 									$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
 									unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
 									$desc = strtr(html_entity_decode($row['description']),$trans);
 									$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
+									$qrymembers = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
+									
 
 									$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
 									$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
@@ -75,21 +81,14 @@
 										<p><b><?php echo ucwords($row['name']) ?></b></p>
 										<p class="truncate"><?php echo strip_tags($desc) ?></p>
 									</td>
-									<td class="">
-										<ul class="users-list clearfix">
-											<?php 
-											$user_ids = array();
-											if(!empty($user_ids)):
-												$members = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as name FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
-												while($row=$members->fetch_assoc()):
-											?>
+									<td class="align-left" style="max-width:500px;width:500px">
+										<ul class="users-list align-left clearfix">
+											<?php while($members= $qrymembers->fetch_assoc()): ?>											
 											<li>
-												<img src="assets/uploads/<?php echo $row['avatar'] ?>" alt="User Image" style="height:35px;width:35px">
-												<a class="users-list-name" href="javascript:void(0)"><?php echo ucwords($row['name']) ?></a>
-												<!-- <span class="users-list-date">Today</span> -->
+												<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2" style="max-width:100px;cursor:pointer">
+												<span class="users-list-date"></span>
 											</li>
-											<?php endwhile; endif;
-											?>
+											<?php endwhile ?>
 										</ul>
 										<ul class="list-inline hide">
 											<li class="list-inline-item">
@@ -144,6 +143,7 @@
 			</div>
 		</div>
 		<div class="tab-pane" id="board" role="tabpanel" aria-labelledby="pills-board-tab">
+			<?php include 'board.php' ?>
 			<div class="d-flex justify-content-center align-tems-center m-1 hide"><h1>Board Card (Drag & Drop) - Coming Soon!</h1></div>
 		</div>
 		<div class="tab-pane" id="files" role="tabpanel" aria-labelledby="pills-files-tab">
