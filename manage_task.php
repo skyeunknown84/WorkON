@@ -17,8 +17,8 @@ if(isset($_GET['id'])){
 		</div>
 		<div class="form-group">
 			<label for="">Assignee</label>
-			<select class="form-control form-control-sm select2" multiple="multiple" name="task_owner[]" required>
-				<option></option>
+			<select name="task_owner" id="task_owner" class="custom-select custom-select-sm" required>
+				<option>Select Assignee</option>
 				<?php 
 				$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
 				while($row= $employees->fetch_assoc()):
@@ -26,7 +26,7 @@ if(isset($_GET['id'])){
 				<option value="<?php echo $row['name'] ?>" <?php echo isset($task_owner) && in_array($row['id'],explode(',',$task_owner)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
 				<?php endwhile; ?>
 			</select>
-			<input type="text" class="form-control form-control-sm hide" name="task_owner" value="<?php echo isset($task_owner) ? $task_owner : '' ?>" required>
+			
 		</div>
 		<div class="form-group">
 			<label for="">Description</label>
@@ -53,7 +53,11 @@ if(isset($_GET['id'])){
 
 <script>
 	$(document).ready(function(){
-
+		$('.select2').select2({
+			// dropdownParent: $('#uni_modal'),
+			placeholder:"Please select here",
+			width: "100%"
+		});
 
 	$('.summernote').summernote({
         height: 200,

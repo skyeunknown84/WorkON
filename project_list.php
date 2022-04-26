@@ -2,7 +2,7 @@
 <div class="col-lg-12">
 	<ul class="nav nav-pills ml-auto p-2">
 		<li class="nav-item"><a class="nav-link active" href="#list" data-toggle="tab">List</a></li>
-		<li class="nav-item"><a class="nav-link" href="#board" data-toggle="tab">Board</a></li>
+		<li class="nav-item hide"><a class="nav-link" href="#board" data-toggle="tab">Board</a></li>
 		<li class="nav-item"><a class="nav-link" href="#files" data-toggle="tab">Files</a></li>
 	</ul>
 	<hr class="border-primary mt-0 mb-3">
@@ -48,8 +48,6 @@
 								}elseif($_SESSION['login_type'] == 3){
 									$where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
 								}
-								// fetch members in array
-								
 
 								$qry = $conn->query("SELECT * FROM project_list $where order by id asc");
 								while($row= $qry->fetch_assoc()):
@@ -58,9 +56,10 @@
 									unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
 									$desc = strtr(html_entity_decode($row['description']),$trans);
 									$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
+									
+									// fetch members in array
 									$qrymembers = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
 									
-
 									$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
 									$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
 									$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
@@ -83,7 +82,7 @@
 									</td>
 									<td class="align-left" style="max-width:500px;width:500px">
 										<ul class="users-list align-left clearfix">
-											<?php while($members= $qrymembers->fetch_assoc()): ?>											
+											<?php while($members = $qrymembers->fetch_assoc()): ?>											
 											<li>
 												<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2" style="max-width:100px;cursor:pointer">
 												<span class="users-list-date"></span>
@@ -142,7 +141,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="tab-pane" id="board" role="tabpanel" aria-labelledby="pills-board-tab">
+		<div class="tab-pane hide" id="board" role="tabpanel" aria-labelledby="pills-board-tab">
 			<?php include 'board.php' ?>
 			<div class="d-flex justify-content-center align-tems-center m-1 hide"><h1>Board Card (Drag & Drop) - Coming Soon!</h1></div>
 		</div>

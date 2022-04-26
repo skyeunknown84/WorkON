@@ -74,7 +74,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="uni_modal" role='dialog'>
+  <div class="modal fade" id="uni_modal" role='dialog' data-focus="false">
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -103,7 +103,7 @@
       </div>
     </div>
   </div>
-  <div class="modal fade" id="viewer_modal" role='dialog'>
+  <div class="modal fade" id="viewer_modal" role='dialog' data-focus="false">
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
               <button type="button" class="btn-close" data-dismiss="modal"><span class="fa fa-times"></span></button>

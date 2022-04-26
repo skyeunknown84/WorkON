@@ -71,6 +71,11 @@ if($action == 'save_progress'){
 	if($save)
 		echo $save;
 }
+if($action == 'save_progress_file'){
+	$save = $crud->save_progress_file();
+	if($save)
+		echo $save;
+}
 if($action == 'delete_progress'){
 	$save = $crud->delete_progress();
 	if($save)

@@ -5,7 +5,7 @@
             <div class="table table-striped mt-1 d-flex" id="previews actions">
                 <form action="" id="manage_upload_file" enctype="multipart/form-data" class="col-12 mx-auto align-center">
                 
-                    <div class="form-group">
+                <div class="form-group">
                         <label for="" class="control-label">Task Name</label>
                         <select class="form-control form-control-sm select2" name="project_id" >
                             <option></option>
@@ -13,6 +13,18 @@
                             $qry = $conn->query("SELECT * FROM project_list $where order by id asc");
                             while($row = $qry->fetch_assoc()):
                                 $pid = $row['id']
+                            ?>
+                            <option value="<?php echo $row['id'] ?>" <?php echo isset($pid) && $pid == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="" class="control-label">SubTask Name</label>
+                        <select class="form-control form-control-sm select2" name="task_id" >
+                            <option></option>
+                            <?php 
+                            $qry = $conn->query("SELECT * FROM task_list where project_id = {$pid} order by task asc");
+                            while($row = $qry->fetch_assoc()):
                             ?>
                             <option value="<?php echo $row['id'] ?>" <?php echo isset($pid) && $pid == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
                             <?php endwhile; ?>
@@ -36,7 +48,7 @@
                     <?php
                     
                         // Get images from the database
-                        $query = $conn->query("SELECT * FROM user_productivity ORDER BY date_uploaded DESC");
+                        $query = $conn->query("SELECT * FROM tbl_files ORDER BY date_uploaded DESC");
 
                         if($query->num_rows > 0){
                             while($row = $query->fetch_assoc()){
@@ -112,7 +124,7 @@ $(document).ready(function(){
 		e.preventDefault()
         start_load()
 		$.ajax({
-			url:'ajax.php?action=save_progress',
+			url:'ajax.php?action=save_file',
 			data: new FormData($(this)[0]),
 		    cache: false,
 		    contentType: false,

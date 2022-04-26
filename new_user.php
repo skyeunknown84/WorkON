@@ -35,7 +35,7 @@
 		                    </div>
 						</div>
 						<div class="form-group d-flex justify-content-center align-items-center">
-							<img src="<?php echo isset($avatar) ? 'assets/uploads/'.$avatar :'' ?>" alt="Avatar" id="cimg" class="img-fluid img-thumbnail ">
+							<img src="<?php echo isset($avatar) ? 'assets/uploads/'.$avatar :'assets/uploads/no-image-available.png' ?>" alt="Avatar" id="cimg" class="img-fluid img-thumbnail ">
 						</div>
 					</div>
 					<div class="col-md-6">
@@ -47,13 +47,16 @@
 						</div>
 						<div class="form-group">
 							<label class="control-label">Password</label>
-							<input type="password" class="form-control form-control-sm" name="password" <?php echo !isset($id) ? "required":'' ?>>
-							<small><i><?php echo isset($id) ? "Leave this blank if you dont want to change you password":'' ?></i></small>
+							<input type="password" class="form-control form-control-sm" name="password" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*]).{8,}" title="Must contain at least one number and one uppercase and lowercase letters, one special symbol character and atleast 8 or more characters in length" <?php echo !isset($id) ? "required":'' ?>>
+							<small class="pwd_msg col-12 hide"><i><?php echo isset($id) ? "Leave this blank if you dont want to change you password":'' ?></i></small>
+							<small class="pwd_format col-12 hide"><i><?php echo isset($id) ? "Password should have atleast a number, one uppercase and one lowercase letters, a special symbol and 8 or more characters in length":'' ?></i></small>
+							<small id="pass_format" data-status=''></small>
 						</div>
 						<div class="form-group">
 							<label class="label control-label">Confirm Password</label>
-							<input type="password" class="form-control form-control-sm" name="cpass" <?php echo !isset($id) ? 'required' : '' ?>>
+							<input type="password" class="form-control form-control-sm" name="cpass" pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*]).{8,}" <?php echo !isset($id) ? 'required' : '' ?>>
 							<small id="pass_match" data-status=''></small>
+							
 						</div>
 					</div>
 				</div>
@@ -78,6 +81,7 @@
 	$('[name="password"],[name="cpass"]').keyup(function(){
 		var pass = $('[name="password"]').val()
 		var cpass = $('[name="cpass"]').val()
+		var strongRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#\$%\^&\*]).{8,}");
 		if(cpass == '' ||pass == ''){
 			$('#pass_match').attr('data-status','')
 		}else{
@@ -86,6 +90,11 @@
 			}else{
 				$('#pass_match').attr('data-status','2').html('<i class="text-danger">Password does not match.</i>')
 			}
+		}
+		if(pass = strongRegex){
+			$('#pass_format').attr('data-status','1').html('<i class="text-success">Password matched the requested format</i>')
+		}else{
+			$('#pass_format').attr('data-status','2').html('<i class="text-danger">Password should have atleast a number, one uppercase and one lowercase letters, a special symbol and 8 or more characters in length</i>')
 		}
 	})
 	function displayImg(input,_this) {
@@ -111,6 +120,8 @@
 					return false;
 				}
 			}
+			$('.pwd_msg').removeClass('hide')
+			$('.pwd_format').removeClass('hide')
 		}
 		$.ajax({
 			url:'ajax.php?action=save_user',
