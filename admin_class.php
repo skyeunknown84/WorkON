@@ -295,6 +295,9 @@ Class Action {
 				}
 			}
 		}
+		// if(isset($task_owner)){
+		// 	$data .= ", task_owner='".implode(',',$task_owner)."' ";
+		// }
 		if(empty($id)){
 			$save = $this->db->query("INSERT INTO task_list set $data");
 		}else{
@@ -314,27 +317,115 @@ Class Action {
 	function save_progress(){
 		extract($_POST);
 		$data = "";
+		$status = 1;
+		// $date_uploaded = now();
 		foreach($_POST as $k => $v){
 			if(!in_array($k, array('id')) && !is_numeric($k)){
 				if($k == 'comment')
 					$v = htmlentities(str_replace("'","&#x2019;",$v));
-				if(empty($data)){
-					$data .= " $k='$v' ";
+				if(empty($v)){
+					$comment = "$v";
 				}else{
-					$data .= ", $k='$v' ";
+					$comment = "$v";
 				}
 			}
 		}
-		$dur = abs(strtotime("2020-01-01 ".$end_time)) - abs(strtotime("2020-01-01 ".$start_time));
-		$dur = $dur / (60 * 60);
-		$data .= ", time_rendered='$dur' ";
+		$timedur = abs(strtotime("2020-01-01 ".$end_time)) - abs(strtotime("2020-01-01 ".$start_time));
+		$dur = $timedur / (60 * 60);
+		$duration = $dur;
 		// echo "INSERT INTO user_productivity set $data"; exit;
+		// if(isset($_FILES['taskfile']) && $_FILES['taskfile']['tmp_name'] != ''){
+		// 	$fname = strtotime(date('y-m-d H:i')).'_'.$_FILES['taskfile']['name'];
+		// 	$move = move_uploaded_file($_FILES['taskfile']['tmp_name'],'assets/uploads/'. $fname);
+		// 	$data .= ", avatar = '$fname' ";
+
+		// }
+		if(isset($_FILES['taskfile']) && $_FILES['taskfile']['tmp_name'] != ''){
+			// File upload path
+			$targetDir = "assets/uploads/files/";
+			$fileName = basename($_FILES["taskfile"]["name"]);
+			$fileSize = basename($_FILES["taskfile"]["size"]);
+			$position= strpos($fileName, ".");
+			$fileExt= substr($fileName, $position + 1);
+			$fileextension= strtolower($fileExt);
+			$targetFilePath = $targetDir . $fileName;
+			$fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
+
+			// $data .= ", file_name={$fileName}";
+		}
 		if(empty($id)){
-			$data .= ", user_id={$_SESSION['login_id']} ";
+			$user_id = "{$_SESSION['login_id']}";
 			
-			$save = $this->db->query("INSERT INTO user_productivity set $data");
+			$allowTypes = array('jpg','png','jpeg','gif','pdf','docx','xlsx','pptx');
+			if(in_array($fileType, $allowTypes)){
+				// $data .= ", file_type={$fileType}";
+
+				// Upload file to server
+				if(move_uploaded_file($_FILES["taskfile"]["tmp_name"], $targetFilePath)){
+					// prepare data to Insert query
+					// $data .= ", file_size={$fileSize}";
+					// $data .= ", file_path={$targetFilePath}";
+					// Insert image file name into database
+					// $save = $this->db->query("INSERT INTO user_productivity set $data");
+					$save = $this->db->query("INSERT into user_productivity 
+						(project_id, 
+						task_id, 
+						comment, 
+						date, 
+						start_time, 
+						end_time, 
+						user_id, 
+						file_name, 
+						file_type, 
+						file_size, 
+						file_path, 
+						date_uploaded, 
+						status, 
+						time_rendered, 
+						date_created) 
+						VALUES 
+						('$project_id', 
+						'$task_id', 
+						'$comment', 
+						'$date', 
+						'$start_time', 
+						'$end_time', 
+						'$user_id', 
+						'$fileName', 
+						'$fileextension', 
+						'$fileSize', 
+						'$targetFilePath', 
+						NOW(), 
+						'$status', 
+						'$duration', 
+						NOW())");
+				}
+			}
+			else{
+				return 2;
+				// $statusMsg = 'Sorry, only with format JPG, JPEG, PNG, GIF for images allowed and only PDF, XLSX, DOCX, PPTX for files are allowed to upload.';
+				header( "refresh:3;url=index.php?page=view_project" );
+			}
+			// $save = $this->db->query("INSERT INTO user_productivity set $data");
 		}else{
-			$save = $this->db->query("UPDATE user_productivity set $data where id = $id");
+			$user_id = "{$_SESSION['login_id']}";
+			$save = $this->db->query("UPDATE user_productivity SET
+			project_id='$project_id', 
+			task_id='$task_id', 
+			comment='$comment', 
+			date='$date', 
+			start_time='$start_time', 
+			end_time='$end_time', 
+			user_id='$user_id', 
+			file_name='$fileName', 
+			file_type='$fileextension', 
+			file_size='$fileSize', 
+			file_path='$targetFilePath', 
+			date_uploaded=NOW(), 
+			status='$status', 
+			time_rendered='$duration', 
+			date_created=NOW() 
+			WHERE id = $id");
 		}
 		if($save){
 			return 1;
@@ -406,7 +497,7 @@ Class Action {
 		extract($_POST);
 		$statusMsg = '';
 		$file_name = "";
-		$check = $this->db->query("SELECT * FROM tbl_files where file_name ='$file_name' ".(!empty($id) ? " and id != {$id} " : ''))->num_rows;
+		$check = $this->db->query("SELECT * FROM user_productivity where file_name ='$file_name' ".(!empty($id) ? " and id != {$id} " : ''))->num_rows;
 		if($check > 0){
 			return 2;
 			exit;
@@ -431,7 +522,7 @@ Class Action {
 				// Upload file to server
 				if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
 					// Insert image file name into database
-					$save = $this->db->query("INSERT into tbl_files (file_name, file_type, file_size, date_uploaded) VALUES ('".$fileName."', '".$fileextension."', '".$fileSize."', NOW())");
+					$save = $this->db->query("INSERT into user_productivity (file_name, file_type, file_size, date_uploaded) VALUES ('".$fileName."', '".$fileextension."', '".$fileSize."', NOW())");
 					if($save){
 						return 1;
 						$statusMsg = "The file (".$fileName. ") with type (".$fileextension. ") has been uploaded successfully.";
@@ -457,15 +548,11 @@ Class Action {
 			return 2;
 			$statusMsg = 'Please select a file to upload.';
 		}
-		// Display status message
 		echo $statusMsg;
-		// if($save){
-		// 	return 1;
-		// }
 	}
 	function delete_file(){
 		extract($_POST);
-		$delete = $this->db->query("DELETE FROM tbl_files where id = $id");
+		$delete = $this->db->query("DELETE FROM user_productivity where id = $id");
 		if($delete){
 			return 1;
 		}

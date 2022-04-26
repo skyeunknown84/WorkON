@@ -20,9 +20,11 @@
 <script>
 	$(document).ready(function(){
 	  $('.select2').select2({
+		// dropdownParent: $('#uni_modal'),
 	    placeholder:"Please select here",
 	    width: "100%"
 	  });
+	  
   	})
 	window.start_load = function(){
 	    $('body').prepend('<div id="preloader2"></div>')
@@ -132,7 +134,11 @@
 <script src="assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- WorkON JS App -->
 <script src="assets/dist/js/workon.js"></script>
-
+<!-- Chosen -->
+<script src="assets/plugins/chosen/chosen.jquery.js"></script>
+<script src="assets/plugins/chosen/docsupport/init.js"></script>
+<!-- Multi-Select -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
 <!-- PAGE assets/plugins -->
 <!-- jQuery Mapael -->
 <script src="assets/plugins/jquery-mousewheel/jquery.mousewheel.js"></script>
@@ -144,7 +150,7 @@
 
 <!-- <script src="assets/dist/js/demo.js"></script> -->
 <!-- WorkON dashboard demo (This is only for demo purposes) -->
-<script src="assets/dist/js/pages/dashboard2.js"></script>
+<!-- <script src="assets/dist/js/pages/dashboard2.js"></script> -->
 <!-- DataTables  & Plugins -->
 <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
 <script src="assets/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>

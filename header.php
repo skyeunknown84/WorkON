@@ -44,5 +44,7 @@
   <script src="assets/plugins/jquery-ui/jquery-ui.min.js"></script>
  <!-- summernote -->
   <link rel="stylesheet" href="assets/plugins/summernote/summernote-bs4.min.css">
-  
+  <!-- Chosen -->
+  <link rel="stylesheet" href="assets/plugins/chosen/chosen.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
 </head>

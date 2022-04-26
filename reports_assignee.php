@@ -1,14 +1,13 @@
 <?php
 include 'db_connect.php';
 
-if(isset($_POST['input'])){
-    $input = $_POST['input'];
+if(isset($_POST['request'])){
+    $request = $_POST['request'];
+    $filter_status = "SELECT *,concat(firstname,' ',lastname) AS assignee FROM users u INNER JOIN project_list p  WHERE concat(firstname,' ',lastname) = '$request' AND type BETWEEN 2 AND 3";
+    $result = mysqli_query($conn,$filter_status);
+    $count = mysqli_num_rows($result);
 
-    $query = "SELECT *,concat(firstname,' ',lastname) AS assignee FROM users u INNER JOIN project_list p WHERE name LIKE '{$input}%' AND type BETWEEN 2 AND 3";
-
-    $result = mysqli_query($conn,$query);
-
-    if(mysqli_num_rows($result) > 0){ ?>
+    if($count){ ?>
         <table class="table table-bordered table-striped mt-4">
             <thead>
                 <th>#</th>
