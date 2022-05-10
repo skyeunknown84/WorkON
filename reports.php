@@ -69,12 +69,12 @@
                 <?php
                 $where = "";
                 if($_SESSION['login_type'] == 2){
-                  $where = " where manager_id = '{$_SESSION['login_id']}' ";
+                  $where = " where manager_id = '{$_SESSION['login_id']}' AND p.proj_status='1' and";
                 }elseif($_SESSION['login_type'] == 3){
-                  $where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
+                  $where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' AND p.proj_status='1'";
                 }
                 // $filter_reports = "SELECT *,concat(firstname,' ',lastname) AS assignee FROM users u INNER JOIN project_list p  WHERE type BETWEEN 2 AND 3 and status = ";
-                $filter_reports = "SELECT * FROM project_list p INNER JOIN users u ON p.user_ids = u.id $where order by name asc";
+                $filter_reports = "SELECT *,concat(firstname,' ',lastname) AS assignee FROM project_list p INNER JOIN users u ON p.user_ids = u.id WHERE p.proj_status='1'";
                 $result = mysqli_query($conn,$filter_reports);
                 $count = mysqli_num_rows($result);
                 if($count > 0){
@@ -253,10 +253,10 @@
                   $("#reportresult").css("display","none");
                   $("#filterresult").html("<span>Working...</span>");
                 },
-                success:function(data){
-                  $("#reportresult").css("display","none");
-                  $("#filterresult").html(data);
-                  $("#filterresult").css("display","block");
+                success:function(data){ 
+                    $("#reportresult").css("display","none");
+                    $("#filterresult").html(data);
+                    $("#filterresult").css("display","block");
                 }
             });
         }

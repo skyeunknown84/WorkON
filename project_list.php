@@ -31,6 +31,9 @@
 								<tr>
 									<th class="text-center">#</th>
 									<th>Project Name</th>
+									<?php if($_SESSION['login_type'] == 3): ?>
+									<th>Role</th>
+									<?php endif ?>
 									<th class="" style="max-width:500px;width:500px">Members</th>
 									<th>Start Date</th>
 									<th>Due Date</th>
@@ -39,101 +42,435 @@
 								</tr>
 							</thead>
 							<tbody>
+								
 								<?php
 								$i = 1;
 								$stat = array("Not Started","Started","In Progress","In Review","Completed");
-								$where = "";
-								if($_SESSION['login_type'] == 2){
-									$where = " where manager_id = '{$_SESSION['login_id']}'";
-								}elseif($_SESSION['login_type'] == 3){
-									$where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
-								}
+								
+								$adminid = $_SESSION['login_id'];
+								$deanid = $_SESSION['login_id'];
+								$chairid = $_SESSION['login_id'];
+								$memberid = $_SESSION['login_id'];
+								if($_SESSION['login_type'] == 3){
+									if ($deanid === $_SESSION['login_id']){
+										$qry = $conn->query("SELECT *,p.id as id FROM project_list p INNER JOIN users u ON u.type = p.user_type WHERE p.manager_id = $deanid  GROUP BY p.name ASC");
+										while($row= $qry->fetch_assoc()):
+											
+											$user_ids = $row['user_ids']; 
+											$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+											unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
+											$desc = strtr(html_entity_decode($row['description']),$trans);
+											$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
+											
+											// fetch members in array
+											$qrymembers = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
+											
+											// role define
+											$userrole = 'Dean';
 
-								$qry = $conn->query("SELECT * FROM project_list $where order by id asc");
-								while($row= $qry->fetch_assoc()):
-									$user_ids = $row['user_ids']; 
-									$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
-									unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
-									$desc = strtr(html_entity_decode($row['description']),$trans);
-									$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
-									
-									// fetch members in array
-									$qrymembers = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
-									
-									$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
-									$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
-									$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
-									$prog = $prog > 0 ?  number_format($prog,5) : $prog;
-									$prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
-									if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
-									if($prod  > 0  || $cprog > 0)
-									$row['status'] = 2;
-									else
-									$row['status'] = 1;
-									elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
-									$row['status'] = 6;
-									endif;
-								?>
-								<tr>
-									<th class="text-center"><?php echo $i++ ?></th>
-									<td>
-										<p><b><?php echo ucwords($row['name']) ?></b></p>
-										<p class="truncate"><?php echo strip_tags($desc) ?></p>
-									</td>
-									<td class="align-left" style="max-width:500px;width:500px">
-										<ul class="users-list align-left clearfix">
-											<?php while($members = $qrymembers->fetch_assoc()): ?>											
-											<li>
-												<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2" style="max-width:100px;cursor:pointer">
-												<span class="users-list-date"></span>
-											</li>
-											<?php endwhile ?>
-										</ul>
-										<ul class="list-inline hide">
-											<li class="list-inline-item">
-												<img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
-											</li>
-										</ul>
-									</td>
-									<td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
-									<td><b><?php echo date("M d, Y",strtotime($row['end_date'])) ?></b></td>
-									<td class="text-center">
-										<?php
-										if($row['status'] == 1){
-											echo "<span class='badge badge-secondary'>Not Started</span>";
-										}elseif($row['status'] == 2){
-										echo "<span class='badge badge-primary'>Started</span>";
-										}elseif($row['status'] == 3){
-										echo "<span class='badge badge-info'>In Progress</span>";
-										}elseif($row['status'] == 4){
-										echo "<span class='badge badge-warning'>In Review</span>";
-										}elseif($row['status'] == 5){
-										echo "<span class='badge badge-success'>Completed</span>";
-										}
-										// elseif($row['status'] == 6){
-										// 	echo "<span class='badge badge-success'>Completed</span>";
-										// }
+											// progress calc
+											$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
+											$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+											$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+											$prog = $prog > 0 ?  number_format($prog,5) : $prog;
+											$prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
+											
+											// status calc
+											if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
+											if($prod  > 0  || $cprog > 0)
+											$row['status'] = 2;
+											else
+											$row['status'] = 1;
+											elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+											$row['status'] = 6;
+											endif;
+
+											// secure id params
+											// $param_id = $row['id'];
+											// // encrypt data with base64 
+											// $url_param_id = base64_encode($param_id);
 										?>
-									</td>
-									<td class="text-center">
-										<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
-										Action
-										</button>
-										<div class="dropdown-menu" style="">
-										<a class="dropdown-item view_project" href="./index.php?page=view_project&id=<?php echo $row['id'] ?>" data-id="<?php echo $row['id'] ?>">
-											<i class="fas fa-plus mr-2"></i> Add Task</a>
-										<div class="dropdown-divider"></div>
-										<?php if($_SESSION['login_type'] != 3): ?>
-										<a class="dropdown-item" href="./index.php?page=edit_project&id=<?php echo $row['id'] ?>">
-											<i class="fas fa-pencil-alt mr-2"></i> Edit</a>
-										<div class="dropdown-divider"></div>
-										<a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">
-										<i class="fas fa-trash mr-2"></i> Delete</a>
-									<?php endif; ?>
-										</div>
-									</td>
-								</tr>	
-							<?php endwhile; ?>
+										<tr>
+											<th class="text-center"><?php echo $i++ ?></th>
+											<td>
+												<p><b><?php echo ucwords($row['name']) ?></b></p>
+												<p class="truncate"><?php echo strip_tags($desc) ?></p>
+											</td>
+											<td>
+												<p><b><?php echo ucwords($userrole) ?></b></p>
+											</td>
+											<td class="align-left" style="max-width:500px;width:500px">
+												<ul class="users-list align-left clearfix">
+													<?php while($members = $qrymembers->fetch_assoc()): ?>											
+													<li>
+														<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2" style="max-width:100px;cursor:pointer">
+														<span class="users-list-date"></span>
+													</li>
+													<?php endwhile ?>
+												</ul>
+												<ul class="list-inline hide">
+													<li class="list-inline-item">
+														<img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
+													</li>
+												</ul>
+											</td>
+											<td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
+											<td><b><?php echo date("M d, Y",strtotime($row['end_date'])) ?></b></td>
+											<td class="text-center">
+												<?php
+												if($row['status'] == 1){
+													echo "<span class='badge badge-secondary'>Not Started</span>";
+												}elseif($row['status'] == 2){
+												echo "<span class='badge badge-primary'>Started</span>";
+												}elseif($row['status'] == 3){
+												echo "<span class='badge badge-info'>In Progress</span>";
+												}elseif($row['status'] == 4){
+												echo "<span class='badge badge-warning'>In Review</span>";
+												}elseif($row['status'] == 5){
+												echo "<span class='badge badge-success'>Completed</span>";
+												}
+												// elseif($row['status'] == 6){
+												// 	echo "<span class='badge badge-success'>Completed</span>";
+												// }
+												?>
+											</td>
+											<td class="text-center">
+												<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+												Action
+												</button>
+												<div class="dropdown-menu" style="">
+												<a class="dropdown-item view_project" href="./index.php?page=view_project&id=<?= $row['id'] ?>" data-id="<?= $row['id'] ?>">
+													<i class="fas fa-plus mr-2"></i> Add Task</a>
+												<div class="dropdown-divider"></div>
+												<?php if($_SESSION['login_type'] == 3): ?>
+												<a class="dropdown-item" href="./index.php?page=edit_project&id=<?= $row['id'] ?>">
+													<i class="fas fa-pencil-alt mr-2"></i> Edit</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?= $row['id'] ?>">
+												<i class="fas fa-trash mr-2"></i> Delete</a>
+												<?php endif; ?>
+												</div>
+											</td>
+										</tr>	
+										<?php endwhile;
+										// $where = " where manager_id = '{$_SESSION['login_id']}'";
+									}
+									if ($chairid === $_SESSION['login_id']){
+										$qry = $conn->query("SELECT *,p.id as id FROM project_list p INNER JOIN users u ON u.type = p.user_type WHERE p.chair_id = $chairid  GROUP BY p.name ASC");
+										while($row= $qry->fetch_assoc()):
+											$user_ids = $row['user_ids']; 
+											$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+											unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
+											$desc = strtr(html_entity_decode($row['description']),$trans);
+											$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
+											
+											// fetch members in array
+											$qrymembers = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
+											
+											// role define
+											$userrole = 'Chair';
+
+											// progress calc
+											$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
+											$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+											$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+											$prog = $prog > 0 ?  number_format($prog,5) : $prog;
+											$prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
+											
+											// status calc
+											if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
+											if($prod  > 0  || $cprog > 0)
+											$row['status'] = 2;
+											else
+											$row['status'] = 1;
+											elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+											$row['status'] = 6;
+											endif;
+
+											// secure id params
+											// $param_id = $row['id'];
+											// // encrypt data with base64 
+											// $url_param_id = base64_encode($param_id);
+
+										?>
+										<tr>
+											<th class="text-center"><?php echo $i++ ?></th>
+											<td>
+												<p><b><?php echo ucwords($row['name']) ?></b></p>
+												<p class="truncate"><?php echo strip_tags($desc) ?></p>
+											</td>
+											<td>
+												<p><b><?php echo ucwords($userrole) ?></b></p>
+											</td>
+											<td class="align-left" style="max-width:500px;width:500px">
+												<ul class="users-list align-left clearfix">
+													<?php while($members = $qrymembers->fetch_assoc()): ?>											
+													<li>
+														<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2" style="max-width:100px;cursor:pointer">
+														<span class="users-list-date"></span>
+													</li>
+													<?php endwhile ?>
+												</ul>
+												<ul class="list-inline hide">
+													<li class="list-inline-item">
+														<img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
+													</li>
+												</ul>
+											</td>
+											<td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
+											<td><b><?php echo date("M d, Y",strtotime($row['end_date'])) ?></b></td>
+											<td class="text-center">
+												<?php
+												if($row['status'] == 1){
+													echo "<span class='badge badge-secondary'>Not Started</span>";
+												}elseif($row['status'] == 2){
+												echo "<span class='badge badge-primary'>Started</span>";
+												}elseif($row['status'] == 3){
+												echo "<span class='badge badge-info'>In Progress</span>";
+												}elseif($row['status'] == 4){
+												echo "<span class='badge badge-warning'>In Review</span>";
+												}elseif($row['status'] == 5){
+												echo "<span class='badge badge-success'>Completed</span>";
+												}
+												// elseif($row['status'] == 6){
+												// 	echo "<span class='badge badge-success'>Completed</span>";
+												// }
+												?>
+											</td>
+											<td class="text-center">
+												<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+												Action
+												</button>
+												<div class="dropdown-menu" style="">
+												<a class="dropdown-item view_project" href="./index.php?page=view_project&id=<?=$row['id'];?>" data-id="<?=$row['id'];?>">
+													<i class="fas fa-plus mr-2"></i> Add Task</a>
+												<div class="dropdown-divider"></div>
+												<?php if($_SESSION['login_type'] == 3): ?>
+												<a class="dropdown-item" href="./index.php?page=edit_project&id=<?=$row['id'];?>">
+													<i class="fas fa-pencil-alt mr-2"></i> Edit</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?=$row['id'];?>">
+												<i class="fas fa-trash mr-2"></i> Delete</a>
+												<?php endif; ?>
+												</div>
+											</td>
+										</tr>	
+										<?php endwhile;
+										// $where = " where chair_id = '{$_SESSION['login_id']}'";
+									}
+									if ($memberid === $_SESSION['login_id']){
+										$qry = $conn->query("SELECT *,p.id as id FROM project_list p INNER JOIN users u ON u.type = p.user_type WHERE concat('[',REPLACE(p.user_ids,',','],['),']') LIKE '%[{$memberid}]%' GROUP BY p.name ASC");
+										while($row= $qry->fetch_assoc()):
+											$user_ids = $row['user_ids']; 
+											$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+											unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
+											$desc = strtr(html_entity_decode($row['description']),$trans);
+											$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
+											
+											// fetch members in array
+											$qrymembers = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
+											
+											// role define
+											$userrole = 'Member';
+
+											// progress calc
+											$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
+											$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+											$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+											$prog = $prog > 0 ?  number_format($prog,5) : $prog;
+											$prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
+											
+											// status calc
+											if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
+											if($prod  > 0  || $cprog > 0)
+											$row['status'] = 2;
+											else
+											$row['status'] = 1;
+											elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+											$row['status'] = 6;
+											endif;
+
+											// secure id params
+											// $param_id = $row['id'];
+											// // encrypt data with base64 
+											// $url_param_id = base64_encode($param_id);
+										?>
+										<tr>
+											<th class="text-center"><?php echo $i++ ?></th>
+											<td>
+												<p><b><?php echo ucwords($row['name']) ?></b></p>
+												<p class="truncate"><?php echo strip_tags($desc) ?></p>
+											</td>
+											<td>
+												<p><b><?php echo ucwords($userrole) ?></b></p>
+											</td>
+											<td class="align-left" style="max-width:500px;width:500px">
+												<ul class="users-list align-left clearfix">
+													<?php while($members = $qrymembers->fetch_assoc()): ?>											
+													<li>
+														<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2" style="max-width:100px;cursor:pointer">
+														<span class="users-list-date"></span>
+													</li>
+													<?php endwhile ?>
+												</ul>
+												<ul class="list-inline hide">
+													<li class="list-inline-item">
+														<img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
+													</li>
+												</ul>
+											</td>
+											<td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
+											<td><b><?php echo date("M d, Y",strtotime($row['end_date'])) ?></b></td>
+											<td class="text-center">
+												<?php
+												if($row['status'] == 1){
+													echo "<span class='badge badge-secondary'>Not Started</span>";
+												}elseif($row['status'] == 2){
+												echo "<span class='badge badge-primary'>Started</span>";
+												}elseif($row['status'] == 3){
+												echo "<span class='badge badge-info'>In Progress</span>";
+												}elseif($row['status'] == 4){
+												echo "<span class='badge badge-warning'>In Review</span>";
+												}elseif($row['status'] == 5){
+												echo "<span class='badge badge-success'>Completed</span>";
+												}
+												// elseif($row['status'] == 6){
+												// 	echo "<span class='badge badge-success'>Completed</span>";
+												// }
+												?>
+											</td>
+											<td class="text-center">
+												<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+												Action
+												</button>
+												<div class="dropdown-menu" style="">
+												<a class="dropdown-item view_project" href="./index.php?page=view_project&id=<?= $row['id'] ?>" data-id="<?= $row['id'] ?>">
+													<i class="fas fa-plus mr-2"></i> Add Task</a>
+												<div class="dropdown-divider"></div>
+												<?php if($_SESSION['login_type'] != 3): ?>
+												<a class="dropdown-item" href="./index.php?page=edit_project&id=<?= $row['id'] ?>">
+													<i class="fas fa-pencil-alt mr-2"></i> Edit</a>
+												<div class="dropdown-divider"></div>
+												<a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?= $row['id'] ?>">
+												<i class="fas fa-trash mr-2"></i> Delete</a>
+												<?php endif; ?>
+												</div>
+											</td>
+										</tr>	
+										<?php endwhile;
+										// $where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
+									}
+									else {
+										echo 'No Data Found';
+									}
+								}
+								elseif($_SESSION['login_type'] == 1){
+									$qry = $conn->query("SELECT *,p.id as id FROM project_list p INNER JOIN users u GROUP BY p.id asc");
+									while($row= $qry->fetch_assoc()):
+										$user_ids = $row['user_ids']; 
+										$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+										unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
+										$desc = strtr(html_entity_decode($row['description']),$trans);
+										$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
+										
+										// fetch members in array
+										$qrymembers = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users where id in ($user_ids) order by concat(firstname,' ',lastname) asc");
+										
+										// role define
+										$userrole = 'Dean';
+
+										// progress calc
+										$tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
+										$cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+										$prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+										$prog = $prog > 0 ?  number_format($prog,5) : $prog;
+										$prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
+										
+										// status calc
+										if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
+										if($prod  > 0  || $cprog > 0)
+										$row['status'] = 2;
+										else
+										$row['status'] = 1;
+										elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+										$row['status'] = 6;
+										endif;
+
+										// secure id params
+										// $data = $row['id'];
+
+										// $encrypt_1 = (($data*123456789*5678)/956783);
+										// // encrypt data with base64 
+										// $url_link = urlencode(base64_encode($encrypt_1));
+									?>
+									<tr>
+										<th class="text-center"><?php echo $i++ ?></th>
+										<td>
+											<p><b><?php echo ucwords($row['name']) ?></b></p>
+											<p class="truncate"><?php echo strip_tags($desc) ?></p>
+										</td>
+										<?php if($_SESSION['login_type'] == 3): ?>
+										<td>
+											<p><b><?php echo ucwords($userrole) ?></b></p>
+										</td>
+										<?php endif ?>
+										<td class="align-left" style="max-width:500px;width:500px">
+											<ul class="users-list align-left clearfix">
+												<?php while($members = $qrymembers->fetch_assoc()): ?>											
+												<li>
+													<img src="assets/uploads/<?php echo $members['avatar'] ?>" title="<?= $members['uname'] ?>" alt="User Image" class="img-circle elevation-2" style="max-width:100px;cursor:pointer">
+													<span class="users-list-date"></span>
+												</li>
+												<?php endwhile ?>
+											</ul>
+											<ul class="list-inline hide">
+												<li class="list-inline-item">
+													<img alt="Avatar" class="table-avatar" src="../../dist/img/avatar.png">
+												</li>
+											</ul>
+										</td>
+										<td><b><?php echo date("M d, Y",strtotime($row['start_date'])) ?></b></td>
+										<td><b><?php echo date("M d, Y",strtotime($row['end_date'])) ?></b></td>
+										<td class="text-center">
+											<?php
+											if($row['status'] == 1){
+												echo "<span class='badge badge-secondary'>Not Started</span>";
+											}elseif($row['status'] == 2){
+											echo "<span class='badge badge-primary'>Started</span>";
+											}elseif($row['status'] == 3){
+											echo "<span class='badge badge-info'>In Progress</span>";
+											}elseif($row['status'] == 4){
+											echo "<span class='badge badge-warning'>In Review</span>";
+											}elseif($row['status'] == 5){
+											echo "<span class='badge badge-success'>Completed</span>";
+											}
+											// elseif($row['status'] == 6){
+											// 	echo "<span class='badge badge-success'>Completed</span>";
+											// }
+											?>
+										</td>
+										<td class="text-center">
+											<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+											Action
+											</button>
+											<div class="dropdown-menu" style="">
+											<a class="dropdown-item view_project" href="./index.php?page=view_project&id=<?= $row['id'] ?>" data-id="<?= $row['id'] ?>">
+												<i class="fas fa-plus mr-2"></i> Add Task</a>
+											<div class="dropdown-divider"></div>
+											<?php if($_SESSION['login_type'] != 3): ?>
+											<a class="dropdown-item" href="./index.php?page=edit_project&id=<?= $row['id'] ?>">
+												<i class="fas fa-pencil-alt mr-2"></i> Edit</a>
+											<div class="dropdown-divider"></div>
+											<a class="dropdown-item delete_project" href="javascript:void(0)" data-id="<?= $row['id'] ?>">
+											<i class="fas fa-trash mr-2"></i> Delete</a>
+										<?php endif; ?>
+											</div>
+										</td>
+									</tr>	
+									<?php endwhile;
+								}
+								?>
+								
 							</tbody>
 						</table>
 					</div>

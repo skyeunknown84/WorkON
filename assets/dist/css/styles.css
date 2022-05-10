@@ -25,7 +25,7 @@
   background: #ffffff82;
 }
 
-#preloader2:before {
+#preloader2:before { 
   content: "";
   position: fixed;
   top: calc(50% - 30px);

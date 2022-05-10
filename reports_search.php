@@ -4,7 +4,7 @@ include 'db_connect.php';
 if(isset($_POST['input'])){
     $input = $_POST['input'];
 
-    $query = "SELECT *,concat(firstname,' ',lastname) AS assignee FROM users u INNER JOIN project_list p WHERE name LIKE '{$input}%' AND type BETWEEN 2 AND 3";
+    $query = "SELECT *,concat(firstname,' ',lastname) AS assignee FROM users u INNER JOIN project_list p WHERE name LIKE '{$input}%' AND type BETWEEN 2 AND 3 AND p.proj_status='1'";
 
     $result = mysqli_query($conn,$query);
 
@@ -76,6 +76,18 @@ if(isset($_POST['input'])){
             </tbody>
         </table>
     <?php
+    }
+    else { ?>
+        <div class="container-fluid">
+            <div class="card card-outline card-success">
+            <div class="card-body py-5">
+                <div class="py-5 my-5 mx-auto">
+                <p class="py-5 my-5 mx-auto text-center">No data(s) found...</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    <?php 
     }
 }
 

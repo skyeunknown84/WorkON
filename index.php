@@ -13,6 +13,13 @@
       $_SESSION['system'][$k] = $v;
     }
   }
+  // if(!isset($_SESSION['notify'])){
+
+  //   $notify = $conn->query("SELECT * FROM task_list t INNER JOIN project_list p ON t.project_id = p.id")->fetch_array();
+  //   foreach($notify as $k => $v){
+  //     $_SESSION['notify'][$k] = $v;
+  //   }
+  // }
   ob_end_flush();
 
 	include 'header.php' 

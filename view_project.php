@@ -35,7 +35,7 @@ if($_SESSION['login_type'] == 2){
 					<div class="row">
 						<div class="col-sm-4">
 							<dl>
-								<dt><b class="border-bottom border-primary">Task Name</b></dt>
+								<dt><b class="border-bottom border-primary">Project Name</b></dt>
 								<dd><?php echo ucwords($name) ?></dd>
 								<dt><b class="border-bottom border-primary">Description</b></dt>
 								<dd><?php echo html_entity_decode($description) ?></dd>
@@ -43,7 +43,7 @@ if($_SESSION['login_type'] == 2){
 						</div>
 						<div class="col-md-4">
 							<dl>
-								<dt><b class="border-bottom border-primary">Task Manager</b></dt>
+								<dt><b class="border-bottom border-primary">Project Manager</b></dt>
 								<dd>
 									<?php if(isset($manager['id'])) : ?>
 									<div class="d-flex align-items-center mt-1">
@@ -119,10 +119,10 @@ if($_SESSION['login_type'] == 2){
 							while($row=$members->fetch_assoc()):
 						?>
 								<li>
-			                        <img src="assets/uploads/<?php echo $row['avatar'] ?>" alt="User Image">
-			                        <a class="users-list-name" href="javascript:void(0)"><?php echo ucwords($row['name']) ?></a>
-			                        <!-- <span class="users-list-date">Today</span> -->
-		                    	</li>
+									<img src="assets/uploads/<?php echo $row['avatar'] ?>" alt="User Image">
+									<a class="users-list-name" href="javascript:void(0)"><?php echo ucwords($row['name']) ?></a>
+									<!-- <span class="users-list-date">Today</span> -->
+								</li>
 						<?php 
 							endwhile;
 						endif;
@@ -137,7 +137,7 @@ if($_SESSION['login_type'] == 2){
 					<div class="row">
 						<div class="col-6 p-0 m-0">
 							<ul class="nav nav-pills ml-auto m-0 p-0">
-								<li class="nav-item  btn-sm"><a class="nav-link active btn-sm" href="#listtask" data-toggle="tab"><i class="fa fa-tasks pr-2"></i>Task List</a></li>
+								<li class="nav-item  btn-sm"><a class="nav-link btn-sm" href="#listtask" data-toggle="tab"><i class="fa fa-tasks pr-2"></i>Task List</a></li>
 								<li class="nav-item hide btn-sm"><a class="nav-link btn-sm" href="#boardtask" data-toggle="tab"><i class="fa fa-layer-group pr-2"></i> Board</a></li>
 							</ul>
 						</div>
@@ -149,15 +149,15 @@ if($_SESSION['login_type'] == 2){
 					</div>
 				</div>
 				
-				<div class="card-body col-12 x-scroll" style="width:1200px;">
+				<div class="card-body">
 					<div class="tab-content px-0 mx-0" id="pills-tabContent">
-						<div class="tab-pane active" id="listtask" role="tabpanel" aria-labelledby="pills-list-tab">
-							<div class="">
-							<table class="table table-condensed table-hover table-responsive x-scroll" id="datalist">
+						<div class="tab-panel col-lg-12" id="listtask" role="tabpanel" aria-labelledby="pills-list-tab">
+							<div class="col-lg-12">
+							<table class="table table-hover table-condensed x-scroll" id="datalist">
 								<colgroup>
 									<col width="5%">
-									<col width="25%">
-									<col width="30%">
+									<col width="50%">
+									<col width="15%">
 									<col width="15%">
 									<col width="15%">
 								</colgroup>
@@ -176,12 +176,10 @@ if($_SESSION['login_type'] == 2){
 										$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
 										unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
 										$desc = strtr(html_entity_decode($row['description']),$trans);
-										$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);
-											
+										$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);											
 											// fetch members in array
 											// $proj_ids = $row['project_id']; 
-											$_SESSION['pid'] = $row['project_id'];
-											
+											$_SESSION['pid'] = $row['project_id'];											
 											// $data_img = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users u INNER JOIN project_list p ON u.id = p.user_ids INNER JOIN task_list t ON t.project_id = p.id WHERE t.id in ($proj_ids) order by t.task asc");
 											// start_time
 										// $qry_start_time = "";
@@ -245,7 +243,7 @@ if($_SESSION['login_type'] == 2){
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-12 mb-5">
 			<div class="card card-outline card-success">
 				<div class="card-header">
 					<b>TASK FILE/S</b>
@@ -254,49 +252,50 @@ if($_SESSION['login_type'] == 2){
 					</div>
 				</div>
 				<div class="card-body">
-					<?php 
-					$progress = $conn->query("SELECT p.*,concat(u.firstname,' ',u.lastname) as uname,u.avatar,t.task FROM user_productivity p inner join users u on u.id = p.user_id inner join task_list t on t.id = p.task_id where p.project_id = $id order by unix_timestamp(p.date_created) desc ");
-					while($row = $progress->fetch_assoc()):
-					?>
-						<div class="card p-3 post">
-
-							<div class="user-block">
-		                      	<?php if($_SESSION['login_id'] == $row['user_id']): ?>
-		                      	<span class="btn-group dropleft float-right">
-								  <span class="btndropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
-								    <i class="fa fa-ellipsis-v"></i>
-								  </span>
-								  <div class="dropdown-menu">
-								  	<a class="dropdown-item manage_progress" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"  data-task="<?php echo $row['task'] ?>"><i class="fa fa-pencil-alt mx-1"></i> Edit</a>
-			                      	<div class="dropdown-divider"></div>
-				                     <a class="dropdown-item delete_progress" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash mx-1"></i> Delete</a>
-								  </div>
+					<table class="table table-hover table-condensed x-scroll" id="datalistfile">
+						<colgroup>
+							<col width="5%">
+							<col width="80%">
+							<col width="15%">
+						</colgroup>
+						<thead>
+							<th >#</th>
+							<th>Task Name</th>
+							<th>
+								<span class="btndropdown-toggle py-2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="cursor: pointer;">
+								    Action <i class="fa fa-ellipsis-v hide"></i>
 								</span>
-								<?php endif; ?>
-		                        <img class="img-circle img-bordered-sm" src="assets/uploads/<?php echo $row['avatar'] ?>" alt="user image">
-		                        <span class="username">
-		                          <a href="#"><?php echo ucwords($row['uname']) ?>[ <?php echo ucwords($row['task']) ?> ]</a>
-		                        </span>
-		                        <span class="description">
-		                        	<span class="fa fa-calendar-day" title="Date Updated"></span>
-		                        	<span><b><?php echo date('M d, Y',strtotime($row['date'])) ?></b></span>
-									<span> | </span>
-		                        	<span class="fa fa-user-clock"></span>
-                      				<span> Start: <b><?php echo date('h:i A',strtotime($row['date'].' '.$row['start_time'])) ?></b></span>
-		                        	<span> | </span>
-                      				<span>End: <b><?php echo date('h:i A',strtotime($row['date'].' '.$row['end_time'])) ?></b></span>
-	                        	</span>
-								<div class="ps-1">
-								<span class="fa fa-comments" title="comment">  </span> <?php echo html_entity_decode($row['comment']) ?>
-		                      	</div>
-								<div class="ps-1">
-									<span class="fa fa-link pr-1" title="attachment (screenshots / docs / recorded video)"></span><a href="<?php echo $row['file_path'] ?>" target="_blank" rel="noopener noreferrer"><?php echo $row['file_name'] ?></a>
-								</div>
-							</div>
-							<!-- /.user-block -->
-	                    </div>
-	                    <div class="post clearfix"></div>
-                    <?php endwhile; ?>
+							</th>
+						</thead>
+						<tbody>
+							<?php 
+							$progress = $conn->query("SELECT p.*,concat(u.firstname,' ',u.lastname) as uname,u.avatar,t.task FROM user_productivity p inner join users u on u.id = p.user_id inner join task_list t on t.id = p.task_id where p.project_id = $id order by unix_timestamp(p.date_created) desc ");
+							while($row = $progress->fetch_assoc()):
+							?>
+								<tr>
+									<td class="text-center"><?php echo $i++ ?></td>
+									<td class="" style="min-width:250px"><b><?php echo ucwords($row['task']) ?></b></td>
+									
+									<td class="text-center">
+										<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+										Action
+										</button>
+										<div class="dropdown-menu" style="">
+										<a class="dropdown-item view_progress" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-comments mx-1"></i> Comments</a>
+										<div class="dropdown-divider"></div>
+										<?php if($_SESSION['login_type'] != 3): ?>
+										<a class="dropdown-item manage_progress" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>" data-task="<?php echo $row['task'] ?>"><i class="fa fa-pencil-alt mx-1"></i> Edit</a>
+										<div class="dropdown-divider"></div>
+										<a class="dropdown-item delete_progress" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>"><i class="fa fa-trash mx-1"></i> Delete</a>
+										<?php endif; ?>
+										</div>
+									</td>
+								</tr>
+							<?php 
+							endwhile;
+							?>
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -324,6 +323,7 @@ if($_SESSION['login_type'] == 2){
 	// dataTables Search and Sort
 	$(document).ready(function(){
 		$('#datalist').dataTable();
+		$('#datalistfile').dataTable();
 		
 	})
 	$('.view_user').click(function(){
@@ -343,7 +343,11 @@ if($_SESSION['login_type'] == 2){
 	})
 	// Add Link to Modal for Add Task Productivity
 	$('#new_productivity').click(function(){
-		uni_modal("<i class='fa fa-plus'></i> Task Progress","manage_progress.php?pid=<?php echo $id ?>",'large')
+		uni_modal("<i class='fa fa-plus'></i> Task Progress","add_progress.php?pid=<?php echo $id ?>",'large')
+	})
+	// View Link to Modal for Add Task Productivity
+	$('.view_progress').click(function(){
+		uni_modal("<i class='fa fa-comments'></i> Task Progress","view_progress.php?pid=<?php echo $id ?>&id="+$(this).attr('data-id'),'large')
 	})
 	// Edit Link to Modal for Add Task Productivity
 	$('.manage_progress').click(function(){

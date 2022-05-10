@@ -370,7 +370,7 @@ Class Action {
 					$save = $this->db->query("INSERT into user_productivity 
 						(project_id, 
 						task_id, 
-						comment, 
+						description, 
 						date, 
 						start_time, 
 						end_time, 
@@ -386,7 +386,7 @@ Class Action {
 						VALUES 
 						('$project_id', 
 						'$task_id', 
-						'$comment', 
+						'$description', 
 						'$date', 
 						'$start_time', 
 						'$end_time', 
@@ -412,7 +412,7 @@ Class Action {
 			$save = $this->db->query("UPDATE user_productivity SET
 			project_id='$project_id', 
 			task_id='$task_id', 
-			comment='$comment', 
+			description='$description', 
 			date='$date', 
 			start_time='$start_time', 
 			end_time='$end_time', 
@@ -451,7 +451,6 @@ Class Action {
 			$data[]=$row;
 		}
 		return json_encode($data);
-
 	}
 
 	function save_group(){
@@ -510,14 +509,13 @@ Class Action {
 			$position= strpos($fileName, ".");
 			$fileExt= substr($fileName, $position + 1);
 			$fileextension= strtolower($fileExt);
-			echo $fileextension;
 			$targetFilePath = $targetDir . $fileName;
 			$fileType = pathinfo($targetFilePath,PATHINFO_EXTENSION);
 
 		}
 		if(empty($id)){
 			// Allow certain file formats
-			$allowTypes = array('jpg','png','jpeg','gif','pdf','docx','xlsx','pptx');
+			$allowTypes = array('jpg','png','jpeg','gif','pdf','docx','xlsx','pptx','txt','zip','rar');
 			if(in_array($fileType, $allowTypes)){
 				// Upload file to server
 				if(move_uploaded_file($_FILES["file"]["tmp_name"], $targetFilePath)){
@@ -557,5 +555,53 @@ Class Action {
 			return 1;
 		}
 	}
+
+	function get_notifications(){
+		extract($_POST);
+		$data = array();
+		$get = $this->db->query("SELECT * FROM task_list ");
+		while($row= $get->fetch_assoc()){
+			// $row['date_created'] = date("M d, Y",strtotime($row['date_created']));
+			// $row['name'] = ucwords($row['name']);
+			// $row['adult_price'] = number_format($row['adult_price'],2);
+			// $row['child_price'] = number_format($row['child_price'],2);
+			// $row['amount'] = number_format($row['amount'],2);
+			$data[]=$row;
+		}
+		return json_encode($data);
+	}
+
+	function update_progress(){
+		extract($_POST);
+		$data = "";
+		$status = 1;
+		// $date_uploaded = now();
+		foreach($_POST as $k => $v){
+			if(!in_array($k, array('id')) && !is_numeric($k)){
+				if($k == 'comment')
+					$v = htmlentities(str_replace("'","&#x2019;",$v));
+				if(empty($v)){
+					$comment = "$v";
+				}else{
+					$comment = "$v";
+				}
+			}
+		}
+		if(empty($id)){
+			$user_id = "{$_SESSION['login_id']}";
+			$save = $this->db->query("UPDATE user_productivity SET
+			project_id='$project_id', 
+			task_id='$task_id', 
+			comment='$comment', 
+			user_id='$user_id', 
+			status='$status', 
+			date_created=NOW()  
+			WHERE project_id = $project_id AND id = $id");
+		}
+		if($save){
+			return 1;
+		}
+	}
+
 
 }

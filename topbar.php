@@ -19,12 +19,24 @@
           <i class="fas fa-expand-arrows-alt"></i>
         </a>
       </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link"  data-toggle="dropdown" aria-expanded="true" href="javascript:void(0)">
+      <li class="nav-item dropdown mx-0 px-0">
+        <a class="nav-link mx-0 px-0 notif-toggle"  data-toggle="dropdown" aria-expanded="true" href="javascript:void(0)">
+          <span>
+            <div class="d-felx badge-pill mt-0">
+              <span class="fa fa-bell mr-0 mb-1 mt-0 pt-0" style="font-size:25px;padding:0;"></span><span class="badge badge-danger notif-count"></span>
+            </div>
+          </span>
+        </a>
+        <div class="dropdown-menu notif-menu y-scroll" style="height:400px;y-overflow:auto"></div>
+        <!-- <div class="dropdown-menu" aria-labelledby="account_settings" style="left: -2.5em;">
+          <a class="dropdown-item" href="javascript:void(0)" id="">No New Notifications</a>
+        </div> -->
+      </li>
+      <li class="nav-item dropdown mx-0 px-0">
+        <a class="nav-link mx-0 px-0"  data-toggle="dropdown" aria-expanded="true" href="javascript:void(0)">
           <span>
             <div class="d-felx badge-pill">
-              <span class="fa fa-user mr-2 hide"></span>
-              <img src="" alt="">
+              <span class="fa fa-bell mr-2 hide"></span>
               <span><b><?php echo ucwords($_SESSION['login_firstname']) ?></b></span>
               <span class="fa fa-angle-down ml-2"></span>
             </div>
@@ -39,7 +51,47 @@
   </nav>
   <!-- /.navbar -->
   <script>
-     $('#manage_account').click(function(){
+      $('#manage_account').click(function(){
         uni_modal('Manage Account','manage_user.php?id=<?php echo $_SESSION['login_id'] ?>')
       })
+      function load_unseen_notification(view = '')
+      {
+          $.ajax({
+          url:"fetch.php",
+          method:"POST",
+          data:{view:view},
+          dataType:"json",
+          success:function(data)
+          {
+              $('.notif-menu').html(data.notification);
+              if(data.unseen_notification > 0)
+              {
+              $('.notif-count').html(data.unseen_notification);
+              }
+              else {
+
+              }
+          }
+          });
+      }
+      
+      load_unseen_notification();
+
+      $(document).on('click', '.notif-toggle', function(){
+        $('.notif-count').html('');
+        load_unseen_notification('yes');
+      });
+
+      $(document).on('click', '.notifMeAccept', function(){
+        alert("Are you sure you want to 'Accept' this task?");
+      });
+
+      $(document).on('click', '.notifMeDecline', function(){
+        alert("Are you sure you want to 'Decline' this task?");
+      });
+      
+      setInterval(function(){ 
+        load_unseen_notification();
+      }, 5000);
+
   </script>

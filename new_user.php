@@ -16,10 +16,10 @@
 							<input type="text" name="lastname" class="form-control form-control-sm" required value="<?php echo isset($lastname) ? $lastname : '' ?>">
 						</div>
 						<?php if($_SESSION['login_type'] == 1): ?>
-						<div class="form-group">
-							<label for="" class="control-label">User Role</label>
-							<select name="type" id="type" class="custom-select custom-select-sm">
-								<option value="3" <?php echo isset($type) && $type == 3 ? 'selected' : '' ?>>Faculty</option>
+						<div class="form-group hide">
+							<label for="" class="control-label hide">User Role</label>
+							<select name="type" id="type" class="custom-select custom-select-sm hide">
+								<option value="3" <?php echo isset($type) && $type == 3 ? 'selected' : 'selected' ?> selected>Member</option>
 								<option value="2" <?php echo isset($type) && $type == 2 ? 'selected' : '' ?>>Chair</option>
 								<option value="1" <?php echo isset($type) && $type == 1 ? 'selected' : '' ?>>Dean</option>
 							</select>

@@ -1,5 +1,12 @@
 <?php if(!isset($conn)){ include 'db_connect.php'; } ?>
-
+<?php 
+if(isset($_GET['id'])){
+	$qry = $conn->query("SELECT * FROM users where id = ".$_GET['id'])->fetch_array();
+	foreach($qry as $k => $v){
+		$$k = $v;
+	}
+}
+?>
 <div class="col-lg-12">
 	<div class="card card-outline card-success">
 		<div class="card-body">
