@@ -14,14 +14,13 @@
 							<th class="text-center">#</th>
 							<th>Name</th>
 							<th>Email</th>
-							<th>Role</th>
 							<th>Action</th>
 						</tr>
 					</thead>
 					<tbody>
 						<?php
 						$i = 1;
-						$type = array('',"Dean","Chair","Faculty");
+						$type = array('',"Dean","Chair","Member");
 						$qry = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users order by concat(firstname,' ',lastname) asc");
 						while($row= $qry->fetch_assoc()):
 						?>
@@ -29,14 +28,13 @@
 							<th class="text-center"><?php echo $i++ ?></th>
 							<td><b><?php echo ucwords($row['name']) ?></b></td>
 							<td><b><?php echo $row['email'] ?></b></td>
-							<td><b><?php echo $type[$row['type']] ?></b></td>
 							<td class="text-center">
 								<button type="button" class="btn btn-default btn-sm btn-round border-info wave-effect text-info dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 								Action
 								</button>
 								<div class="dropdown-menu" style="">
-								<a class="dropdown-item view_user" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">View</a>
-								<div class="dropdown-divider"></div>
+								<a class="dropdown-item view_user hide" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">View</a>
+								<div class="dropdown-divider hide"></div>
 								<a class="dropdown-item" href="./index.php?page=edit_user&id=<?php echo $row['id'] ?>">Edit</a>
 								<div class="dropdown-divider"></div>
 								<a class="dropdown-item delete_user" href="javascript:void(0)" data-id="<?php echo $row['id'] ?>">Delete</a>

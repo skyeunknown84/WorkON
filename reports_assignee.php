@@ -3,11 +3,11 @@ include 'db_connect.php';
 
 if(isset($_POST['request'])){
     $request = $_POST['request'];
-    $filter_status = "SELECT *,concat(firstname,' ',lastname) AS assignee FROM users u INNER JOIN project_list p  WHERE concat(firstname,' ',lastname) = '$request' AND type BETWEEN 2 AND 3";
+    $filter_status = "SELECT *,concat(firstname,' ',lastname) AS assignee FROM users u INNER JOIN project_list p  WHERE concat(firstname,' ',lastname) = '$request' AND type BETWEEN 2 AND 3 AND p.proj_status='1'";
     $result = mysqli_query($conn,$filter_status);
     $count = mysqli_num_rows($result);
 
-    if($count){ ?>
+    if($count > 0){ ?>
         <table class="table table-bordered table-striped mt-4">
             <thead>
                 <th>#</th>
@@ -75,6 +75,18 @@ if(isset($_POST['request'])){
             </tbody>
         </table>
     <?php
+    }
+    else { ?>
+        <div class="container-fluid">
+            <div class="card card-outline card-success">
+            <div class="card-body py-5">
+                <div class="py-5 my-5 mx-auto">
+                <p class="py-5 my-5 mx-auto text-center">No data(s) found...</p>
+                </div>
+            </div>
+            </div>
+        </div>
+    <?php 
     }
 }
 

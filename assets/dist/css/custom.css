@@ -119,6 +119,27 @@ body::-webkit-scrollbar-thumb:hover {
     background-color: var(--mint);
     outline: 1px solid var(--mint);
 } */
+
+/* y-scroll */
+.y-scroll {
+    overflow: auto;
+}
+.y-scroll::-webkit-scrollbar {
+    width: 0.05rem;
+    height: 0.45rem;
+} 
+.y-scroll::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+} 
+.y-scroll::-webkit-scrollbar-thumb {
+    background-color: var(--pale-navy);
+    outline: 1px solid var(--pale-navy);
+}
+.y-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: var(--mint);
+    outline: 1px solid var(--mint);
+}
+
 /* Login */
 .login-bg {
     background: var(--navy) !important;
@@ -222,4 +243,10 @@ ul {
     visibility: inherit !important;
     background: transparent;
     border: #666 2px dashed;
+}
+
+.notif-count {
+    position: relative !important;
+    margin-top: -155px !important;
+    border-radius: 25% !important;
 }

@@ -71,11 +71,6 @@ if($action == 'save_progress'){
 	if($save)
 		echo $save;
 }
-if($action == 'save_progress_file'){
-	$save = $crud->save_progress_file();
-	if($save)
-		echo $save;
-}
 if($action == 'delete_progress'){
 	$save = $crud->delete_progress();
 	if($save)
@@ -107,5 +102,16 @@ if($action == 'delete_file'){
 	if($save)
 		echo $save;
 }
+if($action == 'save_task_notif'){
+	$save = $crud->save_task_notif();
+	if($save)
+		echo $save;
+}
+if($action == 'update_progress'){
+	$save = $crud->update_progress();
+	if($save)
+		echo $save;
+}
+
 ob_end_flush();
 ?>

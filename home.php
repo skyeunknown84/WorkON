@@ -24,7 +24,7 @@ if(isset($_GET['id'])){
   <?php 
 
     $where = "";
-    if($_SESSION['login_type'] == 2){
+    if($_SESSION['login_type'] == 1){
       $where = " where manager_id = '{$_SESSION['login_id']}' ";
     }elseif($_SESSION['login_type'] == 3){
       $where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
@@ -41,7 +41,7 @@ if(isset($_GET['id'])){
         <div class="col-md-8">
         <div class="card card-outline card-success">
           <div class="card-header">
-            <b>Main Tasks Progress</b>
+            <b>Project Progress</b>
           </div>
           <div class="card-body p-0">
             <div class="table-responsive">
@@ -55,7 +55,7 @@ if(isset($_GET['id'])){
                 </colgroup>
                 <thead>
                   <th># </th>
-                  <th>Main Tasks</th>
+                  <th>Project Name</th>
                   <th class="hide">Assignee</th>
                   <th>Progress</th>
                   <th>Status</th>
@@ -71,92 +71,310 @@ if(isset($_GET['id'])){
                 }elseif($_SESSION['login_type'] == 3){
                   $where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
                 }
-                $qry = $conn->query("SELECT * FROM project_list p INNER JOIN users u ON p.user_ids = u.id $where order by name asc");
-                while($row= $qry->fetch_assoc()):
-                  $prog= 0;
-                $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
-                $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
-                // $prostat = $conn->query("SELECT *,t.status as tstat  FROM task_list t INNER JOIN project_list p ON t.project_id = p.id where t.project_id = {$row['id']}");
-                //   if($row= $qry->fetch_assoc()):
-                //     if($row['tstat'] <= 4)
 
-                $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
-                $prog = $prog > 0 ?  number_format($prog,2) : $prog;
-                $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
-                if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
-                if($prod  > 0  || $cprog > 0)
-                  $row['status'] = 2;
-                else
-                  $row['status'] = 1;
-                elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
-                $row['status'] = 4;
-                endif;
+                $adminid = $_SESSION['login_id'];
+								$deanid = $_SESSION['login_id'];
+								$chairid = $_SESSION['login_id'];
+								$memberid = $_SESSION['login_id'];
+								if($_SESSION['login_type'] == 3){
+									if ($deanid === $_SESSION['login_id']){
+                    $qry = $conn->query("SELECT * FROM project_list p INNER JOIN users u ON p.user_type = u.type WHERE manager_id = $deanid GROUP BY p.id ASC");
+                  while($row= $qry->fetch_assoc()):
+                  $prog= 0;
+                  $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
+                  $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+                  // $prostat = $conn->query("SELECT *,t.status as tstat  FROM task_list t INNER JOIN project_list p ON t.project_id = p.id where t.project_id = {$row['id']}");
+                  //   if($row= $qry->fetch_assoc()):
+                  //     if($row['tstat'] <= 4)
+                  $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+                  $prog = $prog > 0 ?  number_format($prog,2) : $prog;
+                  $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
+                  if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
+                  if($prod  > 0  || $cprog > 0)
+                    $row['status'] = 2;
+                  else
+                    $row['status'] = 1;
+                  elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+                  $row['status'] = 4;
+                  endif;
                   ?>
                   <tr>
-                      <td>
-                         <?php echo $i++ ?>
-                      </td>
-                      <td>
-                          <a>
-                              <?php echo ucwords($row['name']) ?>
-                          </a>
-                          <br>
-                          <small>
-                              Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
-                          </small>
-                      </td>
-                      <td class="hide">
-                        <?php echo ucwords($row['name']) ?>
-                      </td>
-                      <td class="project_progress">
-                          <div class="progress progress-sm">
-                              <div class="progress-bar bg-green" role="progressbar progressbar-success" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
-                              </div>
-                          </div>
-                          <small>
-                              <?php echo $prog ?>% Complete
-                          </small>
-                      </td>
-                      <td class="project-state">
-                          <?php
-                            // if($stat[$row['status']] =='Not Started'){
-                            //   echo "<span class='badge badge-secondary'>{$stat[$row['status']]}</span>";
-                            // }elseif($stat[$row['status']] =='Started'){
-                            //   echo "<span class='badge badge-primary'>{$stat[$row['status']]}</span>";
-                            // }elseif($stat[$row['status']] =='In Progress'){
-                            //   echo "<span class='badge badge-info'>{$stat[$row['status']]}</span>";
-                            // }elseif($stat[$row['status']] =='In Review'){
-                            //   echo "<span class='badge badge-warning'>{$stat[$row['status']]}</span>";
-                            // }elseif($stat[$row['status']] =='Over Due'){
-                            //   echo "<span class='badge badge-danger'>{$stat[$row['status']]}</span>";
-                            // }elseif($stat[$row['status']] =='Completed'){
-                            //   echo "<span class='badge badge-success'>{$stat[$row['status']]}</span>";
-                            // }
-                            if($row['status'] == 1){
-                              echo "<span class='badge badge-secondary'>Not Started</span>";
-                            }elseif($row['status'] == 2){
-                            echo "<span class='badge badge-primary'>Started</span>";
-                            }elseif($row['status'] == 3){
-                            echo "<span class='badge badge-info'>In Progress</span>";
-                            }elseif($row['status'] == 4){
-                            echo "<span class='badge badge-warning'>In Review</span>";
-                            }elseif($row['status'] == 5){
-                            echo "<span class='badge badge-success'>Completed</span>";
-                            }
-                            // elseif($row['status'] == 6){
-                            //   echo "<span class='badge badge-success'>Completed</span>";
-                            // }
-                          ?>
-                      </td>
-                      <td>
-                        <a class="btn btn-primary btn-sm" href="./index.php?page=view_project&id=<?php echo $row['id'] ?>">
-                              <i class="fas fa-folder">
-                              </i>
-                              View
+                    <td>
+                        <?php echo $i++ ?>
+                    </td>
+                    <td>
+                        <a>
+                            <?php echo ucwords($row['name']) ?>
                         </a>
-                      </td>
+                        <br>
+                        <small>
+                            Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
+                        </small>
+                    </td>
+                    <td class="hide">
+                      <?php echo ucwords($row['name']) ?>
+                    </td>
+                    <td class="project_progress">
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-green" role="progressbar progressbar-success" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
+                            </div>
+                        </div>
+                        <small>
+                            <?php echo $prog ?>% Complete
+                        </small>
+                    </td>
+                    <td class="project-state">
+                        <?php
+                          if($row['status'] == 1){
+                            echo "<span class='badge badge-secondary'>Not Started</span>";
+                          }elseif($row['status'] == 2){
+                          echo "<span class='badge badge-primary'>Started</span>";
+                          }elseif($row['status'] == 3){
+                          echo "<span class='badge badge-info'>In Progress</span>";
+                          }elseif($row['status'] == 4){
+                          echo "<span class='badge badge-warning'>In Review</span>";
+                          }elseif($row['status'] == 5){
+                          echo "<span class='badge badge-success'>Completed</span>";
+                          }
+                          // elseif($row['status'] == 6){
+                          //   echo "<span class='badge badge-success'>Completed</span>";
+                          // }
+                        ?>
+                    </td>
+                    <td>
+                      <a class="btn btn-primary btn-sm" href="./index.php?page=view_project&id=<?php echo $row['id'] ?>">
+                            <i class="fas fa-folder">
+                            </i>
+                            View
+                      </a>
+                    </td>
                   </tr>
-                <?php endwhile; ?>
+                  <?php endwhile;
+                  }
+                  if ($chairid === $_SESSION['login_id']){
+										$qry = $conn->query("SELECT * FROM project_list p INNER JOIN users u ON u.type = p.user_type WHERE p.chair_id = $chairid  GROUP BY p.name ASC");
+                  while($row= $qry->fetch_assoc()):
+                  $prog= 0;
+                  $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
+                  $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+                  // $prostat = $conn->query("SELECT *,t.status as tstat  FROM task_list t INNER JOIN project_list p ON t.project_id = p.id where t.project_id = {$row['id']}");
+                  //   if($row= $qry->fetch_assoc()):
+                  //     if($row['tstat'] <= 4)
+                  $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+                  $prog = $prog > 0 ?  number_format($prog,2) : $prog;
+                  $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
+                  if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
+                  if($prod  > 0  || $cprog > 0)
+                    $row['status'] = 2;
+                  else
+                    $row['status'] = 1;
+                  elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+                  $row['status'] = 4;
+                  endif;
+                  ?>
+                  <tr>
+                    <td>
+                        <?php echo $i++ ?>
+                    </td>
+                    <td>
+                        <a>
+                            <?php echo ucwords($row['name']) ?>
+                        </a>
+                        <br>
+                        <small>
+                            Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
+                        </small>
+                    </td>
+                    <td class="hide">
+                      <?php echo ucwords($row['name']) ?>
+                    </td>
+                    <td class="project_progress">
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-green" role="progressbar progressbar-success" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
+                            </div>
+                        </div>
+                        <small>
+                            <?php echo $prog ?>% Complete
+                        </small>
+                    </td>
+                    <td class="project-state">
+                        <?php
+                          if($row['status'] == 1){
+                            echo "<span class='badge badge-secondary'>Not Started</span>";
+                          }elseif($row['status'] == 2){
+                          echo "<span class='badge badge-primary'>Started</span>";
+                          }elseif($row['status'] == 3){
+                          echo "<span class='badge badge-info'>In Progress</span>";
+                          }elseif($row['status'] == 4){
+                          echo "<span class='badge badge-warning'>In Review</span>";
+                          }elseif($row['status'] == 5){
+                          echo "<span class='badge badge-success'>Completed</span>";
+                          }
+                          // elseif($row['status'] == 6){
+                          //   echo "<span class='badge badge-success'>Completed</span>";
+                          // }
+                        ?>
+                    </td>
+                    <td>
+                      <a class="btn btn-primary btn-sm" href="./index.php?page=view_project&id=<?php echo $row['id'] ?>">
+                            <i class="fas fa-folder">
+                            </i>
+                            View
+                      </a>
+                    </td>
+                  </tr>
+                  <?php endwhile;
+                  }
+                  if ($memberid === $_SESSION['login_id']){
+										$qry = $conn->query("SELECT * FROM project_list p INNER JOIN users u ON u.type = p.user_type WHERE concat('[',REPLACE(p.user_ids,',','],['),']') LIKE '%[{$memberid}]%' GROUP BY p.name ASC");
+                  while($row= $qry->fetch_assoc()):
+                  $prog= 0;
+                  $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
+                  $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+                  // $prostat = $conn->query("SELECT *,t.status as tstat  FROM task_list t INNER JOIN project_list p ON t.project_id = p.id where t.project_id = {$row['id']}");
+                  //   if($row= $qry->fetch_assoc()):
+                  //     if($row['tstat'] <= 4)
+                  $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+                  $prog = $prog > 0 ?  number_format($prog,2) : $prog;
+                  $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
+                  if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
+                  if($prod  > 0  || $cprog > 0)
+                    $row['status'] = 2;
+                  else
+                    $row['status'] = 1;
+                  elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+                  $row['status'] = 4;
+                  endif;
+                  ?>
+                  <tr>
+                    <td>
+                        <?php echo $i++ ?>
+                    </td>
+                    <td>
+                        <a>
+                            <?php echo ucwords($row['name']) ?>
+                        </a>
+                        <br>
+                        <small>
+                            Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
+                        </small>
+                    </td>
+                    <td class="hide">
+                      <?php echo ucwords($row['name']) ?>
+                    </td>
+                    <td class="project_progress">
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-green" role="progressbar progressbar-success" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
+                            </div>
+                        </div>
+                        <small>
+                            <?php echo $prog ?>% Complete
+                        </small>
+                    </td>
+                    <td class="project-state">
+                        <?php
+                          if($row['status'] == 1){
+                            echo "<span class='badge badge-secondary'>Not Started</span>";
+                          }elseif($row['status'] == 2){
+                          echo "<span class='badge badge-primary'>Started</span>";
+                          }elseif($row['status'] == 3){
+                          echo "<span class='badge badge-info'>In Progress</span>";
+                          }elseif($row['status'] == 4){
+                          echo "<span class='badge badge-warning'>In Review</span>";
+                          }elseif($row['status'] == 5){
+                          echo "<span class='badge badge-success'>Completed</span>";
+                          }
+                          // elseif($row['status'] == 6){
+                          //   echo "<span class='badge badge-success'>Completed</span>";
+                          // }
+                        ?>
+                    </td>
+                    <td>
+                      <a class="btn btn-primary btn-sm" href="./index.php?page=view_project&id=<?php echo $row['id'] ?>">
+                            <i class="fas fa-folder">
+                            </i>
+                            View
+                      </a>
+                    </td>
+                  </tr>
+                  <?php endwhile;
+                  }
+                }
+                elseif($_SESSION['login_type'] == 1){
+                  $qry = $conn->query("SELECT * FROM project_list p INNER JOIN users u GROUP BY p.id asc");
+                  while($row= $qry->fetch_assoc()):
+                  $prog= 0;
+                  $tprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']}")->num_rows;
+                  $cprog = $conn->query("SELECT * FROM task_list where project_id = {$row['id']} and status = 5")->num_rows;
+                  // $prostat = $conn->query("SELECT *,t.status as tstat  FROM task_list t INNER JOIN project_list p ON t.project_id = p.id where t.project_id = {$row['id']}");
+                  //   if($row= $qry->fetch_assoc()):
+                  //     if($row['tstat'] <= 4)
+                  $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
+                  $prog = $prog > 0 ?  number_format($prog,2) : $prog;
+                  $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$row['id']}")->num_rows;
+                  if($row['status'] == 0 && strtotime(date('Y-m-d')) >= strtotime($row['start_date'])):
+                  if($prod  > 0  || $cprog > 0)
+                    $row['status'] = 2;
+                  else
+                    $row['status'] = 1;
+                  elseif($row['status'] == 0 && strtotime(date('Y-m-d')) > strtotime($row['end_date'])):
+                  $row['status'] = 4;
+                  endif;
+                  ?>
+                  <tr>
+                    <td>
+                        <?php echo $i++ ?>
+                    </td>
+                    <td>
+                        <a>
+                            <?php echo ucwords($row['name']) ?>
+                        </a>
+                        <br>
+                        <small>
+                            Due: <?php echo date("Y-m-d",strtotime($row['end_date'])) ?>
+                        </small>
+                    </td>
+                    <td class="hide">
+                      <?php echo ucwords($row['name']) ?>
+                    </td>
+                    <td class="project_progress">
+                        <div class="progress progress-sm">
+                            <div class="progress-bar bg-green" role="progressbar progressbar-success" aria-valuenow="57" aria-valuemin="0" aria-valuemax="100" style="width: <?php echo $prog ?>%">
+                            </div>
+                        </div>
+                        <small>
+                            <?php echo $prog ?>% Complete
+                        </small>
+                    </td>
+                    <td class="project-state">
+                        <?php
+                          if($row['status'] == 1){
+                            echo "<span class='badge badge-secondary'>Not Started</span>";
+                          }elseif($row['status'] == 2){
+                          echo "<span class='badge badge-primary'>Started</span>";
+                          }elseif($row['status'] == 3){
+                          echo "<span class='badge badge-info'>In Progress</span>";
+                          }elseif($row['status'] == 4){
+                          echo "<span class='badge badge-warning'>In Review</span>";
+                          }elseif($row['status'] == 5){
+                          echo "<span class='badge badge-success'>Completed</span>";
+                          }
+                          // elseif($row['status'] == 6){
+                          //   echo "<span class='badge badge-success'>Completed</span>";
+                          // }
+                        ?>
+                    </td>
+                    <td>
+                      <a class="btn btn-primary btn-sm" href="./index.php?page=view_project&id=<?php echo $row['id'] ?>">
+                            <i class="fas fa-folder">
+                            </i>
+                            View
+                      </a>
+                    </td>
+                  </tr>
+                  <?php endwhile;
+                }
+                ?>
                 </tbody>  
               </table>
             </div>
@@ -170,7 +388,7 @@ if(isset($_GET['id'])){
               <div class="inner bg-success">
                 <h3><?php echo $conn->query("SELECT * FROM project_list $where")->num_rows; ?></h3>
 
-                <p>Total Main Tasks</p>
+                <p>Total Projects</p>
               </div>
               <div class="icon">
                 <i class="fa fa-layer-group"></i>
@@ -181,7 +399,7 @@ if(isset($_GET['id'])){
             <div class="small-box bg-light shadow-sm border">
               <div class="inner bg-info">
                 <h3><?php echo $conn->query("SELECT t.*,p.* FROM task_list t INNER JOIN project_list p ON t.project_id = p.id WHERE t.status = '5' AND p.status = '5' GROUP BY p.id HAVING count(p.id)")->num_rows; ?></h3>
-                <p>Completed Main Tasks</p>
+                <p>Completed Projects</p>
               </div>
               <div class="icon">
                 <i class="fa fa-tasks"></i>

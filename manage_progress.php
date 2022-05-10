@@ -1,8 +1,8 @@
 <?php 
 include 'db_connect.php';
 if(isset($_GET['id'])){
-	$qry = $conn->query("SELECT * FROM user_productivity where id = ".$_GET['id'])->fetch_array();
-	foreach($qry as $k => $v){
+	$qryprogress = $conn->query("SELECT * FROM user_productivity where id = ".$_GET['id'])->fetch_array();
+	foreach($qryprogress as $k => $v){
 		$$k = $v;
 	}
 }
@@ -45,20 +45,77 @@ if(isset($_GET['id'])){
 					<div class="form-group">
 						<label for="" class="control-label">Add Task File</label>
 						<div class="custom-file">
-						<input type="file" class="" id="custom_file" name="taskfile">
-						<!-- <label class="custom-file-label" for="custom_file">Choose file</label> -->
+						<input type="file" class="" id="custom_file" name="taskfile" onchange="displayFile(this,$(this))" required>
 						</div>
 					</div>
-					<div class="form-group d-flex justify-content-center">
-						<span class=" id=""></span>
+					<div class="form-group d-flex file-display">
+						<?php if($file_type == 'pdf'){ ?>
+                            <a id="dFile" target="_blank" href="<?php echo $file_path; ?>" title="<?php echo $file_name ?>" class="img-fluid img-thumbnail m-2 align-center text-danger">
+                                <i class="fas fa-file-pdf fa-3x"></i>
+                                <br/><small><?php echo $file_name ?></small>
+                                <!-- <br/><span><a class="fa fa-trash"></a></span> -->
+                            </a>
+                            <?php 
+                            }
+                            elseif($file_type == 'docx'){ ?>
+                            <a id="dFile" target="_blank" href="<?php echo $file_path; ?>" title="<?php echo $file_name ?>" class="img-fluid img-thumbnail m-2 align-center text-primary">
+                                <i class="fas fa-file-word fa-3x"></i>
+                                <br/><small><?php echo $file_name ?></small>
+                                <!-- <br/><span><a class="fa fa-trash"></a></span> -->
+                            </a>
+                        	<?php 
+                            }
+                            elseif($file_type == 'xlsx'){ ?>
+                            <a id="dFile" target="_blank" href="<?php echo $file_path; ?>" title="<?php echo $file_name ?>" class=" text-success">
+                                <i class="fas fa-file-excel fa-3x"></i>
+                                <br/><small><?php echo $file_name ?></small>
+                                <!-- <br/><span><a class="fa fa-trash"></a></span> -->
+                            </a>
+                            <?php 
+                            }
+                            elseif($file_type == 'pptx'){ ?>
+                            <a id="dFile" target="_blank" href="<?php echo $file_path; ?>" title="<?php echo $file_name ?>" class="img-fluid img-thumbnail m-2 align-center text-warning">
+                                <i class="fas fa-file-powerpoint fa-3x"></i>
+                                <br/><small><?php echo $file_name ?></small>
+                                <!-- <br/><span><a class="fa fa-trash"></a></span> -->
+                            </a>
+							<?php 
+							}
+							elseif($file_type == 'png'){ ?>
+								<a id="dFile" href="<?php echo $file_path; ?>" target="_blank"><img src="<?php echo $file_path; ?>" alt="" title="<?php echo $file_name ?>" class="img-fluid img-thumbnail" style="height:100px" /></a>
+							<?php 
+							}							
+							elseif($file_type == 'jpg'){ ?>
+								<a id="dFile" href="<?php echo $file_path; ?>" target="_blank"><img src="<?php echo $file_path; ?>" alt="" title="<?php echo $file_name ?>" class="img-fluid img-thumbnail" style="height:100px" /></a>
+							<?php 
+							}
+							elseif($file_type == 'gif'){ ?>
+								<a id="dFile" href="<?php echo $file_path; ?>" target="_blank"><img src="<?php echo $file_path; ?>" alt="" title="<?php echo $file_name ?>" class="img-fluid img-thumbnail" style="height:100px" /></a>
+							<?php 
+							}
+							elseif($file_type == 'zip'){ ?>
+								<a id="dFile" href="<?php echo $file_path; ?>" target="_blank"><i class="fas fa-file-archive" title="<?php echo $file_type ?>"></i> <?php echo $file_type ?></a>
+								<?php 
+							}
+							elseif($file_type == 'rar'){ ?>
+								<a id="dFile" href="<?php echo $file_path; ?>" target="_blank"><i class="fas fa-file-archive" title="<?php echo $file_type ?>"></i> <?php echo $file_type ?></a>
+								<?php 
+							}
+							elseif($file_type == ''){ ?>
+								<a id="dFile" href="#" target="_blank"><span>No File Upload</span></a>
+                        	<?php 
+                            }
+                            else{ ?>
+                            <a id="dFile" href="<?php echo $file_path; ?>" target="_blank"><img src="<?php echo $file_path; ?>" alt="" title="<?php echo $file_name ?>" class="img-fluid img-thumbnail" style="height:100px" /></a>
+                        <?php } ?>
 					</div>
 					
 				</div>
 				<div class="col-md-7">
 					<div class="form-group pb-4 mb-4">
-						<label for="">Comment/Progress Description</label>
-						<textarea name="comment" id="task_progress_desc" cols="30" rows="30" class="summernote form-control" required="">
-							<?php echo isset($comment) ? $comment : '' ?>
+						<label for="description">Comment/Progress Description</label>
+						<textarea name="description" id="task_progress_desc" cols="30" rows="30" class="summernote form-control" required="">
+							<?php echo isset($description) ? $description : '' ?>
 						</textarea>
 					</div>
 					
@@ -74,7 +131,18 @@ if(isset($_GET['id'])){
 	}
 </style>
 <script>
+	
+	function displayFile(input,_this) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+			reader.onload = function (e) {
+				$('#dFile').attr('href', e.target.result);
+			}
+			reader.readAsDataURL(input.files[0]);
+		}
+	}
 	$(document).ready(function(){
+		
 	$('.summernote').summernote({
         height: 200,
         toolbar: [

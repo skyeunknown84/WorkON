@@ -23,6 +23,7 @@
   if ($result) {
     echo "File has been uploaded";
   };
+
 }
 ?>
 <div class="col-lg-12">
@@ -33,7 +34,7 @@
 				<div class="row">
 					<div class="col-md-6">
 						<div class="form-group">
-							<label for="" class="control-label">Task Name</label>
+							<label for="" class="control-label">Project Name</label>
 							<input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>" required>
 						</div>
 					</div>
@@ -57,14 +58,14 @@
 						<input type="hidden" name="start_date" value="<?php echo date('Y-m-d') ?>" required>
 						</div>
 					</div>
-					<?php if($_SESSION['login_type'] == 1 ): ?>
+					<?php if($_SESSION['login_type'] == 3 ||  $_SESSION['login_type'] == 1 ): ?>
 					<div class="col-md-6">
 						<div class="form-group">
-						<label for="" class="control-label">Task Manager</label>
+						<label for="" class="control-label">Dean</label>
 						<select class="form-control form-control-sm select2" name="manager_id" required>
 							<option></option>
 							<?php 
-							$managers = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 2 order by concat(firstname,' ',lastname) asc ");
+							$managers = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type between 2 and 3 order by concat(firstname,' ',lastname) asc ");
 							while($row= $managers->fetch_assoc()):
 							?>
 							<option value="<?php echo $row['id'] ?>" <?php echo isset($manager_id) && $manager_id == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
@@ -83,15 +84,33 @@
 					</div>		
 				</div>
 				<div class="row">
-					
-					<div class="col-md-12">
+					<input type="text" class="hide" name="proj_status" value="1">
+					<?php if($_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 1 ): ?>
+					<div class="col-md-6">
 						<div class="form-group">
-						<label for="" class="control-label">Task Team Members</label>
+						<label for="" class="control-label">Project Chair</label>
+						<select class="form-control form-control-sm select2" name="chair_id" required>
+							<option></option>
+							<?php 
+							$chairs = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type between 2 and 3 order by concat(firstname,' ',lastname) asc ");
+							while($row= $chairs->fetch_assoc()):
+							?>
+							<option value="<?php echo $row['id'] ?>" <?php echo isset($chair_id) && $chair_id == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+							<?php endwhile; ?>
+						</select>
+						</div>
+					</div>
+					<?php else: ?>
+						<input type="hidden" name="chair_id" value="<?php echo $_SESSION['login_id'] ?>">
+					<?php endif; ?>
+					<div class="col-md-6">
+						<div class="form-group">
+						<label for="" class="control-label">Team Members</label>
 						<select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]" required>
 							<option></option>
 							<?php 
-							$employees = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type = 3 order by concat(firstname,' ',lastname) asc ");
-							while($row= $employees->fetch_assoc()):
+							$members = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type between 2 and 3 order by concat(firstname,' ',lastname) asc ");
+							while($row= $members->fetch_assoc()):
 							?>
 							<option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
 							<?php endwhile; ?>
@@ -102,7 +121,7 @@
 				<div class="row">
 					<div class="col-md-12">
 						<div class="form-group">
-							<label for="" class="control-label">Task Overview</label>
+							<label for="" class="control-label">Project Overview</label>
 							<textarea name="description" id="" cols="30" rows="10" class="summernote form-control" required>
 								<?php echo isset($description) ? $description : '' ?>
 							</textarea>
@@ -111,23 +130,19 @@
 					<div class="col-md-6 hide">
 						<div class="form-group">
 							<label for="" class="control-label">Task Documentation Link</label>
-							<input type="url" class="form-control form-control-sm hide" name="project_url" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($project_url) ? $project_url : '' ?>">
+							<input type="url" class="form-control form-control-sm hide" name="project_url" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="">
 						</div>
 					</div>
 					<div class="col-md-6 hide">
 						<div class="form-group">
 							<label for="" class="control-label">Task Time Sheet Link</label>
-							<input type="url" class="form-control form-control-sm hide" name="project_time_sheet" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="<?php echo isset($project_time_sheet) ? $project_time_sheet : '' ?>">
+							<input type="url" class="form-control form-control-sm hide" name="project_time_sheet" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="">
 						</div>
 					</div>
 					<div class="col-md-6 hide">
-						<div class="form-group ">
-							<label for="" class="control-label col-12">Upload Task File</label>
-							<div class="custom-file col-8">
-								<input type="file" class="custom-file-input rounded-circle" id="customFileToUpload" name="project_files">
-								<label class="custom-file-label" for="file" name="project_filename">Choose file</label>								
-							</div>				
-							<!-- <button class="btn btn-primary mt-1 col-3" name="save_file" style="margin-left:2rem">Upload</button>	 -->
+						<div class="form-group">
+							<label for="" class="control-label">Upload Main Task File</label>
+							<input type="url" class="form-control form-control-sm hide" name="project_files" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="">
 						</div>
 					</div>
 				</div>

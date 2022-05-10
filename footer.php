@@ -24,7 +24,7 @@
 	    placeholder:"Please select here",
 	    width: "100%"
 	  });
-	  
+	 
   	})
 	window.start_load = function(){
 	    $('body').prepend('<div id="preloader2"></div>')
@@ -128,6 +128,9 @@
 		val = val > 0 ? parseFloat(val).toLocaleString("en-US") : 0;
 		$(this).val(val)
 	})
+
+	// notifications
+
 </script>
 <script src="assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- overlayScrollbars -->

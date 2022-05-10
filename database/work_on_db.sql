@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 04, 2022 at 07:21 AM
--- Server version: 10.4.20-MariaDB
--- PHP Version: 8.0.9
+-- Generation Time: May 10, 2022 at 01:59 AM
+-- Server version: 10.4.22-MariaDB
+-- PHP Version: 8.1.2
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -29,14 +29,23 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `group_list` (
   `id` int(30) NOT NULL,
-  `project_id` int(30) NOT NULL,
-  `group_name` text NOT NULL,
-  `member` varchar(255) NOT NULL,
-  `status` varchar(255) NOT NULL,
-  `member_id` int(30) NOT NULL,
-  `user_ids` text NOT NULL,
-  `date_created` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `group_name` varchar(255) NOT NULL,
+  `group_manager` varchar(255) NOT NULL,
+  `group_members` text NOT NULL,
+  `group_tasks` text NOT NULL,
+  `user_ids` int(30) DEFAULT NULL,
+  `manager_id` int(30) DEFAULT NULL,
+  `date_created` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `group_list`
+--
+
+INSERT INTO `group_list` (`id`, `group_name`, `group_manager`, `group_members`, `group_tasks`, `user_ids`, `manager_id`, `date_created`) VALUES
+(1, 'Group Two', 'Andrea Jada', 'Adam Gio, Arnold John', 'My First Task, My Second Task', NULL, NULL, '2022-03-06 22:58:16'),
+(3, 'Group One', 'Andrea Jada', 'Array', 'Array', NULL, NULL, '2022-03-07 01:37:56'),
+(4, 'Group Three', 'Andrea Jada', 'Array', 'Array', NULL, NULL, '2022-03-07 01:40:01');
 
 -- --------------------------------------------------------
 
@@ -49,10 +58,13 @@ CREATE TABLE `project_list` (
   `name` varchar(200) NOT NULL,
   `description` text NOT NULL,
   `status` tinyint(2) NOT NULL,
-  `start_date` date NOT NULL,
+  `proj_status` int(11) NOT NULL DEFAULT 0,
+  `start_date` date DEFAULT NULL,
   `end_date` date NOT NULL,
   `manager_id` int(30) NOT NULL,
+  `chair_id` int(30) NOT NULL,
   `user_ids` text NOT NULL,
+  `user_type` int(1) NOT NULL DEFAULT 3,
   `project_url` longtext NOT NULL,
   `project_time_sheet` longtext NOT NULL,
   `project_files` longtext NOT NULL,
@@ -63,12 +75,9 @@ CREATE TABLE `project_list` (
 -- Dumping data for table `project_list`
 --
 
-INSERT INTO `project_list` (`id`, `name`, `description`, `status`, `start_date`, `end_date`, `manager_id`, `user_ids`, `project_url`, `project_time_sheet`, `project_files`, `date_created`) VALUES
-(21, 'Project One', '																																								Proj One																																			', 1, '2021-12-10', '2021-12-17', 17, '18,20', 'https://docs.google.com/spreadsheets/d/1VPYzRekHOMXbRFmHUASxOZDdOuxMYn8se4cjgW_a_8U/edit#gid=0', 'https://docs.google.com/spreadsheets/d/1NKXcLS3rcaNcnDc_ej0YB38FqE_HKjyx7aqQWFOnWqA/edit#gid=0', '', '2021-12-10 05:54:59'),
-(22, 'Project Two', '								Proj Two							', 1, '2021-12-10', '2021-12-17', 16, '21,19', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 05:58:48'),
-(23, 'Project Three', '								Proj Three							', 1, '2021-12-10', '2021-12-24', 16, '18,21,22', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 06:14:10'),
-(24, 'Project Four', 'Proj Four', 1, '2021-12-10', '2021-12-31', 16, '18,20,21,19,22', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 06:51:29'),
-(25, 'Project Five', 'Project Five', 1, '2021-12-10', '2022-01-07', 17, '18,20,21,19,22', 'https://docs.google.com/spreadsheets/u/0/', 'https://docs.google.com/spreadsheets/u/0/', '', '2021-12-10 07:11:07');
+INSERT INTO `project_list` (`id`, `name`, `description`, `status`, `proj_status`, `start_date`, `end_date`, `manager_id`, `chair_id`, `user_ids`, `user_type`, `project_url`, `project_time_sheet`, `project_files`, `date_created`) VALUES
+(1, 'Work-ON Project One', 'Project One', 1, 1, '2022-05-09', '2022-05-10', 2, 3, '5,6', 3, '', '', '', '2022-05-09 21:10:52'),
+(2, 'Work-ON Project Two', 'Project Two', 1, 1, '2022-05-10', '2022-05-11', 5, 2, '4,6', 3, '', '', '', '2022-05-10 00:28:55');
 
 -- --------------------------------------------------------
 
@@ -101,12 +110,14 @@ INSERT INTO `system_settings` (`id`, `name`, `email`, `contact`, `address`, `cov
 CREATE TABLE `task_list` (
   `id` int(30) NOT NULL,
   `project_id` int(30) NOT NULL,
-  `task` varchar(200) NOT NULL,
-  `task_owner` varchar(255) NOT NULL,
+  `task` text NOT NULL,
+  `task_owner` text NOT NULL,
   `description` text NOT NULL,
   `file_uploaded` longtext NOT NULL,
-  `task_url` longtext NOT NULL,
+  `user_id` int(30) DEFAULT NULL,
   `status` tinyint(4) NOT NULL,
+  `task_startdate` datetime DEFAULT NULL,
+  `active` int(11) DEFAULT 0,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -114,8 +125,65 @@ CREATE TABLE `task_list` (
 -- Dumping data for table `task_list`
 --
 
-INSERT INTO `task_list` (`id`, `project_id`, `task`, `task_owner`, `description`, `file_uploaded`, `task_url`, `status`, `date_created`) VALUES
-(21, 25, 'Task 1', 'Ellie Pal', 'Task No. 1', '', '', 1, '2021-12-10 07:28:19');
+INSERT INTO `task_list` (`id`, `project_id`, `task`, `task_owner`, `description`, `file_uploaded`, `user_id`, `status`, `task_startdate`, `active`, `date_created`) VALUES
+(1, 1, 'Task Number One', 'Jess DM', 'Welcome Task', '', 2, 1, '2022-05-10 07:16:06', 0, '2022-05-10 06:04:55');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_files`
+--
+
+CREATE TABLE `tbl_files` (
+  `id` int(11) NOT NULL,
+  `project_id` int(30) DEFAULT NULL,
+  `task_id` int(30) DEFAULT NULL,
+  `file_name` text NOT NULL,
+  `file_type` varchar(255) NOT NULL,
+  `file_path` text DEFAULT NULL,
+  `file_size` varchar(255) DEFAULT NULL,
+  `date_uploaded` datetime NOT NULL,
+  `status` enum('1','0') CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_notifications`
+--
+
+CREATE TABLE `tbl_notifications` (
+  `n_id` int(11) NOT NULL,
+  `project_id` int(30) NOT NULL,
+  `task_owner` text NOT NULL,
+  `description` text NOT NULL,
+  `task` text NOT NULL,
+  `active` int(1) DEFAULT 0,
+  `date_stamp` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_status`
+--
+
+CREATE TABLE `tbl_status` (
+  `id` int(11) NOT NULL,
+  `status_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `tbl_status`
+--
+
+INSERT INTO `tbl_status` (`id`, `status_name`) VALUES
+(1, 'NOT-STARTED'),
+(2, 'STARTED'),
+(3, 'IN-PROGRESS'),
+(4, 'IN-REVIEW'),
+(5, 'COMPLETED'),
+(6, 'OVER-DUE');
 
 -- --------------------------------------------------------
 
@@ -129,8 +197,9 @@ CREATE TABLE `users` (
   `lastname` varchar(200) NOT NULL,
   `email` varchar(200) NOT NULL,
   `password` text NOT NULL,
-  `type` tinyint(1) NOT NULL DEFAULT 2 COMMENT '1 = admin, 2 = staff',
+  `type` tinyint(1) DEFAULT 3 COMMENT '1=dean, 2=chair, 3=member',
   `avatar` text NOT NULL DEFAULT 'no-image-available.png',
+  `task_status` int(11) NOT NULL DEFAULT 0 COMMENT '0=no-assigned,\r\n1=not-started,\r\n2=started,\r\n3=in-progress,\r\n4=in-review,\r\n5=completed',
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -138,15 +207,13 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`, `type`, `avatar`, `date_created`) VALUES
-(1, 'Administrator', ' ', 'admin@workon.com', '0192023a7bbd73250516f069df18b500', 1, '1639091160_144119.jpg', '2021-12-10 05:16:23'),
-(16, 'Jane', 'Smith', 'janesmith@workon.com', '9172a26354c4073ced007b01b3ac5b1f', 2, '1639085100_PM_1.PNG', '2021-12-10 05:25:32'),
-(17, 'Jon', 'Smith', 'jonsmith@workon.com', '13188d067cb373f775e0c452c42bc177', 2, '1639085220_PM.PNG', '2021-12-10 05:27:32'),
-(18, 'Adam', 'Doe', 'adamdoe@workon.com', '51e4b4360b146d70f1c8f457be19497e', 3, '1639085580_EMP_1.jfif', '2021-12-10 05:33:05'),
-(19, 'Ethan', 'End', 'ethanend@workon.com', '423f2413ede9d1207cc40377c64b4c2f', 3, '1639085640_EMP_2.jpg', '2021-12-10 05:34:24'),
-(20, 'Alice', 'Doe', 'alicedoe@workon.com', '0c71b853e16aa031265abd08f94024e7', 3, '1639085820_EMP_3.jfif', '2021-12-10 05:37:55'),
-(21, 'Ellie', 'Pal', 'elliepal@workon.com', '4c8a8df57b4f393623abbf4eb916720d', 3, '1639085940_EMP_4.jpg', '2021-12-10 05:39:00'),
-(22, 'Sage', 'Del', 'sagedel@workon.com', '73a7ac02d64efa7c3b177c8581a2ad53', 3, '1639086000_EMP_5.jpg', '2021-12-10 05:40:59');
+INSERT INTO `users` (`id`, `firstname`, `lastname`, `email`, `password`, `type`, `avatar`, `task_status`, `date_created`) VALUES
+(1, 'Administrator', ' ', 'admin@work-on.tech', '1ab1753615a7e91dc9cd1ed5d0d748cc', 1, '1652101980_anime-girl-green-hair-Favim.com-642566.jpg', 0, '2022-05-09 20:25:25'),
+(2, 'Jess', 'DM', 'jessdm@gmail.com', 'cd98e2b7dad295ed9207eb761f4eff48', 3, '1652101020_green-haired-anime-girl-1.jpg', 0, '2022-05-09 20:57:14'),
+(3, 'Jenn', 'DM', 'jenndm@gmail.com', 'cd98e2b7dad295ed9207eb761f4eff48', 3, '1652101140_e259dd19c9cc6e043f8755a0007d7656.jpg', 0, '2022-05-09 20:59:56'),
+(4, 'Jon', 'Snow', 'jonsnow@gmail.com', 'cd98e2b7dad295ed9207eb761f4eff48', 3, '1652101260_images.png', 0, '2022-05-09 21:01:27'),
+(5, 'Billy', 'Maximoff', 'billym@gmail.com', 'cd98e2b7dad295ed9207eb761f4eff48', 3, '1652101440_68f9b688fd3c1cc580a899702653e0d5.jpg', 0, '2022-05-09 21:04:11'),
+(6, 'Tommy', 'Maximoff', 'tommym@gmail.com', 'cd98e2b7dad295ed9207eb761f4eff48', 3, '1652101680_tumblr_tommy.jpg', 0, '2022-05-09 21:08:34');
 
 -- --------------------------------------------------------
 
@@ -158,16 +225,20 @@ CREATE TABLE `user_productivity` (
   `id` int(30) NOT NULL,
   `project_id` int(30) NOT NULL,
   `task_id` int(30) NOT NULL,
-  `comment` text NOT NULL,
-  `subject` varchar(200) NOT NULL,
-  `date` date NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
+  `description` longtext DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `date` date DEFAULT current_timestamp(),
+  `start_time` time DEFAULT NULL,
+  `end_time` time DEFAULT current_timestamp(),
   `user_id` int(30) NOT NULL,
-  `file_uploaded` longtext NOT NULL,
-  `url_productivity` longtext NOT NULL,
-  `status` tinyint(4) NOT NULL,
-  `time_rendered` float NOT NULL,
+  `file_name` text DEFAULT NULL,
+  `file_type` varchar(255) DEFAULT NULL,
+  `file_size` int(255) DEFAULT NULL,
+  `file_path` text DEFAULT NULL,
+  `date_uploaded` datetime DEFAULT current_timestamp(),
+  `status` enum('1','0') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT '1',
+  `active` int(1) NOT NULL DEFAULT 0,
+  `time_rendered` float DEFAULT NULL,
   `date_created` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -175,9 +246,8 @@ CREATE TABLE `user_productivity` (
 -- Dumping data for table `user_productivity`
 --
 
-INSERT INTO `user_productivity` (`id`, `project_id`, `task_id`, `comment`, `subject`, `date`, `start_time`, `end_time`, `user_id`, `file_uploaded`, `url_productivity`, `status`, `time_rendered`, `date_created`) VALUES
-(23, 25, 21, '&lt;ul&gt;&lt;li&gt;Add more icons for each buttons&lt;/li&gt;&lt;li&gt;Add more details to design&lt;/li&gt;&lt;/ul&gt;', 'For Task 1 - Initial Update', '0000-00-00', '08:58:00', '09:58:00', 1, '', 'https://docs.google.com/spreadsheets/u/0/', 0, 1, '2021-12-10 08:59:34'),
-(24, 25, 21, '&lt;ul&gt;&lt;li&gt;Apply URL Links&lt;/li&gt;&lt;li&gt;Responsiveness of UI&lt;/li&gt;&lt;/ul&gt;', 'For Task 1 - Final Update', '2021-12-10', '00:00:00', '02:00:00', 1, '', 'https://docs.google.com/spreadsheets/u/0/', 0, 2, '2021-12-10 09:01:12');
+INSERT INTO `user_productivity` (`id`, `project_id`, `task_id`, `description`, `comment`, `date`, `start_time`, `end_time`, `user_id`, `file_name`, `file_type`, `file_size`, `file_path`, `date_uploaded`, `status`, `active`, `time_rendered`, `date_created`) VALUES
+(1, 1, 1, 'This Task 1 file', 'asda', '0000-00-00', '00:00:00', '00:00:00', 1, 'boat.png', 'png', 237101, 'assets/uploads/files/boat.png', '2022-05-10 06:07:44', '1', 0, 0, '2022-05-10 06:07:44');
 
 --
 -- Indexes for dumped tables
@@ -208,6 +278,24 @@ ALTER TABLE `task_list`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_files`
+--
+ALTER TABLE `tbl_files`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_notifications`
+--
+ALTER TABLE `tbl_notifications`
+  ADD PRIMARY KEY (`n_id`);
+
+--
+-- Indexes for table `tbl_status`
+--
+ALTER TABLE `tbl_status`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -227,13 +315,13 @@ ALTER TABLE `user_productivity`
 -- AUTO_INCREMENT for table `group_list`
 --
 ALTER TABLE `group_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `project_list`
 --
 ALTER TABLE `project_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `system_settings`
@@ -245,19 +333,37 @@ ALTER TABLE `system_settings`
 -- AUTO_INCREMENT for table `task_list`
 --
 ALTER TABLE `task_list`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `tbl_files`
+--
+ALTER TABLE `tbl_files`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_notifications`
+--
+ALTER TABLE `tbl_notifications`
+  MODIFY `n_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `tbl_status`
+--
+ALTER TABLE `tbl_status`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `user_productivity`
 --
 ALTER TABLE `user_productivity`
-  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(30) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

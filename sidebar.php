@@ -36,7 +36,7 @@
             <a href="#" class="nav-link nav-edit_project nav-view_project">
               <i class="nav-icon fas fa-layer-group"></i>
               <p>
-                Tasks
+                Projects
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
@@ -45,14 +45,14 @@
               <li class="nav-item">
                 <a href="./index.php?page=new_project" class="nav-link nav-new_project tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Create New Task</p>
+                  <p>Create New Project</p>
                 </a>
               </li>
             <?php endif; ?>
               <li class="nav-item">
                 <a href="./index.php?page=project_list" class="nav-link nav-project_list tree-item">
                   <i class="fas fa-angle-right nav-icon"></i>
-                  <p>Task List</p>
+                  <p>Project List</p>
                 </a>
               </li>
             </ul>
