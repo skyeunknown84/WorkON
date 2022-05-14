@@ -51,6 +51,7 @@
   </nav>
   <!-- /.navbar -->
   <script>
+    $(document).ready(function () {
       $('#manage_account').click(function(){
         uni_modal('Manage Account','manage_user.php?id=<?php echo $_SESSION['login_id'] ?>')
       })
@@ -82,16 +83,16 @@
         load_unseen_notification('yes');
       });
 
-      $(document).on('click', '.notifMeAccept', function(){
-        alert("Are you sure you want to 'Accept' this task?");
-      });
+      // $(document).on('click', '.notifMeAccept', function(){
+      //   alert("Are you sure you want to 'Accept' this task?");
+      // });
 
-      $(document).on('click', '.notifMeDecline', function(){
-        alert("Are you sure you want to 'Decline' this task?");
-      });
+      // $(document).on('click', '.notifMeDecline', function(){
+      //   alert("Are you sure you want to 'Decline' this task?");
+      // });
       
       setInterval(function(){ 
         load_unseen_notification();
       }, 5000);
-
+    });
   </script>

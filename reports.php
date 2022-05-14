@@ -26,11 +26,11 @@
                 <div class="col-md-4">
                   <select name="status" id="fetch_status" class="custom-select custom-select-md form-control">
                     <option value="">Select Status</option>
-                    <option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Not Started</option>
-                    <option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>Started</option>
-                    <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Progress</option>
-                    <option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>In Review</option>
-                    <option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
+                    <option value="0" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>>Not Started</option>
+                    <option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Started</option>
+                    <option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>In Progress</option>
+                    <option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Review</option>
+                    <option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>Completed</option>
                   </select>
                 </div>
                 <div class="col-md-4">
@@ -41,7 +41,7 @@
                       $qry = $conn->query("SELECT concat(firstname,' ',lastname) as assignee,type FROM users WHERE type BETWEEN 2 AND 3");
                       while($row = $qry->fetch_assoc()):
                         $chair = "(Chair)";
-                        $faculty = "(Faculty)";
+                        $faculty = "(Member)";
                         
                         $usertype = $row['type'];
                         if($usertype=='2'){
@@ -122,15 +122,15 @@
                           </td>
                           <td>
                               <?php
-                              if($row['status'] == 1){
+                              if($row['status'] == 0){
                                   echo "<span class='badge badge-secondary'>Not Started</span>";
-                              }elseif($row['status'] == 2){
+                              }elseif($row['status'] == 1){
                               echo "<span class='badge badge-primary'>Started</span>";
-                              }elseif($row['status'] == 3){
+                              }elseif($row['status'] == 2){
                               echo "<span class='badge badge-info'>In Progress</span>";
-                              }elseif($row['status'] == 4){
+                              }elseif($row['status'] == 3){
                               echo "<span class='badge badge-warning'>In Review</span>";
-                              }elseif($row['status'] == 5){
+                              }elseif($row['status'] == 4){
                               echo "<span class='badge badge-success'>Completed</span>";
                               }
                               // elseif($row['status'] == 6){

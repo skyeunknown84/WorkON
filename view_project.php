@@ -1,22 +1,39 @@
 <?php
 include 'db_connect.php';
 $stat = array("Not Started","Started","In Progress","In Review","Completed");
-$qry = $conn->query("SELECT * FROM project_list where id = ".$_GET['id'])->fetch_array();
+// decrypt id params
+$param_id = $_GET['id'];
+// make id longer
+$decode_id = ($param_id / 8967452390);
+// encrypt data with base64 
+// $url_encode_id = urlencode(base64_encode($long_param_id));
+// decrypt data with base64
+// $url_decode_id = base64_decode(urldecode($url_encode_id/123456789));
+$qry = $conn->query("SELECT * FROM project_list where id = {$decode_id}")->fetch_array();
 foreach($qry as $k => $v){
 	$$k = $v;
 }
+// if($id == $url_encode_id){
+// 	foreach($_GET as $key => $id){
+// 		$param_id2 = $_GET[$key] = base64_decode(urldecode($id));
+// 		echo $url_decode_id = ($param_id2/123456789);
+// 	}
+// }
+// if($id == $param_id){
+// 	$url_param_id = base64_encode($param_id);
+// }
 $tprog = $conn->query("SELECT * FROM task_list where project_id = {$id}")->num_rows;
 $cprog = $conn->query("SELECT * FROM task_list where project_id = {$id} and status = 5")->num_rows;
 $prog = $tprog > 0 ? ($cprog/$tprog) * 100 : 0;
 $prog = $prog > 0 ?  number_format($prog,2) : $prog;
 $prod = $conn->query("SELECT * FROM user_productivity where project_id = {$id}")->num_rows;
 if($status == 0 && strtotime(date('Y-m-d')) >= strtotime($start_date)):
-if($prod  > 0  || $cprog > 0)
-  $status = 2;
-else
-  $status = 1;
-elseif($status == 0 && strtotime(date('Y-m-d')) > strtotime($end_date)):
-$status = 4;
+	if($prod  > 0  || $cprog > 0)
+		$status = 1;
+	else
+		$status = 0;
+	elseif($status == 0 && strtotime(date('Y-m-d')) > strtotime($end_date)):
+		$status = 4;
 endif;
 $manager = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where id = $manager_id");
 $manager = $manager->num_rows > 0 ? $manager->fetch_array() : array();
@@ -26,6 +43,7 @@ if($_SESSION['login_type'] == 2){
 }elseif($_SESSION['login_type'] == 3){
 	$where = " where concat('[',REPLACE(user_ids,',','],['),']') LIKE '%[{$_SESSION['login_id']}]%' ";
 }
+
 ?>
 <div class="col-lg-12">
 	<div class="row">
@@ -59,22 +77,21 @@ if($_SESSION['login_type'] == 2){
 								<dt><b class="border-bottom border-primary">Status</b></dt>
 								<dd>
 									<?php 
-										if($stat[$status] == 'Not Started') {
+										if($stat[$status] == 'Not Started'){
 											echo "<span class='badge badge-secondary'>Not Started</span>";
+										}elseif($stat[$status] == 'Started'){
+										echo "<span class='badge badge-primary'>Started</span>";
+										}elseif($stat[$status] == 'In Progress'){
+										echo "<span class='badge badge-info'>In Progress</span>";
+										}elseif($stat[$status] == 'In Review'){
+										echo "<span class='badge badge-warning'>In Review</span>";
+										}elseif($stat[$status] == 'Completed'){
+										echo "<span class='badge badge-success'>Completed</span>";
 										}
-										elseif($stat[$status] == 'Started') {
-											echo "<span class='badge badge-primary'>Started</span>";
-										}
-										elseif($stat[$status] == 'In Progress') {
-											echo "<span class='badge badge-info'>In Progress</span>";
-										}
-										elseif($stat[$status] == 'In Review') {
-											echo "<span class='badge badge-warning'>In Review</span>";
-										}
-										elseif($stat[$status] == 'Completed') {
-											echo "<span class='badge badge-success'>Completed</span>";
-										}
-									?>
+										// elseif($stat[$status] == 6){
+										// 	echo "<span class='badge badge-success'>Completed</span>";
+										// }
+										?>
 								</dd>
 							</dl>						
 							
@@ -142,9 +159,16 @@ if($_SESSION['login_type'] == 2){
 							</ul>
 						</div>
 						<div class="col-6 text-right">
-						<?php if($_SESSION['login_type'] != 3): ?>
-							<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_task"><i class="fa fa-plus"></i> New Task</button>
-						<?php endif; ?>
+							<?php 
+							// $adminid = $_SESSION['login_id'];
+							// $deanid = $_SESSION['login_id'];
+							// $chairid = $_SESSION['login_id'];
+							// $memberid = $_SESSION['login_id'];
+							if($_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 1){ ?>
+								<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_task"><i class="fa fa-plus"></i> New Task</button>
+								<?php 
+							}
+						?>
 						</div>
 					</div>
 				</div>
@@ -171,18 +195,19 @@ if($_SESSION['login_type'] == 2){
 								<tbody>
 									<?php 
 									$i = 1;
-									$tasks = $conn->query("SELECT * FROM task_list where project_id = {$id} order by task asc");
+									$tasks = $conn->query("SELECT *,concat(firstname,' ',lastname) as uname FROM users u INNER JOIN task_list t ON concat(firstname,' ',lastname) = t.task_owner where project_id = {$id} order by task asc");
 									while($row=$tasks->fetch_assoc()):
 										$trans = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
 										unset($trans["\""], $trans["<"], $trans[">"], $trans["<h2"]);
 										$desc = strtr(html_entity_decode($row['description']),$trans);
 										$desc=str_replace(array("<li>","</li>"), array("",", "), $desc);											
 											// fetch members in array
-											// $proj_ids = $row['project_id']; 
+											$proj_id = $row['project_id']; 
 											$_SESSION['pid'] = $row['project_id'];											
 											// $data_img = $conn->query("SELECT avatar,concat(firstname,' ',lastname) as uname FROM users u INNER JOIN project_list p ON u.id = p.user_ids INNER JOIN task_list t ON t.project_id = p.id WHERE t.id in ($proj_ids) order by t.task asc");
 											// start_time
 										// $qry_start_time = "";
+										$task_owner_qry = $conn->query("SELECT concat(firstname,' ',lastname) as uname FROM users u INNER JOIN task_list t ON concat(firstname,' ',lastname) = t.task_owner");
 									?>
 										<tr>
 											<td class="text-center"><?php echo $i++ ?></td>
@@ -248,7 +273,7 @@ if($_SESSION['login_type'] == 2){
 				<div class="card-header">
 					<b>TASK FILE/S</b>
 					<div class="card-tools">
-						<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_productivity"><i class="fa fa-plus"></i> Add Task Files</button>
+						<button class="btn btn-primary bg-primary btn-sm" type="button" id="new_productivity"><i class="fa fa-plus"></i> Add Attachment File</button>
 					</div>
 				</div>
 				<div class="card-body">
