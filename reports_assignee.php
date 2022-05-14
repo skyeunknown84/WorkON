@@ -51,15 +51,15 @@ if(isset($_POST['request'])){
                     </td>
                     <td>
                         <?php
-                        if($row['status'] == 1){
+                        if($row['status'] == 0){
                             echo "<span class='badge badge-secondary'>Not Started</span>";
-                        }elseif($row['status'] == 2){
+                        }elseif($row['status'] == 1){
                         echo "<span class='badge badge-primary'>Started</span>";
-                        }elseif($row['status'] == 3){
+                        }elseif($row['status'] == 2){
                         echo "<span class='badge badge-info'>In Progress</span>";
-                        }elseif($row['status'] == 4){
+                        }elseif($row['status'] == 3){
                         echo "<span class='badge badge-warning'>In Review</span>";
-                        }elseif($row['status'] == 5){
+                        }elseif($row['status'] == 4){
                         echo "<span class='badge badge-success'>Completed</span>";
                         }
                         // elseif($row['status'] == 6){

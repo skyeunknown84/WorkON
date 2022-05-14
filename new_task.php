@@ -49,12 +49,12 @@ if(isset($_GET['id'])){
 				<div class="form-group">
 					<label for="">Status</label>
 					<select name="status" id="status" class="custom-select custom-select-sm">
-						<option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Not Started</option>
-						<option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>Started</option>
-						<option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Progress</option>
-						<option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>In Review</option>
+						<option value="0" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>>Not Started</option>
+						<option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Started</option>
+						<option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>In Progress</option>
+						<option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Review</option>
+						<option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>Completed</option>
 						<option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Over Due</option>
-						<option value="6" <?php echo isset($status) && $status == 6 ? 'selected' : '' ?>>Completed</option>
 					</select>
 				</div>
 			</div>

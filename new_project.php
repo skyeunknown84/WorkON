@@ -19,7 +19,7 @@
   $filename = $_POST['filename'];
   $location = "Uploaded_Files/" . $files;
   $sqli = "INSERT INTO `tblfiles` (`FileName`, `Location`) VALUES ('{$filename}','{$location}')";
-  $result = mysqli_query($con,$sqli);
+  $result = mysqli_query($conn,$sqli);
   if ($result) {
     echo "File has been uploaded";
   };
@@ -38,58 +38,33 @@
 							<input type="text" class="form-control form-control-sm" name="name" value="<?php echo isset($name) ? $name : '' ?>" required>
 						</div>
 					</div>
-					<div class="col-md-6">
-						<div class="form-group">
-							<label for="">Status</label>
-							<select name="status" id="status" class="custom-select custom-select-sm" required>
-								<option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Not Started</option>
-								<option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>Started</option>
-								<option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Progress</option>
-								<option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>In Review</option>
-								<option value="5" <?php echo isset($status) && $status == 5 ? 'selected' : '' ?>>Completed</option>
-							</select>
-						</div>
-					</div>
-				</div>
-				<div class="row">
 					<div class="col-md-6 hide">
 						<div class="form-group">
 						<label for="" class="control-label hide">Start Date</label>
 						<input type="hidden" name="start_date" value="<?php echo date('Y-m-d') ?>" required>
 						</div>
 					</div>
-					<?php if($_SESSION['login_type'] == 3 ||  $_SESSION['login_type'] == 1 ): ?>
 					<div class="col-md-6">
 						<div class="form-group">
-						<label for="" class="control-label">Dean</label>
-						<select class="form-control form-control-sm select2" name="manager_id" required>
-							<option></option>
-							<?php 
-							$managers = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type between 2 and 3 order by concat(firstname,' ',lastname) asc ");
-							while($row= $managers->fetch_assoc()):
-							?>
-							<option value="<?php echo $row['id'] ?>" <?php echo isset($manager_id) && $manager_id == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
-							<?php endwhile; ?>
-						</select>
+							<label for="">Status</label>
+							<select name="status" id="status" class="custom-select custom-select-sm" required>
+								<option value="0" <?php echo isset($status) && $status == 0 ? 'selected' : '' ?>>Not Started</option>
+								<option value="1" <?php echo isset($status) && $status == 1 ? 'selected' : '' ?>>Started</option>
+								<option value="2" <?php echo isset($status) && $status == 2 ? 'selected' : '' ?>>In Progress</option>
+								<option value="3" <?php echo isset($status) && $status == 3 ? 'selected' : '' ?>>In Review</option>
+								<option value="4" <?php echo isset($status) && $status == 4 ? 'selected' : '' ?>>Completed</option>
+							</select>
 						</div>
 					</div>
-					<?php else: ?>
-						<input type="hidden" name="manager_id" value="<?php echo $_SESSION['login_id'] ?>">
-					<?php endif; ?>
-					<div class="col-md-6">
-						<div class="form-group">
-						<label for="" class="control-label">Due Date</label>
-						<input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
-						</div>
-					</div>		
 				</div>
 				<div class="row">
+					
 					<input type="text" class="hide" name="proj_status" value="1">
 					<?php if($_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 1 ): ?>
 					<div class="col-md-6">
 						<div class="form-group">
 						<label for="" class="control-label">Project Chair</label>
-						<select class="form-control form-control-sm select2" name="chair_id" required>
+						<select class="form-control form-control-sm select2" name="chair_id" id="chair_data" required>
 							<option></option>
 							<?php 
 							$chairs = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type between 2 and 3 order by concat(firstname,' ',lastname) asc ");
@@ -105,20 +80,27 @@
 					<?php endif; ?>
 					<div class="col-md-6">
 						<div class="form-group">
+						<label for="" class="control-label">Due Date</label>
+						<input type="date" class="form-control form-control-sm" autocomplete="off" name="end_date" value="<?php echo isset($end_date) ? date("Y-m-d",strtotime($end_date)) : '' ?>" required>
+						</div>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
 						<label for="" class="control-label">Team Members</label>
-						<select class="form-control form-control-sm select2" multiple="multiple" name="user_ids[]" required>
-							<option></option>
-							<?php 
+						<?php if($_SESSION['login_type'] == 3 || $_SESSION['login_type'] == 1 ): ?>
+						<select id="team_members" class="form-control form-control-sm" multiple="multiple" name="user_ids[]" required>
+						<?php 
 							$members = $conn->query("SELECT *,concat(firstname,' ',lastname) as name FROM users where type between 2 and 3 order by concat(firstname,' ',lastname) asc ");
 							while($row= $members->fetch_assoc()):
 							?>
-							<option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && in_array($row['id'],explode(',',$user_ids)) ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
+							<option value="<?php echo $row['id'] ?>" <?php echo isset($user_ids) && array($user_ids) == $row['id'] ? "selected" : '' ?>><?php echo ucwords($row['name']) ?></option>
 							<?php endwhile; ?>
 						</select>
+						<?php else: ?>
+							<input type="hidden" name="user_ids[]" value="<?php echo $_SESSION['login_id'] ?>" <?php echo isset($user_ids) && array($user_ids) == $row['id'] ? "selected" : '' ?>>
+						<?php endif; ?>
 						</div>
 					</div>
-				</div>
-				<div class="row">
 					<div class="col-md-12">
 						<div class="form-group">
 							<label for="" class="control-label">Project Overview</label>
@@ -127,25 +109,8 @@
 							</textarea>
 						</div>
 					</div>
-					<div class="col-md-6 hide">
-						<div class="form-group">
-							<label for="" class="control-label">Task Documentation Link</label>
-							<input type="url" class="form-control form-control-sm hide" name="project_url" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="">
-						</div>
-					</div>
-					<div class="col-md-6 hide">
-						<div class="form-group">
-							<label for="" class="control-label">Task Time Sheet Link</label>
-							<input type="url" class="form-control form-control-sm hide" name="project_time_sheet" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="">
-						</div>
-					</div>
-					<div class="col-md-6 hide">
-						<div class="form-group">
-							<label for="" class="control-label">Upload Main Task File</label>
-							<input type="url" class="form-control form-control-sm hide" name="project_files" placeholder="e.g. https://docs.google.com/spreadsheets/u/0/" value="">
-						</div>
-					</div>
 				</div>
+				
         	</form>
     	</div>
     	<div class="card-footer border-top border-info">
@@ -180,5 +145,8 @@
 				}
 			}
 		})
-	})
+	});
+
+	// linked Select box of Project Chair to Team Members
+
 </script>
